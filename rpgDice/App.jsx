@@ -12,7 +12,7 @@ import Sandbox from "./components/Screens/testScreens/sandbox";
 //https://www.canva.com/colors/color-wheel/
 export default function App() {
   return (
-    /*    <Sandbox /> */
+    /* <Sandbox /> */
     <DiceContextProvider>
       <HistoryContextProvider>
         <Nav />
