@@ -43,6 +43,8 @@ export default function presets({ navigation }) {
   const [index, setIndex] = useState(0);
   const [rollArray, setRollArray] = useState([]);
 
+  const [diceIcon, setDiceIcon] = useState();
+
   //checks the platform and if it is android it will set color to black
   //it will also call read
   useEffect(() => {
@@ -56,7 +58,6 @@ export default function presets({ navigation }) {
     updatePersetSave();
   }, [preSet]);
 
-  let test;
   //search the save file for the key presets and if it is not empty setPreSet to what it finds
   const read = async () => {
     try {
@@ -80,6 +81,38 @@ export default function presets({ navigation }) {
     }
   };
 
+  const diceIconSelect = () => {
+    let diceIcon;
+    switch (selectedDice) {
+      case 4:
+        diceIcon = "dice-4";
+        break;
+      case 6:
+        diceIcon = "dice-6";
+        break;
+      case 8:
+        diceIcon = "dice-d8";
+        break;
+      case 10:
+        diceIcon = "dice-d10";
+        break;
+      case 12:
+        diceIcon = "dice-d12";
+        break;
+      case 20:
+        diceIcon = "dice-d20";
+        break;
+      case 100:
+        diceIcon = "dice-multiple";
+        break;
+      default:
+        diceIcon = "dice-1";
+
+        break;
+    }
+    return diceIcon;
+  };
+
   //makes a new preSet
   const MakePreSet = () => {
     var time = new Date();
@@ -96,6 +129,9 @@ export default function presets({ navigation }) {
     if (diceCheck == "") {
       diceCheck = 4;
     }
+
+    let icon = diceIconSelect();
+
     setPreSet([
       ...preSet,
       {
@@ -105,6 +141,7 @@ export default function presets({ navigation }) {
         pName: checkName,
         pDice: diceCheck,
         pBuffplus: checkBuffplus,
+        pIconName: icon,
       },
     ]);
     setName("");
@@ -118,6 +155,7 @@ export default function presets({ navigation }) {
 
   //saves the canges that has been made to a preSet
   const saveUpdate = () => {
+    let icon = diceIconSelect();
     let checkName = name;
     if (checkName == "") {
       checkName = preSet[updateId].pName;
@@ -131,6 +169,7 @@ export default function presets({ navigation }) {
     preSet[updateId].pDiceNumber = diceNumber;
     preSet[updateId].pBuffplus = checkBuffplus;
     preSet[updateId].pDice = selectedDice;
+    preSet[updateId].pIconName = icon;
     updatePersetSave();
     setUpdateId(0);
     setUpdateModal(false);
@@ -554,13 +593,19 @@ export default function presets({ navigation }) {
                     Style.lightBackground,
                     { alignSelf: "center" },
                   ]}>
-                  <Text
+                  {/*                   <Text
                     style={[
                       Style.textColor,
                       { fontWeight: "bold", fontSize: 30 },
                     ]}>
                     {item.pDice}
-                  </Text>
+                  </Text> */}
+                  <MaterialCommunityIcons
+                    name={item.pIconName}
+                    size={50}
+                    color='black'
+                    style={{ textAlign: "center", color: "white" }}
+                  />
                 </View>
 
                 <View
@@ -627,6 +672,11 @@ export default function presets({ navigation }) {
           );
         })}
       </ScrollView>
+
+      <TouchableOpacity onPress={() => console.log(preSet)}>
+        <Text style={Style.buttonStyle}>log</Text>
+      </TouchableOpacity>
+
       <TouchableOpacity
         onPress={() => deleteAllPresets()}
         style={{ alignSelf: "flex-end" }}>

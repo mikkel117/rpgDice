@@ -6,95 +6,71 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import Styles from "../../../assets/styles/styles";
-import presets from "../Presets";
+import Style from "../../../assets/styles/styles";
 
 //storage keys
 //presets
 //folders
 //dice
 
+const returnTest = () => {
+  let number = Math.floor(Math.random() * 10) + 1;
+  let returnNumbers;
+  switch (number) {
+    case 1:
+      returnNumbers = 1;
+      break;
+    case 2:
+      returnNumbers = 2;
+      break;
+    case 3:
+      returnNumbers = 3;
+      break;
+    case 4:
+      returnNumbers = 4;
+      break;
+    case 5:
+      returnNumbers = 5;
+      break;
+    case 6:
+      returnNumbers = 6;
+      break;
+    case 7:
+      returnNumbers = 7;
+      break;
+    case 8:
+      returnNumbers = 8;
+      break;
+    case 9:
+      returnNumbers = 9;
+      break;
+    case 10:
+      returnNumbers = 10;
+      break;
+
+    default:
+      break;
+  }
+  return returnNumbers;
+};
+
+const callReturnTest = () => {
+  let returnNumber = returnTest();
+  console.log(returnNumber);
+};
+
 export default function Sandbox() {
-  const [folder, setFolder] = useState([]);
-  const [valTest, setValTest] = useState();
-
-  /*   useEffect(() => {
-    keysCheck();
-  }, []); */
-
-  getAllKeys = async () => {
-    let keys = [];
-    try {
-      keys = await AsyncStorage.getAllKeys();
-    } catch (e) {
-      // read key error
-    }
-
-    console.log(keys);
-  };
-
-  clearAll = async () => {
-    try {
-      await AsyncStorage.clear();
-    } catch (e) {
-      // clear error
-    }
-    console.log("Done.");
-  };
   return (
-    <View style={styles.container}>
-      <SafeAreaView>
-        <Text style={styles.color}>Welcome</Text>
-        <Button title='store data' onPress={() => storeData()} />
-        <View style={{ marginTop: 20 }}>
-          <Button title='get all keys' onPress={() => getAllKeys()} />
-        </View>
-
-        <View>
-          {folder.length > 0 ? (
-            <>
-              {folder.map((data) => {
-                console.log("data", data);
-                return (
-                  <TouchableOpacity key={data.id}>
-                    <Text
-                      style={[
-                        Styles.buttonStyle,
-                        {
-                          borderWidth: 1,
-                          margin: 5,
-                          padding: 10,
-                          fontSize: 20,
-                        },
-                      ]}>
-                      {data.name}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </>
-          ) : (
-            <></>
-          )}
-        </View>
-      </SafeAreaView>
-      <TouchableOpacity
-        style={{ alignSelf: "flex-end", justifyContent: "flex-end" }}
-        onPress={() => clearAll()}>
-        <Text
-          style={[
-            Styles.buttonStyle,
-            {
-              borderWidth: 1,
-              margin: 5,
-              padding: 10,
-              fontSize: 15,
-              backgroundColor: "red",
-            },
-          ]}>
-          CLEAR ALL KEYS
+    <SafeAreaView style={styles.container}>
+      <View>
+        <Text style={[Style.textColor, { fontSize: 40 }]}>
+          welcome to sandbox
         </Text>
+      </View>
+      <TouchableOpacity onPress={() => callReturnTest()}>
+        <Text style={Style.buttonStyle}>click me</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 }
 
