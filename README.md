@@ -11,6 +11,6 @@ rpgDice is an app that uses react native and expo.
 you download the code open it in you editter and then.
 
 *npm init*
-_npm start_
+*npm start*
 
 and you sould be good to go.
