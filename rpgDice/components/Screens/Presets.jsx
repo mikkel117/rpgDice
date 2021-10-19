@@ -570,102 +570,112 @@ export default function presets({ navigation }) {
       )}
 
       <View style={{ alignItems: "center" }}>
+        <Text style={[Style.textColor, { fontSize: 25 }]}>
+          Create pre set rolles here
+        </Text>
         <TouchableOpacity onPress={() => setNewPreSet(true)}>
           <MaterialCommunityIcons name='folder-plus' size={30} color='white' />
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={[Style.screenBackground, { flex: 1 }]}>
-        {preSet.map((item) => {
-          return (
-            <View
-              key={item.id}
-              style={{
-                width: "100%",
-                borderBottomWidth: 1,
-                borderColor: "gray",
-                padding: 10,
-                flex: 1,
-              }}>
-              <View style={{ flex: 1, flexDirection: "row" }}>
-                <View
-                  style={[
-                    styles.diceContainer,
-                    Style.lightBackground,
-                    { alignSelf: "center" },
-                  ]}>
-                  <MaterialCommunityIcons
-                    name={item.pIconName}
-                    size={50}
-                    color='black'
-                    style={{ textAlign: "center", color: "white" }}
-                  />
-                </View>
-
-                <View
-                  style={{
-                    paddingLeft: 5,
-                    justifyContent: "space-around",
-                    flex: 1,
-                  }}>
-                  <Text style={[Style.textColor, styles.font]}>
-                    {item.pDiceNumber}d{item.pDice}
-                    {item.pBuff ? (
-                      <>
-                        {item.pBuffplus ? (
-                          <>+{item.pBuff}</>
-                        ) : (
-                          <>{item.pBuff}</>
-                        )}{" "}
-                      </>
-                    ) : (
-                      <></>
-                    )}
-                  </Text>
-                  <TouchableOpacity
-                    style={{ alignSelf: "flex-start" }}
-                    onPress={() => rollPreSet(item.id)}>
-                    <Text style={styles.buttonStyle}>roll</Text>
-                  </TouchableOpacity>
-                </View>
-
-                <View style={{ flex: 1, alignSelf: "center" }}>
-                  <Text
+      {preSet.length > 0 ? (
+        <ScrollView style={[Style.screenBackground, { flex: 1 }]}>
+          {preSet.map((item) => {
+            return (
+              <View
+                key={item.id}
+                style={{
+                  width: "100%",
+                  borderBottomWidth: 1,
+                  borderColor: "gray",
+                  padding: 10,
+                  flex: 1,
+                }}>
+                <View style={{ flex: 1, flexDirection: "row" }}>
+                  <View
                     style={[
-                      styles.font,
-                      Style.textColor,
-                      {
-                        marginBottom: 5,
-                        fontWeight: "bold",
-                        textAlign: "center",
-                      },
+                      styles.diceContainer,
+                      Style.lightBackground,
+                      { alignSelf: "center" },
                     ]}>
-                    {item.pName}
-                  </Text>
+                    <MaterialCommunityIcons
+                      name={item.pIconName}
+                      size={50}
+                      color='black'
+                      style={{ textAlign: "center", color: "white" }}
+                    />
+                  </View>
+
                   <View
                     style={{
+                      paddingLeft: 5,
+                      justifyContent: "space-around",
                       flex: 1,
-                      flexDirection: "row",
-                      justifyContent: "space-between",
                     }}>
-                    <TouchableOpacity onPress={() => deleteAlert(item.id)}>
-                      <MaterialIcons name='delete' size={40} color='red' />
+                    <Text style={[Style.textColor, styles.font]}>
+                      {item.pDiceNumber}d{item.pDice}
+                      {item.pBuff ? (
+                        <>
+                          {item.pBuffplus ? (
+                            <>+{item.pBuff}</>
+                          ) : (
+                            <>{item.pBuff}</>
+                          )}{" "}
+                        </>
+                      ) : (
+                        <></>
+                      )}
+                    </Text>
+                    <TouchableOpacity
+                      style={{ alignSelf: "flex-start" }}
+                      onPress={() => rollPreSet(item.id)}>
+                      <Text style={styles.buttonStyle}>roll</Text>
                     </TouchableOpacity>
+                  </View>
 
-                    <TouchableOpacity onPress={() => update(item.id)}>
-                      <MaterialCommunityIcons
-                        name='content-save-edit'
-                        size={40}
-                        color='white'
-                      />
-                    </TouchableOpacity>
+                  <View style={{ flex: 1, alignSelf: "center" }}>
+                    <Text
+                      style={[
+                        styles.font,
+                        Style.textColor,
+                        {
+                          marginBottom: 5,
+                          fontWeight: "bold",
+                          textAlign: "center",
+                        },
+                      ]}>
+                      {item.pName}
+                    </Text>
+                    <View
+                      style={{
+                        flex: 1,
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}>
+                      <TouchableOpacity onPress={() => deleteAlert(item.id)}>
+                        <MaterialIcons name='delete' size={40} color='red' />
+                      </TouchableOpacity>
+
+                      <TouchableOpacity onPress={() => update(item.id)}>
+                        <MaterialCommunityIcons
+                          name='content-save-edit'
+                          size={40}
+                          color='white'
+                        />
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 </View>
               </View>
-            </View>
-          );
-        })}
-      </ScrollView>
+            );
+          })}
+        </ScrollView>
+      ) : (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <Text style={[Style.defoultFont, Style.textColor]}>Empty</Text>
+        </View>
+      )}
 
       <TouchableOpacity
         onPress={() => deleteAllPresets()}

@@ -27,6 +27,7 @@ export default function EditDice({ navigation }) {
   const [diceVal, setDiceVal] = useState("");
   const [diceChoice, setDiceChoice] = useState(false);
 
+  //adds a new dice
   const addDice = () => {
     var time = new Date();
     let diceValue = diceVal;
@@ -45,12 +46,14 @@ export default function EditDice({ navigation }) {
     setDiceVal("");
   };
 
+  //checks if the value is 0 and if it is not it will set diceval to whatever the user tipes
   const zeroCheck = (val) => {
     if (val != "") {
       setDiceVal(val);
     }
   };
 
+  //update dice
   const updateDice = () => {
     let diceValue = diceVal;
     if (diceValue == "") {
@@ -62,10 +65,12 @@ export default function EditDice({ navigation }) {
     setDiceVal("");
   };
 
+  //deletes a dice using its id
   const deleteDice = (id) => {
     setDice(dice.filter((item) => item.id != id));
   };
 
+  //a alert that comes up before you can delete a dice
   const deleteAlert = (id) => {
     Alert.alert(
       "DELETE DICE",
@@ -83,6 +88,8 @@ export default function EditDice({ navigation }) {
     );
   };
 
+  //finds where a dice is in the array (the index of the dice) using its id.
+  //and opens a modal
   const callDiceChose = (id) => {
     let index = dice.findIndex((obj) => obj.id == id);
     setIndex(index);
@@ -90,6 +97,7 @@ export default function EditDice({ navigation }) {
     setDiceChoice(true);
   };
 
+  //a alert for when the dice gets reset
   const resetDice = () => {
     Alert.alert(
       "REASET DICE",
@@ -101,6 +109,7 @@ export default function EditDice({ navigation }) {
         },
         {
           text: "delete",
+          //sets the dice array to what it were to begain with
           onPress: () =>
             setDice([
               { id: 1, sides: 4, name: "dice-d4" },
@@ -128,9 +137,23 @@ export default function EditDice({ navigation }) {
             onChangeText={(val) => setDiceVal(val)}
           />
 
-          <TouchableOpacity onPress={() => addDice()}>
-            <Text style={Style.buttonStyle}>Add dice</Text>
-          </TouchableOpacity>
+          <View style={{ flexDirection: "row" }}>
+            <TouchableOpacity
+              style={{ flexBasis: "45%" }}
+              onPress={() => setNewDice(false)}>
+              <Text style={Style.buttonStyle}>close</Text>
+            </TouchableOpacity>
+
+            <View style={{ flexBasis: "10%" }}></View>
+
+            <TouchableOpacity
+              onPress={() => addDice()}
+              style={{ flexBasis: "45%" }}>
+              <Text style={[Style.buttonStyle, { backgroundColor: "green" }]}>
+                Add dice
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
 
@@ -173,13 +196,14 @@ export default function EditDice({ navigation }) {
         </View>
       </Modal>
 
-      <View>
+      <View style={{ alignItems: "center" }}>
+        <Text style={[Style.textColor, { fontSize: 25 }]}>
+          create and edit dice here
+        </Text>
         <TouchableOpacity onPress={() => setNewDice(true)}>
           <Ionicons name='create' size={30} color='white' />
         </TouchableOpacity>
       </View>
-
-      <Text style={[Style.textColor, { textAlign: "center" }]}>edit dice</Text>
 
       <View style={[{ flex: 1 }]}>
         {dice.length > 7 ? (
@@ -272,33 +296,4 @@ const styles = StyleSheet.create({
 });
 
 {
-  /* <View
-style={{
-  justifyContent: "space-between",
-  flexDirection: "row",
-  flexWrap: "wrap",
-}}>
-{dice.slice(7, dice.length).map((item) => {
-  return (
-    <TouchableOpacity
-      key={item.id}
-      style={styles.dices}
-      onPress={() => callDiceChose(item.id)}>
-      <MaterialCommunityIcons
-        name={item.name}
-        size={50}
-        color='black'
-        style={{ textAlign: "center", color: "white" }}
-      />
-      <Text
-        style={[
-          Style.textColor,
-          { textAlign: "center", fontSize: 20 },
-        ]}>
-        d{item.sides}
-      </Text>
-    </TouchableOpacity>
-  );
-})}
-</View> */
 }
