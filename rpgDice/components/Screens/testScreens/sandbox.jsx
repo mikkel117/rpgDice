@@ -6,40 +6,20 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import Styles from "../../../assets/styles/styles";
+import presets from "../Presets";
+
+//storage keys
+//presets
+//folders
+//dice
 
 export default function Sandbox() {
-  const [folder, setFolder] = useState([
-    { id: 1, name: "dragoin-slayer" },
-    { id: 2, name: "king-slayer" },
-    { id: 3, name: "hard-dungeons" },
-    { id: 4, name: "Lorem-Ipsum" },
-    { id: 5, name: "Lorem-Ipsum-Dolor-Sit" },
-  ]);
+  const [folder, setFolder] = useState([]);
   const [valTest, setValTest] = useState();
 
-  useEffect(() => {
-    setValTest("folders");
-    getData();
-  }, []);
-
-  const storeData = async () => {
-    try {
-      const jsonValue = JSON.stringify(folder);
-      await AsyncStorage.setItem("folders", jsonValue);
-    } catch (e) {
-      // saving error
-    }
-  };
-
-  const getData = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem(`${valTest}`);
-      let test = jsonValue != null ? JSON.parse(jsonValue) : null;
-      console.log("data", test);
-    } catch (e) {
-      // error reading value
-    }
-  };
+  /*   useEffect(() => {
+    keysCheck();
+  }, []); */
 
   getAllKeys = async () => {
     let keys = [];
@@ -58,7 +38,6 @@ export default function Sandbox() {
     } catch (e) {
       // clear error
     }
-    console.log("test");
     console.log("Done.");
   };
   return (
@@ -71,19 +50,31 @@ export default function Sandbox() {
         </View>
 
         <View>
-          {folder.map((data) => {
-            return (
-              <TouchableOpacity key={data.id}>
-                <Text
-                  style={[
-                    Styles.buttonStyle,
-                    { borderWidth: 1, margin: 5, padding: 10, fontSize: 20 },
-                  ]}>
-                  {data.name}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
+          {folder.length > 0 ? (
+            <>
+              {folder.map((data) => {
+                console.log("data", data);
+                return (
+                  <TouchableOpacity key={data.id}>
+                    <Text
+                      style={[
+                        Styles.buttonStyle,
+                        {
+                          borderWidth: 1,
+                          margin: 5,
+                          padding: 10,
+                          fontSize: 20,
+                        },
+                      ]}>
+                      {data.name}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </>
+          ) : (
+            <></>
+          )}
         </View>
       </SafeAreaView>
       <TouchableOpacity
