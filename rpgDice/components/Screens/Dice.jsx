@@ -278,7 +278,7 @@ export default function Dice() {
             onLongPress={() => {
               setDiceNumber(1);
             }}>
-            <AntDesign name='minuscircle' size={24} color='white' />
+            <AntDesign name='minuscircle' size={30} color='white' />
           </TouchableOpacity>
 
           <Text style={Style.diceNBuff} onPress={() => BuffInputCheck(2)}>
@@ -287,14 +287,12 @@ export default function Dice() {
 
           <TouchableOpacity
             onPress={() => {
-              if (diceNumber != 100) {
-                setDiceNumber((diceNumber) => diceNumber + 1);
-              }
+              setDiceNumber((diceNumber) => diceNumber + 1);
             }}
             onLongPress={() => {
-              setDiceNumber(100);
+              setDiceNumber((diceNumber) => diceNumber + 10);
             }}>
-            <AntDesign name='pluscircle' size={24} color='white' />
+            <AntDesign name='pluscircle' size={30} color='white' />
           </TouchableOpacity>
         </View>
 
@@ -304,7 +302,7 @@ export default function Dice() {
             onLongPress={() => {
               setBuff(0);
             }}>
-            <AntDesign name='minuscircle' size={24} color='white' />
+            <AntDesign name='minuscircle' size={30} color='white' />
           </TouchableOpacity>
 
           <Text style={Style.diceNBuff} onPress={() => BuffInputCheck(1)}>
@@ -314,9 +312,9 @@ export default function Dice() {
           <TouchableOpacity
             onPress={() => setBuff((buff) => buff + 1)}
             onLongPress={() => {
-              setBuff(100);
+              setBuff((buff) => buff + 10);
             }}>
-            <AntDesign name='pluscircle' size={24} color='white' />
+            <AntDesign name='pluscircle' size={30} color='white' />
           </TouchableOpacity>
         </View>
       </View>

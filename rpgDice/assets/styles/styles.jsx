@@ -38,6 +38,9 @@ const Style = StyleSheet.create({
     width: 100,
     textAlign: "center",
     color: "white",
+    fontSize: 20,
+    marginHorizontal: 10,
+    marginBottom: 10,
   },
 });
 

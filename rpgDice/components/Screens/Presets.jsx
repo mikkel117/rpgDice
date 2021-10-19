@@ -81,6 +81,7 @@ export default function presets({ navigation }) {
     }
   };
 
+  //a switch that returns a icon name
   const diceIconSelect = () => {
     let diceIcon;
     switch (selectedDice) {
@@ -593,13 +594,6 @@ export default function presets({ navigation }) {
                     Style.lightBackground,
                     { alignSelf: "center" },
                   ]}>
-                  {/*                   <Text
-                    style={[
-                      Style.textColor,
-                      { fontWeight: "bold", fontSize: 30 },
-                    ]}>
-                    {item.pDice}
-                  </Text> */}
                   <MaterialCommunityIcons
                     name={item.pIconName}
                     size={50}
@@ -672,10 +666,6 @@ export default function presets({ navigation }) {
           );
         })}
       </ScrollView>
-
-      <TouchableOpacity onPress={() => console.log(preSet)}>
-        <Text style={Style.buttonStyle}>log</Text>
-      </TouchableOpacity>
 
       <TouchableOpacity
         onPress={() => deleteAllPresets()}

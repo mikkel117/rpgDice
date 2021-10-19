@@ -13,62 +13,47 @@ import Style from "../../../assets/styles/styles";
 //folders
 //dice
 
-const returnTest = () => {
-  let number = Math.floor(Math.random() * 10) + 1;
-  let returnNumbers;
-  switch (number) {
-    case 1:
-      returnNumbers = 1;
-      break;
-    case 2:
-      returnNumbers = 2;
-      break;
-    case 3:
-      returnNumbers = 3;
-      break;
-    case 4:
-      returnNumbers = 4;
-      break;
-    case 5:
-      returnNumbers = 5;
-      break;
-    case 6:
-      returnNumbers = 6;
-      break;
-    case 7:
-      returnNumbers = 7;
-      break;
-    case 8:
-      returnNumbers = 8;
-      break;
-    case 9:
-      returnNumbers = 9;
-      break;
-    case 10:
-      returnNumbers = 10;
-      break;
-
-    default:
-      break;
-  }
-  return returnNumbers;
-};
-
-const callReturnTest = () => {
-  let returnNumber = returnTest();
-  console.log(returnNumber);
-};
-
 export default function Sandbox() {
+  const [number, setNumber] = useState(0);
+
+  const Plus = () => {
+    /* setPlus(100); */
+    if (number != 100 && number < 100) {
+      setNumber((number) => number + 20);
+      if (number > 100) {
+        setNumber(100);
+      }
+    }
+  };
+  const Minus = () => {
+    if (number != 0) {
+      setNumber((number) => number - 10);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <View>
+      <View style={{ alignSelf: "center" }}>
         <Text style={[Style.textColor, { fontSize: 40 }]}>
           welcome to sandbox
         </Text>
       </View>
-      <TouchableOpacity onPress={() => callReturnTest()}>
-        <Text style={Style.buttonStyle}>click me</Text>
+      <TouchableOpacity
+        onLongPress={() => Plus()}
+        onPress={() => setNumber((number) => number + 1)}
+        style={{ borderWidth: 2 }}>
+        <Text style={Style.buttonStyle}>+</Text>
+      </TouchableOpacity>
+
+      <View style={{ alignItems: "center", marginVertical: 10 }}>
+        <Text style={[Style.textColor, Style.defoultFont]}>{number}</Text>
+      </View>
+
+      <TouchableOpacity
+        onLongPress={() => Minus()}
+        onPress={() => setNumber((number) => number - 1)}
+        style={{ borderWidth: 2 }}>
+        <Text style={Style.buttonStyle}>-</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -78,7 +63,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#2E2E2E",
-    alignItems: "center",
   },
   input: {
     borderWidth: 1,
