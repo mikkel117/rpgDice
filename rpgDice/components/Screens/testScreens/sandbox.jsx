@@ -58,10 +58,9 @@ export default function Sandbox() {
     } catch (e) {
       // clear error
     }
-
+    console.log("test");
     console.log("Done.");
   };
-
   return (
     <View style={styles.container}>
       <SafeAreaView>
