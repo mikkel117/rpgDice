@@ -1,93 +1,110 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-import { Text, View, StyleSheet, Button } from "react-native";
+import { Text, View, StyleSheet, Button, TouchableOpacity } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { FontAwesome5 } from "@expo/vector-icons";
-
-function HomeScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Home!</Text>
-    </View>
-  );
-}
-
-function Setting() {
-  return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>setting</Text>
-    </View>
-  );
-}
-
-function EditProfile() {
-  return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>edit profile</Text>
-    </View>
-  );
-}
-/* <FontAwesome5 name="dice-d20" size={24} color="black" /> */
-/* history */
-/* edit */
-
-const screenOptions = (route) => {
-  let iconName;
-  switch (route.route.name) {
-    case "Home":
-      iconName = "dice-d20";
-      break;
-    case "Historie":
-      iconName = "history";
-      break;
-    case "Edit":
-      iconName = "edit";
-      break;
-    default:
-      break;
-  }
-  return <FontAwesome5 name={iconName} size={24} color='white' />;
-};
-
-const Tab = createBottomTabNavigator();
+import Styles from "../../../assets/styles/styles";
 
 export default function Sandbox() {
+  const [folder, setFolder] = useState([
+    { id: 1, name: "dragoin-slayer" },
+    { id: 2, name: "king-slayer" },
+    { id: 3, name: "hard-dungeons" },
+    { id: 4, name: "Lorem-Ipsum" },
+    { id: 5, name: "Lorem-Ipsum-Dolor-Sit" },
+  ]);
+  const [valTest, setValTest] = useState();
+
+  useEffect(() => {
+    setValTest("folders");
+    getData();
+  }, []);
+
+  const storeData = async () => {
+    try {
+      const jsonValue = JSON.stringify(folder);
+      await AsyncStorage.setItem("folders", jsonValue);
+    } catch (e) {
+      // saving error
+    }
+  };
+
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem(`${valTest}`);
+      let test = jsonValue != null ? JSON.parse(jsonValue) : null;
+      console.log("data", test);
+    } catch (e) {
+      // error reading value
+    }
+  };
+
+  getAllKeys = async () => {
+    let keys = [];
+    try {
+      keys = await AsyncStorage.getAllKeys();
+    } catch (e) {
+      // read key error
+    }
+
+    console.log(keys);
+  };
+
+  clearAll = async () => {
+    try {
+      await AsyncStorage.clear();
+    } catch (e) {
+      // clear error
+    }
+
+    console.log("Done.");
+  };
+
   return (
-    <>
-      <NavigationContainer>
-        <Tab.Navigator
-          screenOptions={(route) => ({
-            tabBarIcon: () => screenOptions(route),
-            tabBarLabelPosition: "below-icon",
-            tabBarLabelStyle: {
-              fontWeight: "700",
-              fontSize: 13,
-            },
-            tabBarStyle: {
-              backgroundColor: "#3b3b3b",
-              padding: 0,
-            },
-            tabBarItemStyle: {
+    <View style={styles.container}>
+      <SafeAreaView>
+        <Text style={styles.color}>Welcome</Text>
+        <Button title='store data' onPress={() => storeData()} />
+        <View style={{ marginTop: 20 }}>
+          <Button title='get all keys' onPress={() => getAllKeys()} />
+        </View>
+
+        <View>
+          {folder.map((data) => {
+            return (
+              <TouchableOpacity key={data.id}>
+                <Text
+                  style={[
+                    Styles.buttonStyle,
+                    { borderWidth: 1, margin: 5, padding: 10, fontSize: 20 },
+                  ]}>
+                  {data.name}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      </SafeAreaView>
+      <TouchableOpacity
+        style={{ alignSelf: "flex-end", justifyContent: "flex-end" }}
+        onPress={() => clearAll()}>
+        <Text
+          style={[
+            Styles.buttonStyle,
+            {
               borderWidth: 1,
+              margin: 5,
+              padding: 10,
+              fontSize: 15,
+              backgroundColor: "red",
             },
-            headerStyle: {
-              backgroundColor: "#3b3b3b",
-            },
-            headerTintColor: "white",
-            headerTitleAlign: "center",
-            tabBarActiveBackgroundColor: "#2E2E2E",
-            tabBarActiveTintColor: "blue",
-            tabBarInactiveTintColor: "white",
-          })}>
-          <Tab.Screen name='Home' component={HomeScreen} />
-          <Tab.Screen name='Historie' component={Setting} />
-          <Tab.Screen name='Edit' component={EditProfile} />
-        </Tab.Navigator>
-      </NavigationContainer>
-    </>
+          ]}>
+          CLEAR ALL KEYS
+        </Text>
+      </TouchableOpacity>
+    </View>
   );
 }
 
