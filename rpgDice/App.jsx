@@ -1,8 +1,8 @@
 /* import { StatusBar } from 'expo-status-bar'; */
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Nav from "./components/Nav";
-import HistoryContextProvider from "./components/context/HistoryConstext";
-import DiceContextProvider from "./components/context/DiceConstext";
+import HistoryContextProvider from "./components/context/HistoryContext";
+import DiceContextProvider from "./components/context/DiceContext";
 import Sandbox from "./components/Screens/testScreens/sandbox";
 //dice icons
 //https://oblador.github.io/react-native-vector-icons/
@@ -13,6 +13,7 @@ import Sandbox from "./components/Screens/testScreens/sandbox";
 export default function App() {
   return (
     // <Sandbox />
+
     <DiceContextProvider>
       <HistoryContextProvider>
         <Nav />
