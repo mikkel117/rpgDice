@@ -130,7 +130,7 @@ export default function EditDice({ navigation }) {
         <View style={Style.lightBackground}>
           <TextInput
             keyboardType='number-pad'
-            style={[Style.input, { fontSize: 20 }]}
+            style={[Style.input, Style.defoultFont]}
             placeholder='Number of sides'
             placeholderTextColor='white'
             maxLength={3}
@@ -169,7 +169,7 @@ export default function EditDice({ navigation }) {
           </Text>
           <TextInput
             keyboardType='number-pad'
-            style={[Style.input, Style.defoultFont]}
+            style={[Style.input]}
             placeholder={`d${dice[index].sides}`}
             placeholderTextColor='white'
             maxLength={3}
@@ -197,7 +197,7 @@ export default function EditDice({ navigation }) {
       </Modal>
 
       <View style={{ alignItems: "center" }}>
-        <Text style={[Style.textColor, { fontSize: 25 }]}>
+        <Text style={[Style.textColor, Style.defoultFont]}>
           create and edit dice here
         </Text>
         <TouchableOpacity onPress={() => setNewDice(true)}>
@@ -223,7 +223,7 @@ export default function EditDice({ navigation }) {
                       style={{ textAlign: "center", color: "white" }}
                     />
                     <View style={{ justifyContent: "center" }}>
-                      <Text style={[Style.textColor, { fontSize: 20 }]}>
+                      <Text style={[Style.textColor, Style.defoultFont]}>
                         d{item.sides}
                       </Text>
                     </View>
@@ -255,7 +255,7 @@ export default function EditDice({ navigation }) {
         ) : (
           <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-            <Text style={[Style.textColor, { fontSize: 20 }]}>Empty</Text>
+            <Text style={[Style.textColor, Style.defoultFont]}>Empty</Text>
           </View>
         )}
       </View>
@@ -287,9 +287,11 @@ const styles = StyleSheet.create({
   },
   diceContainer: {
     borderBottomWidth: 1,
-    margin: 5,
+    borderTopWidth: 1,
+    marginVertical: 5,
     padding: 5,
     paddingVertical: 10,
+    borderColor: "gray",
     flexDirection: "row",
     alignItems: "center",
   },

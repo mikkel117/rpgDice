@@ -281,7 +281,7 @@ export default function presets({ navigation }) {
         <View style={Style.lightBackground}>
           <TextInput
             keyboardType='default'
-            style={[Style.input, { fontSize: 20 }]}
+            style={[Style.input]}
             placeholder='enter a name'
             placeholderTextColor='white'
             maxLength={30}
@@ -293,7 +293,7 @@ export default function presets({ navigation }) {
               marginHorizontal: 10,
               marginVertical: 20,
               borderWidth: 1,
-              borderColor: "blue",
+              borderColor: "#A9CEC2",
             }}>
             <Picker
               selectedValue={selectedDice}
@@ -330,7 +330,11 @@ export default function presets({ navigation }) {
 
             <View style={styles.diceNBuff}>
               <Text
-                style={{ color: "white", textAlign: "center", fontSize: 20 }}>
+                style={[
+                  Style.textColor,
+                  Style.defoultFont,
+                  { textAlign: "center" },
+                ]}>
                 {diceNumber}d
               </Text>
             </View>
@@ -361,7 +365,11 @@ export default function presets({ navigation }) {
 
             <View style={styles.diceNBuff}>
               <Text
-                style={{ color: "white", textAlign: "center", fontSize: 20 }}>
+                style={[
+                  Style.defoultFont,
+                  Style.textColor,
+                  { textAlign: "center" },
+                ]}>
                 {buff}
               </Text>
             </View>
@@ -403,7 +411,7 @@ export default function presets({ navigation }) {
           <View style={Style.lightBackground}>
             <TextInput
               keyboardType='default'
-              style={[Style.input, { fontSize: 20 }]}
+              style={[Style.input]}
               placeholder={preSet[updateId].pName}
               placeholderTextColor='white'
               maxLength={30}
@@ -415,7 +423,7 @@ export default function presets({ navigation }) {
                 marginHorizontal: 10,
                 marginVertical: 20,
                 borderWidth: 1,
-                borderColor: "blue",
+                borderColor: "#A9CEC2",
               }}>
               <Picker
                 selectedValue={selectedDice}
@@ -452,7 +460,11 @@ export default function presets({ navigation }) {
 
               <View style={styles.diceNBuff}>
                 <Text
-                  style={{ color: "white", textAlign: "center", fontSize: 20 }}>
+                  style={[
+                    Style.defoultFont,
+                    Style.textColor,
+                    { textAlign: "center" },
+                  ]}>
                   {diceNumber}d
                 </Text>
               </View>
@@ -482,7 +494,11 @@ export default function presets({ navigation }) {
 
               <View style={styles.diceNBuff}>
                 <Text
-                  style={{ color: "white", textAlign: "center", fontSize: 20 }}>
+                  style={[
+                    Style.defoultFont,
+                    Style.textColor,
+                    { textAlign: "center" },
+                  ]}>
                   {buff}
                 </Text>
               </View>
@@ -527,7 +543,11 @@ export default function presets({ navigation }) {
           <View style={[Style.lightBackground]}>
             <View style={{ alignItems: "center" }}>
               <Text
-                style={[Style.textColor, { fontSize: 20, marginBottom: 5 }]}>
+                style={[
+                  Style.textColor,
+                  Style.defoultFont,
+                  { marginBottom: 5 },
+                ]}>
                 {rollArray[0].diceNumber}d{rollArray[0].dice}
                 {rollArray[0].buff ? (
                   <>
@@ -546,7 +566,11 @@ export default function presets({ navigation }) {
                 {rollArray[0].resoult}
               </Text>
               <Text
-                style={[Style.textColor, { fontSize: 20, marginBottom: 10 }]}>
+                style={[
+                  Style.textColor,
+                  Style.defoultFont,
+                  { marginBottom: 10 },
+                ]}>
                 {rollArray[0].rollArray.map((data) => {
                   return (
                     <Text key={data.key} style={[Style.textColor]}>
@@ -586,9 +610,11 @@ export default function presets({ navigation }) {
                 key={item.id}
                 style={{
                   width: "100%",
+                  borderTopWidth: 1,
                   borderBottomWidth: 1,
                   borderColor: "gray",
                   padding: 10,
+                  marginVertical: 10,
                   flex: 1,
                 }}>
                 <View style={{ flex: 1, flexDirection: "row" }}>
@@ -612,7 +638,7 @@ export default function presets({ navigation }) {
                       justifyContent: "space-around",
                       flex: 1,
                     }}>
-                    <Text style={[Style.textColor, styles.font]}>
+                    <Text style={[Style.textColor, Style.defoultFont]}>
                       {item.pDiceNumber}d{item.pDice}
                       {item.pBuff ? (
                         <>
@@ -636,7 +662,7 @@ export default function presets({ navigation }) {
                   <View style={{ flex: 1, alignSelf: "center" }}>
                     <Text
                       style={[
-                        styles.font,
+                        Style.defoultFont,
                         Style.textColor,
                         {
                           marginBottom: 5,
@@ -709,9 +735,6 @@ const styles = StyleSheet.create({
     height: 90,
     alignItems: "center",
     justifyContent: "center",
-  },
-  font: {
-    fontSize: 20,
   },
   buttonStyle: {
     color: "black",

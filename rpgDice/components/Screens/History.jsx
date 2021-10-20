@@ -62,12 +62,11 @@ export default function History() {
                     {data.hRolled.map((item) => {
                       return (
                         <Text key={item.key} style={Style.textColor}>
-                          {" "}
                           {data.hRolled.length == 1 ? (
                             <>{item.item}</>
                           ) : (
                             <>{item.item},</>
-                          )}{" "}
+                          )}
                         </Text>
                       );
                     })}

@@ -23,13 +23,15 @@ export default function Dice() {
   const { history, setHistory } = useContext(HistoryContext);
   const { dice, setDice } = useContext(DiceContext);
 
-  const [newDice, setNewDice] = useState(false);
-  const [diceVal, setDiceVal] = useState();
+  /*   const [newDice, setNewDice] = useState(false);
+  const [diceVal, setDiceVal] = useState(); */
 
   //opens the modal to see the dice thow details
   const [modanOpen, setModanOpen] = useState(false);
   //set the number of dices that needs to be thowen
   const [diceNumber, setDiceNumber] = useState(1);
+
+  const [diceNumberInput, setDiecNumberInput] = useState(1);
   //see if the number of dice has been pressed
   const [diceInput, setDiceInput] = useState(false);
   //the curent dice
@@ -42,6 +44,8 @@ export default function Dice() {
 
   //saves the buff
   const [buff, setBuff] = useState(0);
+
+  const [uBuffInput, setUBuffInput] = useState(0);
   //see if the buff has been pressed
   const [buffInput, setBuffInput] = useState(false);
   //if the buff is + or -
@@ -140,16 +144,19 @@ export default function Dice() {
 
   //check if the user has given a wrong input
   const ZeroCheck = () => {
+    let diceNumber = diceNumberInput;
+    let buff = uBuffInput;
+    /* setDiceNumber(diceNumberInput); */
+    /* setBuff(uBuffInput); */
     if (buffInput == true) {
+      setBuff(buff);
       if (buff == "") {
         setBuff(0);
       }
     } else {
+      setDiceNumber(diceNumber);
       if (diceNumber == "" || diceNumber < 0 || diceNumber == 0) {
         setDiceNumber(1);
-      }
-      if (diceNumber > 100) {
-        setDiceNumber(100);
       }
     }
     //sets the inputs to int(number)
@@ -176,7 +183,11 @@ export default function Dice() {
               style={{ textAlign: "center", color: "white" }}
             />
             <Text
-              style={[Style.textColor, { textAlign: "center", fontSize: 20 }]}>
+              style={[
+                Style.textColor,
+                Style.defoultFont,
+                { textAlign: "center" },
+              ]}>
               d{item.sides}
             </Text>
           </TouchableOpacity>
@@ -188,7 +199,8 @@ export default function Dice() {
           <Text
             style={[
               Style.textColor,
-              { textAlign: "center", fontSize: 20, paddingBottom: 5 },
+              Style.defoultFont,
+              { textAlign: "center", paddingBottom: 5 },
             ]}>
             {diceNumber}d{curentDice}
             {buff ? <>{buffplus ? <>+{buff}</> : <>{buff}</>} </> : <></>}
@@ -205,17 +217,13 @@ export default function Dice() {
           <Text
             style={[
               Style.textColor,
-              { textAlign: "center", fontSize: 20, paddingBottom: 5 },
+              Style.defoultFont,
+              { textAlign: "center", paddingBottom: 5 },
             ]}>
             {rolled.map((data) => {
               return (
                 <Text key={data.key}>
-                  {" "}
-                  {rolled.length == 1 ? (
-                    <>{data.item}</>
-                  ) : (
-                    <>{data.item},</>
-                  )}{" "}
+                  {rolled.length == 1 ? <>{data.item}</> : <>{data.item},</>}
                 </Text>
               );
             })}
@@ -231,39 +239,44 @@ export default function Dice() {
         <View style={Style.lightBackground}>
           {buffInput ? (
             <>
-              {Platform.OS == "android" ? (
-                <TextInput
-                  keyboardType='numeric'
-                  style={Style.input}
-                  placeholder='1'
-                  placeholderTextColor='white'
-                  onChangeText={(val) => setBuff(val)}
-                />
-              ) : (
-                <TextInput
-                  keyboardType='default'
-                  style={Style.input}
-                  placeholder='1'
-                  placeholderTextColor='white'
-                  onChangeText={(val) => setBuff(val)}
-                />
-              )}
+              <TextInput
+                keyboardType='numeric'
+                style={Style.input}
+                placeholder='0'
+                maxLength={3}
+                placeholderTextColor='white'
+                onChangeText={(val) => setUBuffInput(val)}
+              />
             </>
           ) : (
             <TextInput
               keyboardType='numeric'
               style={Style.input}
               placeholder='1d'
+              maxLength={3}
               placeholderTextColor='white'
-              onChangeText={(val) => setDiceNumber(val)}
+              onChangeText={(val) => setDiecNumberInput(val)}
             />
           )}
-          <TouchableOpacity
-            onPress={() => {
-              ZeroCheck();
-            }}>
-            <Text style={Style.buttonStyle}> close </Text>
-          </TouchableOpacity>
+          <View style={{ flexDirection: "row" }}>
+            <TouchableOpacity
+              style={{ flexBasis: "45%" }}
+              onPress={() => setDiceInput(false)}>
+              <Text style={Style.buttonStyle}>close</Text>
+            </TouchableOpacity>
+
+            <View style={{ flexBasis: "10%" }}></View>
+
+            <TouchableOpacity
+              onPress={() => {
+                ZeroCheck();
+              }}
+              style={{ flexBasis: "45%" }}>
+              <Text style={[Style.buttonStyle, { backgroundColor: "green" }]}>
+                set
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
 

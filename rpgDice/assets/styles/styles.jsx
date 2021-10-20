@@ -5,7 +5,7 @@ const Style = StyleSheet.create({
     backgroundColor: "#2E2E2E",
   },
   lightBackground: {
-    backgroundColor: "#3b3b3b",
+    backgroundColor: "#47494E",
   },
   textColor: {
     color: "white",
@@ -18,14 +18,15 @@ const Style = StyleSheet.create({
     textAlign: "center",
     fontSize: 18,
     padding: 10,
-    backgroundColor: "blue",
+    backgroundColor: "#5D686F",
   },
   input: {
     color: "white",
     borderWidth: 1,
-    borderColor: "blue",
+    borderColor: "#A9CEC2",
     padding: 8,
     margin: 10,
+    fontSize: 20,
   },
   DiceNBuffContainer: {
     flexDirection: "row",

@@ -39,7 +39,7 @@ function StackScreen() {
       screenOptions={{
         /* headerShown: false, */
         headerStyle: {
-          backgroundColor: "#3b3b3b",
+          backgroundColor: "#47494E",
         },
         headerTintColor: "white",
         headerTitleAlign: "center",
@@ -66,18 +66,18 @@ export default function Nav() {
             fontSize: 20,
           },
           tabBarStyle: {
-            backgroundColor: "#3b3b3b",
+            backgroundColor: "#47494E",
           },
           tabBarItemStyle: {
             borderWidth: 1,
           },
           headerStyle: {
-            backgroundColor: "#3b3b3b",
+            backgroundColor: "#47494E",
           },
           headerTintColor: "white",
           headerTitleAlign: "center",
-          tabBarActiveBackgroundColor: "#2E2E2E",
-          tabBarActiveTintColor: "blue",
+          tabBarActiveBackgroundColor: "#47494E",
+          tabBarActiveTintColor: "#A9CEC2",
           tabBarInactiveTintColor: "white",
         })}>
         <Tab.Screen name='Home' component={Dice} />
