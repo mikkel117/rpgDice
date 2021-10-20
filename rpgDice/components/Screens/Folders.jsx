@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Text, View, StyleSheet, Button, TouchableOpacity } from "react-native";
 import Style from "../../assets/styles/styles";
 
+import { SettingsContext } from "../context/SettingsContext";
+
 export default function Folders() {
+  const { firstTime, setFirstTime, preSetDefoult, setPreSetDefoult } =
+    useContext(SettingsContext);
   const [folder, setFolder] = useState([
     {
       id: 1,
@@ -26,13 +30,17 @@ export default function Folders() {
       ],
     },
   ]);
-  const [index, setIndex] = useState(0);
+
+  //********************************************************** */
+  //folder
+  const [Folderindex, setFolderIndex] = useState(0);
   const [showFolder, setShowFolder] = useState(true);
   const [folderClicked, setFolderClicked] = useState(false);
+  //********************************************************** */
 
   const getIndex = (id) => {
     let index = folder.findIndex((obj) => obj.id == id);
-    setIndex(index);
+    setFolderIndex(index);
     /* setFolderClicked(true); */
     setShowFolder(false);
   };
@@ -76,7 +84,7 @@ export default function Folders() {
                 <Text style={Style.buttonStyle}>go Back</Text>
               </TouchableOpacity>
             </View>
-            {folder[index].items.map((data) => {
+            {folder[Folderindex].items.map((data) => {
               return (
                 <View key={data.id}>
                   <Text style={[Style.defoultFont, Style.textColor]}>

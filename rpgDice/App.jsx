@@ -3,6 +3,7 @@ import React from "react";
 import Nav from "./components/Nav";
 import HistoryContextProvider from "./components/context/HistoryContext";
 import DiceContextProvider from "./components/context/DiceContext";
+import SettingsContextProvider from "./components/context/SettingsContext";
 import Sandbox from "./components/Screens/testScreens/sandbox";
 //dice icons
 //https://oblador.github.io/react-native-vector-icons/
@@ -13,11 +14,12 @@ import Sandbox from "./components/Screens/testScreens/sandbox";
 export default function App() {
   return (
     // <Sandbox />
-
-    <DiceContextProvider>
-      <HistoryContextProvider>
-        <Nav />
-      </HistoryContextProvider>
-    </DiceContextProvider>
+    <SettingsContextProvider>
+      <DiceContextProvider>
+        <HistoryContextProvider>
+          <Nav />
+        </HistoryContextProvider>
+      </DiceContextProvider>
+    </SettingsContextProvider>
   );
 }

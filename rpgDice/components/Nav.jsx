@@ -49,7 +49,11 @@ function StackScreen() {
         headerTitleAlign: "center",
         animation: "fade",
       }}>
-      <Stack.Screen name='setting' component={settings} />
+      <Stack.Screen
+        name='setting'
+        component={settings}
+        options={{ headerShown: false }}
+      />
       <Stack.Screen
         name='folders'
         component={Folders}
@@ -65,7 +69,19 @@ function StackScreen() {
       />
 
       <Stack.Screen name='EditDice' component={EditDice} />
-      <Stack.Screen name='preset' component={Presets} />
+      <Stack.Screen
+        name='preset'
+        component={Presets}
+        options={({ navigation }) => ({
+          headerRight: () => (
+            <View>
+              <TouchableOpacity onPress={() => navigation.navigate("folders")}>
+                <Text style={Style.buttonStyle}>folders</Text>
+              </TouchableOpacity>
+            </View>
+          ),
+        })}
+      />
     </Stack.Navigator>
   );
 }
