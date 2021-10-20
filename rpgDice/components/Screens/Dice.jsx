@@ -15,8 +15,8 @@ import { AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import Style from "../../assets/styles/styles";
-import { HistoryContext } from "../context/HistoryConstext";
-import { DiceContext } from "../context/DiceConstext";
+import { HistoryContext } from "../context/HistoryContext";
+import { DiceContext } from "../context/DiceContext";
 
 export default function Dice() {
   //saves all the thowes in the app as long as it is open

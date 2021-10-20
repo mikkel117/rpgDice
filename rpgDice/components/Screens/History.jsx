@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Text, View, ScrollView, StyleSheet } from "react-native";
 
-import { HistoryContext } from "../context/HistoryConstext";
+import { HistoryContext } from "../context/HistoryContext";
 import Style from "../../assets/styles/styles";
 
 export default function History() {

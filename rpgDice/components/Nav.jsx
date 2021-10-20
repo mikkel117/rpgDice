@@ -1,4 +1,5 @@
 import React from "react";
+import { View, Text, TouchableOpacity } from "react-native";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -11,8 +12,11 @@ import Historie from "./Screens/History";
 import Presets from "./Screens/Presets";
 import EditDice from "./Screens/EditDice";
 import settings from "./Screens/settings";
+import Folders from "./Screens/Folders";
 
 import SandBox from "./Screens/testScreens/sandbox";
+
+import Style from "../assets/styles/styles";
 
 const screenOptions = (route) => {
   let iconName;
@@ -46,8 +50,22 @@ function StackScreen() {
         animation: "fade",
       }}>
       <Stack.Screen name='setting' component={settings} />
-      <Stack.Screen name='preset' component={Presets} />
+      <Stack.Screen
+        name='folders'
+        component={Folders}
+        options={({ navigation }) => ({
+          headerRight: () => (
+            <View>
+              <TouchableOpacity onPress={() => navigation.navigate("preset")}>
+                <Text style={Style.buttonStyle}>pre sets</Text>
+              </TouchableOpacity>
+            </View>
+          ),
+        })}
+      />
+
       <Stack.Screen name='EditDice' component={EditDice} />
+      <Stack.Screen name='preset' component={Presets} />
     </Stack.Navigator>
   );
 }

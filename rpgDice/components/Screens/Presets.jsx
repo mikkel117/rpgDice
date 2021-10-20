@@ -18,8 +18,8 @@ import { AntDesign } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 
 import Style from "../../assets/styles/styles";
-import { DiceContext } from "../context/DiceConstext";
-import { HistoryContext } from "../context/HistoryConstext";
+import { DiceContext } from "../context/DiceContext";
+import { HistoryContext } from "../context/HistoryContext";
 
 export default function presets({ navigation }) {
   const { dice } = useContext(DiceContext);

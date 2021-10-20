@@ -16,7 +16,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 
 import Style from "../../assets/styles/styles";
-import { DiceContext } from "../context/DiceConstext";
+import { DiceContext } from "../context/DiceContext";
 
 export default function EditDice({ navigation }) {
   const { dice, setDice } = useContext(DiceContext);

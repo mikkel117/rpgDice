@@ -10,7 +10,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Style from "../../../assets/styles/styles";
 
-import folders from "./folders";
+import folders from "./testFolders";
 import presets from "./preSets";
 
 //storage keys

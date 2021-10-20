@@ -3,7 +3,7 @@ import { Alert, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 import Style from "../../assets/styles/styles";
-import { HistoryContext } from "../context/HistoryConstext";
+import { HistoryContext } from "../context/HistoryContext";
 
 export default function settings({ navigation }) {
   const { setHistory } = useContext(HistoryContext);
@@ -34,9 +34,9 @@ export default function settings({ navigation }) {
         </Text>
 
         <TouchableOpacity
-          onPress={() => navigation.navigate("preset")}
+          onPress={() => navigation.navigate("folders")}
           style={{ borderWidth: 2, marginVertical: 10 }}>
-          <Text style={Style.buttonStyle}>go to preSet</Text>
+          <Text style={Style.buttonStyle}>go to folders</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
