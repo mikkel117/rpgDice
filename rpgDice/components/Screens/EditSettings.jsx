@@ -6,7 +6,9 @@ import Style from "../../assets/styles/styles";
 import { HistoryContext } from "../context/HistoryContext";
 import { SettingsContext } from "../context/SettingsContext";
 
-export default function settings({ navigation }) {
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+export default function EditSettings({ navigation }) {
   const { setHistory } = useContext(HistoryContext);
   const { preSetDefoult, setPreSetDefoult, firstTime, setFirstTime } =
     useContext(SettingsContext);
@@ -27,6 +29,14 @@ export default function settings({ navigation }) {
   const withoutFolders = () => {
     setPreSetDefoult(true);
     setFirstTime(false);
+  };
+
+  clearAll = async () => {
+    try {
+      await AsyncStorage.clear();
+    } catch (e) {
+      // clear error
+    }
   };
 
   return (
@@ -92,6 +102,7 @@ export default function settings({ navigation }) {
           <Text style={Style.buttonStyle}>go to edit dice</Text>
         </TouchableOpacity>
       </View>
+
       <View
         style={{
           flexBasis: "10%",

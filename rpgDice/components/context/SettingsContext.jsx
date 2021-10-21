@@ -4,13 +4,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export const SettingsContext = createContext();
 
 const SettingsContextProvider = (props) => {
-  /*   const [settingsArray, setSettingsAray] = useState([]);
+  const [firstTime, setFirstTime] = useState(true);
+  const [preSetDefoult, setPreSetDefoult] = useState(false);
+  /* const [settingsArray, setSettingsArray] = useState([]) */
   useEffect(() => {
     read();
   }, []);
 
   useEffect(() => {
-    setSettingsAray([{ value: firstTime }, { value: preSetDefoult }]);
     set();
   }, [firstTime, preSetDefoult]);
 
@@ -19,26 +20,33 @@ const SettingsContextProvider = (props) => {
       const jsonValue = await AsyncStorage.getItem("settings");
       let data = jsonValue != null ? JSON.parse(jsonValue) : null;
       if (data != null) {
-        console.log(data);
-      } else {
-        console.log("het");
+        setFirstTime(data[0].value);
+        setPreSetDefoult(data[1].value);
       }
     } catch (e) {
       console.log("read error", e);
     }
   };
 
+  const testCall = () => {
+    let settingsArray = [
+      { name: "first time", value: firstTime },
+      { name: "preset", value: preSetDefoult },
+    ];
+
+    return settingsArray;
+  };
+
   set = async () => {
     try {
-      const jsonValue = JSON.stringify(settingsArray);
+      const array = testCall();
+      const jsonValue = JSON.stringify(array);
       await AsyncStorage.setItem("settings", jsonValue);
     } catch (e) {
       console.log("set error", e);
     }
-  }; */
+  };
 
-  const [firstTime, setFirstTime] = useState(true);
-  const [preSetDefoult, setPreSetDefoult] = useState(false);
   return (
     <SettingsContext.Provider
       value={{ firstTime, setFirstTime, preSetDefoult, setPreSetDefoult }}>

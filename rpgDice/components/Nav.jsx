@@ -11,7 +11,7 @@ import Dice from "./Screens/Dice";
 import Historie from "./Screens/History";
 import Presets from "./Screens/Presets";
 import EditDice from "./Screens/EditDice";
-import settings from "./Screens/settings";
+import EditSettings from "./Screens/EditSettings";
 import Folders from "./Screens/Folders";
 
 import SandBox from "./Screens/testScreens/sandbox";
@@ -50,8 +50,8 @@ function StackScreen() {
         animation: "fade",
       }}>
       <Stack.Screen
-        name='setting'
-        component={settings}
+        name='Edit settings'
+        component={EditSettings}
         options={{ headerShown: false }}
       />
       <Stack.Screen
