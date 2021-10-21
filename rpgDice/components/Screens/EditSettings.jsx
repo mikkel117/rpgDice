@@ -12,19 +12,6 @@ export default function EditSettings({ navigation }) {
   const { setHistory } = useContext(HistoryContext);
   const { preSetDefoult, setPreSetDefoult, firstTime, setFirstTime } =
     useContext(SettingsContext);
-  const deleteAlert = () => {
-    Alert.alert(
-      "DELETE HISTORY",
-      "this will delete the history is what you want",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        { text: "delete", onPress: () => setHistory([]) },
-      ]
-    );
-  };
 
   const withoutFolders = () => {
     setPreSetDefoult(true);
@@ -100,40 +87,6 @@ export default function EditSettings({ navigation }) {
           onPress={() => navigation.navigate("EditDice")}
           style={{ borderWidth: 2 }}>
           <Text style={Style.buttonStyle}>go to edit dice</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View
-        style={{
-          flexBasis: "10%",
-          flexDirection: "row",
-          alignItems: "flex-end",
-        }}>
-        <TouchableOpacity
-          style={{ flexBasis: "45%" }}
-          onPress={() => setPreSetDefoult(!preSetDefoult)}>
-          <Text style={[Style.buttonStyle, { padding: 5, fontSize: 15 }]}>
-            toggle with/without
-          </Text>
-        </TouchableOpacity>
-
-        <View style={{ flexBasis: "10%" }}></View>
-
-        <TouchableOpacity
-          onPress={() => deleteAlert()}
-          style={{ flexBasis: "45%" }}>
-          <Text
-            style={[
-              Style.textColor,
-              {
-                backgroundColor: "red",
-                padding: 5,
-                fontSize: 15,
-                textAlign: "center",
-              },
-            ]}>
-            DELETE HISTORT
-          </Text>
         </TouchableOpacity>
       </View>
     </View>

@@ -127,7 +127,12 @@ export default function Nav() {
               <View>
                 <TouchableOpacity
                   onPress={() => navigation.navigate("settings")}>
-                  <Ionicons name='settings' size={30} color='black' />
+                  <Ionicons
+                    name='settings'
+                    size={30}
+                    color='white'
+                    style={{ marginRight: 15 }}
+                  />
                 </TouchableOpacity>
               </View>
             ),
