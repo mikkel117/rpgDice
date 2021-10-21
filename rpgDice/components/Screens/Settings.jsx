@@ -90,7 +90,7 @@ export default function Settings() {
         </TouchableOpacity>
       </View>
       <View style={{ flexBasis: "25%" }}>
-        <View style={{ borderBottomWidth: 1 }}>
+        <View style={{ borderBottomWidth: 2 }}>
           <Text
             style={[
               Style.textColor,
@@ -99,7 +99,12 @@ export default function Settings() {
             DANGER ZONE
           </Text>
         </View>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View
+          style={{
+            flexDirection: "row",
+            flex: 1,
+            alignItems: "center",
+          }}>
           <TouchableOpacity
             style={{ flexBasis: "45%" }}
             onPress={() => deleteHistorieAlert()}>

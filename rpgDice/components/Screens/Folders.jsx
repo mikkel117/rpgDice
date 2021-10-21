@@ -1,7 +1,20 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Text, View, StyleSheet, Button, TouchableOpacity } from "react-native";
-import Style from "../../assets/styles/styles";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Button,
+  TouchableOpacity,
+  TextInput,
+  SafeAreaView,
+  ScrollView,
+} from "react-native";
+import Modal from "react-native-modal";
 
+import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+
+import Style from "../../assets/styles/styles";
 import { SettingsContext } from "../context/SettingsContext";
 
 export default function Folders() {
@@ -24,7 +37,7 @@ export default function Folders() {
     },
     {
       id: 3,
-      name: "Peter the knith",
+      name: "Peter the knight",
       items: [
         { id: 1, name: "Sword attack", numberOfDice: 1, dice: 20, buff: 10 },
       ],
@@ -32,46 +45,156 @@ export default function Folders() {
   ]);
 
   //********************************************************** */
-  //folder
+  //folder state
   const [Folderindex, setFolderIndex] = useState(0);
   const [showFolder, setShowFolder] = useState(true);
-  const [folderClicked, setFolderClicked] = useState(false);
+  const [newFolder, setNewFolder] = useState(false);
+  const [folderName, setFolderName] = useState("");
+  /* const [folderClicked, setFolderClicked] = useState(false); */
   //********************************************************** */
+
+  const createUpdateFolder = () => {
+    let name = folderName;
+    let time = new Date();
+    if (name == "") {
+      name = time.toLocaleString();
+    }
+    setNewFolder(false);
+    setFolder([
+      ...folder,
+      {
+        id: time.toLocaleString(),
+        name: name,
+        items: [],
+      },
+    ]);
+  };
 
   const getIndex = (id) => {
     let index = folder.findIndex((obj) => obj.id == id);
     setFolderIndex(index);
-    /* setFolderClicked(true); */
     setShowFolder(false);
   };
 
   return (
     <View style={styles.container}>
-      <View style={{ alignSelf: "center" }}>
-        <Text style={[Style.textColor, { fontSize: 40 }]}>
-          welcome to sandbox
-        </Text>
-      </View>
-      <View style={{ flex: 1, alignItems: "center" }}>
+      <Modal
+        isVisible={newFolder}
+        coverScreen={true}
+        style={{ margin: 0, flex: 1 }}>
+        <View style={[Style.lightBackground, {}]}>
+          <TextInput
+            keyboardType='default'
+            style={[Style.input, Style.defoultFont]}
+            placeholder='folder name'
+            placeholderTextColor='white'
+            maxLength={30}
+            onChangeText={(val) => {
+              if (val != 0) setFolderName(val);
+            }}
+          />
+          <View style={{ flexDirection: "row" }}>
+            <TouchableOpacity
+              style={{ flexBasis: "45%" }}
+              onPress={() => setNewFolder(false)}>
+              <Text style={[Style.buttonStyle]}>close</Text>
+            </TouchableOpacity>
+            <View style={{ flexBasis: "10%" }}></View>
+            <TouchableOpacity
+              style={{ flexBasis: "45%" }}
+              onPress={() => createUpdateFolder()}>
+              <Text style={[Style.buttonStyle, { backgroundColor: "green" }]}>
+                create
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      <View style={{ alignItems: "center" }}>
         {showFolder ? (
           <>
+            <TouchableOpacity onPress={() => setNewFolder(true)}>
+              <MaterialIcons name='create-new-folder' size={30} color='white' />
+            </TouchableOpacity>
+            <Text style={[Style.defoultFont, Style.textColor]}>
+              create and edit folders here
+            </Text>
+          </>
+        ) : (
+          <>
+            <TouchableOpacity onPress={() => console.log("new preset")}>
+              <MaterialIcons name='create-new-folder' size={30} color='white' />
+            </TouchableOpacity>
+            <Text style={[Style.defoultFont, Style.textColor]}>
+              create and edit presets here
+            </Text>
+          </>
+        )}
+      </View>
+      <View style={{ flex: 1 }}>
+        {showFolder ? (
+          <ScrollView style={{ flex: 1 }}>
             {folder.map((data) => {
               return (
-                <TouchableOpacity
+                <View
                   key={data.id}
-                  onPress={() => getIndex(data.id)}>
-                  <Text
+                  style={{
+                    borderTopWidth: 1,
+                    borderBottomWidth: 1,
+                    borderColor: "gray",
+                    padding: 10,
+                    marginVertical: 10,
+                    flex: 1,
+                    flexDirection: "row",
+                  }}>
+                  <View
                     style={[
-                      Style.defoultFont,
-                      Style.textColor,
-                      { padding: 10, margin: 10, backgroundColor: "blue" },
+                      {
+                        flex: 1,
+                      },
                     ]}>
-                    {data.name}
-                  </Text>
-                </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[
+                        Style.lightBackground,
+                        { height: 70, justifyContent: "center" },
+                      ]}
+                      onPress={() => getIndex(data.id)}>
+                      <Text
+                        style={[
+                          Style.textColor,
+                          Style.defoultFont,
+                          { textAlign: "center" },
+                        ]}>
+                        {data.name}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View
+                    style={{
+                      flex: 1,
+                      flexDirection: "row",
+                      justifyContent: "space-around",
+                      alignItems: "center",
+                    }}>
+                    <TouchableOpacity>
+                      <MaterialIcons name='delete' size={40} color='red' />
+                    </TouchableOpacity>
+
+                    {/* <View style={{ width: 20 }}></View> */}
+
+                    <TouchableOpacity>
+                      <MaterialCommunityIcons
+                        name='content-save-edit'
+                        size={40}
+                        color='white'
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
               );
             })}
-          </>
+          </ScrollView>
         ) : (
           <>
             <View
@@ -114,5 +237,11 @@ const styles = StyleSheet.create({
   color: {
     fontSize: 20,
     color: "white",
+  },
+  diceContainer: {
+    width: 90,
+    height: 90,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
