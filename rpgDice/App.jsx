@@ -1,6 +1,7 @@
 /* import { StatusBar } from 'expo-status-bar'; */
 import React from "react";
 import Nav from "./components/Nav";
+
 import HistoryContextProvider from "./components/context/HistoryContext";
 import DiceContextProvider from "./components/context/DiceContext";
 import SettingsContextProvider from "./components/context/SettingsContext";

@@ -6,6 +6,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { FontAwesome5 } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 import Dice from "./Screens/Dice";
 import Historie from "./Screens/History";
@@ -13,6 +14,7 @@ import Presets from "./Screens/Presets";
 import EditDice from "./Screens/EditDice";
 import EditSettings from "./Screens/EditSettings";
 import Folders from "./Screens/Folders";
+import Settings from "./Screens/Settings";
 
 import SandBox from "./Screens/testScreens/sandbox";
 
@@ -82,6 +84,7 @@ function StackScreen() {
           ),
         })}
       />
+      <Stack.Screen name='settings' component={Settings} />
     </Stack.Navigator>
   );
 }
@@ -116,7 +119,20 @@ export default function Nav() {
         })}>
         <Tab.Screen name='Home' component={Dice} />
         <Tab.Screen name='Historie' component={Historie} />
-        <Tab.Screen name='Edit' component={StackScreen} />
+        <Tab.Screen
+          name='Edit'
+          component={StackScreen}
+          options={({ navigation }) => ({
+            headerRight: () => (
+              <View>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("settings")}>
+                  <Ionicons name='settings' size={30} color='black' />
+                </TouchableOpacity>
+              </View>
+            ),
+          })}
+        />
         {/* <Tab.Screen name='Sandbox' component={SandBox} /> */}
       </Tab.Navigator>
     </NavigationContainer>
