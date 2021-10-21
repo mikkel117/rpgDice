@@ -1,12 +1,11 @@
 import React, { useContext, useState, useEffect, version } from "react";
 import { Alert, Text, View, TouchableOpacity } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import Style from "../../assets/styles/styles";
 import { HistoryContext } from "../context/HistoryContext";
 import { SettingsContext } from "../context/SettingsContext";
 import { DiceContext } from "../context/DiceContext";
-
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Settings() {
   const { setHistory } = useContext(HistoryContext);

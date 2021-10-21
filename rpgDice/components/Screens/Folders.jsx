@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import Modal from "react-native-modal";
 
+
 import { MaterialIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
@@ -210,7 +211,12 @@ export default function Folders() {
             {folder[Folderindex].items.map((data) => {
               return (
                 <View key={data.id}>
-                  <Text style={[Style.defoultFont, Style.textColor]}>
+                  <Text
+                    style={[
+                      Style.defoultFont,
+                      Style.textColor,
+                      { textAlign: "center" },
+                    ]}>
                     attack name {data.name}
                   </Text>
                 </View>
