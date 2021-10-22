@@ -1,66 +1,85 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
-import { Text, View, StyleSheet, Button, TouchableOpacity } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
-import { NavigationContainer, ThemeProvider } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+  Platform,
+  StatusBar,
+  Animated,
+  Pressable,
+} from "react-native";
 
 import Style from "../../../assets/styles/styles";
 
-import folders from "./testFolders";
-import presets from "./preSets";
-
-//storage keys
-//presets
-//folders
-//dice
-const Stack = createNativeStackNavigator();
 export default function Sandbox() {
-  const [preSetDefoult, setPreSetDefoult] = useState(false);
+  const [isOn, setIsOn] = useState(false);
+  const [color, setColor] = useState("green");
+
+  const translation = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (isOn == false) {
+      setColor("red");
+    } else {
+      setColor("green");
+    }
+  }, [isOn]);
+
+  const animate = () => {
+    setIsOn(!isOn);
+
+    Animated.timing(translation, {
+      toValue: isOn ? 0 : 40,
+      easing: Easing.bounce,
+      /* delay: 2000, */
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
+
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={({ navigation }) => ({
-          headerStyle: {
-            backgroundColor: "#47494E",
-          },
-          headerTintColor: "white",
-          headerTitleAlign: "center",
-          animation: "fade",
-        })}>
-        {preSetDefoult ? (
-          <Stack.Screen name='preset' component={presets} />
-        ) : (
-          <>
-            <Stack.Screen
-              name='Home'
-              component={folders}
-              options={({ navigation }) => ({
-                headerRight: () => (
-                  <View>
-                    <TouchableOpacity
-                      onPress={() => navigation.navigate("preset")}>
-                      <Text style={Style.buttonStyle}>pre sets</Text>
-                    </TouchableOpacity>
-                  </View>
-                ),
-              })}
+    <SafeAreaView style={[styles.container]}>
+      <View style={{ borderBottomWidth: 2 }}>
+        <Text style={{ color: "white", textAlign: "center", fontSize: 40 }}>
+          welcome to sandbox
+        </Text>
+      </View>
+      <View style={{ alignItems: "center" }}>
+        <Pressable onPress={() => animate()}>
+          <View
+            style={{
+              width: 70,
+              height: 30,
+              backgroundColor: `${color}`,
+              borderRadius: 20,
+            }}>
+            <Animated.View
+              style={{
+                width: 30,
+                height: 30,
+                borderRadius: 20,
+                backgroundColor: "white",
+                transform: [{ translateX: translation }],
+              }}
             />
-            <Stack.Screen name='preset' component={presets} />
-          </>
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
+          </View>
+        </Pressable>
+      </View>
+      {/*       <TouchableOpacity onPress={() => animate()}>
+        <Text style={[Style.buttonStyle]}>Start</Text>
+      </TouchableOpacity> */}
+    </SafeAreaView>
   );
 }
 
-/* const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#2E2E2E",
+    paddingTop: Platform.OS == "android" ? StatusBar.currentHeight : 0,
   },
   input: {
     borderWidth: 1,
@@ -72,4 +91,18 @@ export default function Sandbox() {
     fontSize: 20,
     color: "white",
   },
-}); */
+});
+
+/* 
+<View>
+<TouchableOpacity onPress={() => setIsOn(!isOn)}>
+  <Text
+    style={[
+      Style.defoultFont,
+      Style.textColor,
+      { padding: 20, backgroundColor: `${color}` },
+    ]}>
+    {isOn ? <>on</> : <>off</>}
+  </Text>
+</TouchableOpacity>
+</View> */

@@ -1,5 +1,13 @@
-import React, { useContext, useState, useEffect, version } from "react";
-import { Alert, Text, View, TouchableOpacity } from "react-native";
+import React, { useContext, useState, useEffect, useRef } from "react";
+import {
+  Alert,
+  Text,
+  View,
+  TouchableOpacity,
+  Animated,
+  Easing,
+  Pressable,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import Style from "../../assets/styles/styles";
@@ -13,8 +21,19 @@ export default function Settings() {
     useContext(SettingsContext);
   const { setDice } = useContext(DiceContext);
 
+  const translation = useRef(new Animated.Value(0)).current;
+
   const [preSetDefoultToggle, setPreSetDefoultToggle] = useState();
   const [preSetDefoultColor, setPreSetDefoultColor] = useState("green");
+
+  useEffect(() => {
+    let test = preSetDefoult;
+    Animated.timing(translation, {
+      toValue: test ? 40 : 0,
+      duration: 0,
+      useNativeDriver: true,
+    }).start();
+  }, []);
 
   useEffect(() => {
     if (preSetDefoult == true) {
@@ -24,6 +43,12 @@ export default function Settings() {
       setPreSetDefoultToggle("off");
       setPreSetDefoultColor("red");
     }
+    Animated.timing(translation, {
+      toValue: preSetDefoult ? 40 : 0,
+      easing: Easing.bounce,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
   }, [preSetDefoult]);
 
   const deleteHistorieAlert = () => {
@@ -78,15 +103,25 @@ export default function Settings() {
   return (
     <View style={[Style.screenBackground, { flex: 1 }]}>
       <View style={{ flex: 1, alignItems: "center" }}>
-        <TouchableOpacity onPress={() => setPreSetDefoult(!preSetDefoult)}>
-          <Text
-            style={[
-              Style.buttonStyle,
-              { backgroundColor: `${preSetDefoultColor}` },
-            ]}>
-            {preSetDefoultToggle}
-          </Text>
-        </TouchableOpacity>
+        <Pressable onPress={() => setPreSetDefoult(!preSetDefoult)}>
+          <View
+            style={{
+              width: 70,
+              height: 30,
+              backgroundColor: `${preSetDefoultColor}`,
+              borderRadius: 20,
+            }}>
+            <Animated.View
+              style={{
+                width: 30,
+                height: 30,
+                borderRadius: 20,
+                backgroundColor: "white",
+                transform: [{ translateX: translation }],
+              }}
+            />
+          </View>
+        </Pressable>
       </View>
       <View style={{ flexBasis: "25%" }}>
         <View style={{ borderBottomWidth: 2 }}>
