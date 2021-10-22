@@ -16,11 +16,27 @@ export default function FoldersPresets({ route, navigation }) {
         <Text style={[Style.buttonStyle]}>go back to folders</Text>
       </TouchableOpacity>
       <View style={{ alignItems: "center" }}>
-        <Text style={[Style.defoultFont, Style.textColor]}>
-          {JSON.stringify(name)}
-        </Text>
+        <Text style={[Style.defoultFont, Style.textColor]}>{name}</Text>
       </View>
-      <Text style={[Style.defoultFont, Style.textColor]}>folder presets</Text>
+      {items.map((data) => {
+        return (
+          <View
+            key={data.id}
+            style={{
+              height: 50,
+              backgroundColor: "red",
+              with: "100%",
+              alignItems: "center",
+            }}>
+            <Text style={[Style.textColor, Style.defoultFont]}>
+              {data.name}
+            </Text>
+            <Text style={[Style.defoultFont, Style.textColor]}>
+              {data.numberOfDice}d{data.dice}+{data.buff}
+            </Text>
+          </View>
+        );
+      })}
     </View>
   );
 }
