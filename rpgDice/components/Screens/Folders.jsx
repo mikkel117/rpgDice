@@ -3,14 +3,12 @@ import {
   Text,
   View,
   StyleSheet,
-  Button,
   TouchableOpacity,
   TextInput,
-  SafeAreaView,
   ScrollView,
+  Alert,
 } from "react-native";
 import Modal from "react-native-modal";
-
 
 import { MaterialIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -18,7 +16,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Style from "../../assets/styles/styles";
 import { SettingsContext } from "../context/SettingsContext";
 
-export default function Folders() {
+export default function Folders({ navigation }) {
   const { firstTime, setFirstTime, preSetDefoult, setPreSetDefoult } =
     useContext(SettingsContext);
   const [folder, setFolder] = useState([
@@ -48,19 +46,21 @@ export default function Folders() {
   //********************************************************** */
   //folder state
   const [Folderindex, setFolderIndex] = useState(0);
-  const [showFolder, setShowFolder] = useState(true);
-  const [newFolder, setNewFolder] = useState(false);
+  const [folderModal, setFolderModal] = useState(false);
   const [folderName, setFolderName] = useState("");
-  /* const [folderClicked, setFolderClicked] = useState(false); */
+  const [folderUpdatePLaceHolder, setFolderUpdatePLaceHolder] = useState("");
+  const [folderUpdate, setFolderUpdate] = useState(false);
   //********************************************************** */
 
-  const createUpdateFolder = () => {
+  //********************************************************** */
+  //create new and update folder
+  const createFolder = () => {
     let name = folderName;
     let time = new Date();
     if (name == "") {
       name = time.toLocaleString();
     }
-    setNewFolder(false);
+    setFolderModal(false);
     setFolder([
       ...folder,
       {
@@ -71,159 +71,177 @@ export default function Folders() {
     ]);
   };
 
-  const getIndex = (id) => {
+  const callUpdateFolder = () => {
+    let name = folderName;
+    folder[Folderindex].name = name;
+    setFolderModal(false);
+  };
+
+  /*   const getIndex = (id) => {
     let index = folder.findIndex((obj) => obj.id == id);
     setFolderIndex(index);
-    setShowFolder(false);
+  }; */
+
+  const deleteOneFolder = (id) => {
+    let index = folder.findIndex((obj) => obj.id == id);
+    Alert.alert(
+      `delete folder`,
+      `you are about to delete ${folder[index].name} this will delete evey preset for this folder. Are you sure this is what you want?`,
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "delete",
+          onPress: () => setFolder(folder.filter((item) => item.id !== id)),
+        },
+      ]
+    );
   };
+
+  const updateFolder = (name, id) => {
+    let index = folder.findIndex((obj) => obj.id == id);
+    setFolderIndex(index);
+    setFolderName(name);
+    setFolderUpdatePLaceHolder(name);
+    setFolderUpdate(true);
+    setFolderModal(true);
+  };
+  //********************************************************** */
 
   return (
     <View style={styles.container}>
+      {/* folder modal */}
       <Modal
-        isVisible={newFolder}
+        isVisible={folderModal}
         coverScreen={true}
         style={{ margin: 0, flex: 1 }}>
         <View style={[Style.lightBackground, {}]}>
-          <TextInput
-            keyboardType='default'
-            style={[Style.input, Style.defoultFont]}
-            placeholder='folder name'
-            placeholderTextColor='white'
-            maxLength={30}
-            onChangeText={(val) => {
-              if (val != 0) setFolderName(val);
-            }}
-          />
+          {folderUpdate ? (
+            <TextInput
+              keyboardType='default'
+              style={[Style.input, Style.defoultFont]}
+              placeholder={`${folderUpdatePLaceHolder}`}
+              placeholderTextColor='white'
+              maxLength={30}
+              onChangeText={(val) => {
+                if (val != 0) setFolderName(val);
+              }}
+            />
+          ) : (
+            <TextInput
+              keyboardType='default'
+              style={[Style.input, Style.defoultFont]}
+              placeholder='folder name'
+              placeholderTextColor='white'
+              maxLength={30}
+              onChangeText={(val) => {
+                if (val != 0) setFolderName(val);
+              }}
+            />
+          )}
           <View style={{ flexDirection: "row" }}>
             <TouchableOpacity
               style={{ flexBasis: "45%" }}
-              onPress={() => setNewFolder(false)}>
+              onPress={() => setFolderModal(false)}>
               <Text style={[Style.buttonStyle]}>close</Text>
             </TouchableOpacity>
             <View style={{ flexBasis: "10%" }}></View>
-            <TouchableOpacity
-              style={{ flexBasis: "45%" }}
-              onPress={() => createUpdateFolder()}>
-              <Text style={[Style.buttonStyle, { backgroundColor: "green" }]}>
-                create
-              </Text>
-            </TouchableOpacity>
+            {folderUpdate ? (
+              <TouchableOpacity
+                style={{ flexBasis: "45%" }}
+                onPress={() => callUpdateFolder()}>
+                <Text style={[Style.buttonStyle, { backgroundColor: "green" }]}>
+                  update
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={{ flexBasis: "45%" }}
+                onPress={() => createFolder()}>
+                <Text style={[Style.buttonStyle, { backgroundColor: "green" }]}>
+                  create
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </Modal>
 
       <View style={{ alignItems: "center" }}>
-        {showFolder ? (
-          <>
-            <TouchableOpacity onPress={() => setNewFolder(true)}>
-              <MaterialIcons name='create-new-folder' size={30} color='white' />
-            </TouchableOpacity>
-            <Text style={[Style.defoultFont, Style.textColor]}>
-              create and edit folders here
-            </Text>
-          </>
-        ) : (
-          <>
-            <TouchableOpacity onPress={() => console.log("new preset")}>
-              <MaterialIcons name='create-new-folder' size={30} color='white' />
-            </TouchableOpacity>
-            <Text style={[Style.defoultFont, Style.textColor]}>
-              create and edit presets here
-            </Text>
-          </>
-        )}
+        <TouchableOpacity onPress={() => setFolderModal(true)}>
+          <MaterialIcons name='create-new-folder' size={30} color='white' />
+        </TouchableOpacity>
+        <Text style={[Style.defoultFont, Style.textColor]}>
+          create and edit folders here
+        </Text>
       </View>
       <View style={{ flex: 1 }}>
-        {showFolder ? (
-          <ScrollView style={{ flex: 1 }}>
-            {folder.map((data) => {
-              return (
+        <ScrollView style={{ flex: 1 }}>
+          {folder.map((data) => {
+            return (
+              <View
+                key={data.id}
+                style={{
+                  borderTopWidth: 1,
+                  borderBottomWidth: 1,
+                  borderColor: "gray",
+                  padding: 10,
+                  marginVertical: 10,
+                  flex: 1,
+                  flexDirection: "row",
+                }}>
                 <View
-                  key={data.id}
+                  style={[
+                    {
+                      flex: 1,
+                    },
+                  ]}>
+                  <TouchableOpacity
+                    style={[
+                      Style.lightBackground,
+                      { height: 70, justifyContent: "center" },
+                    ]}
+                    onPress={() =>
+                      navigation.navigate("folderPresets", {
+                        data: data,
+                      })
+                    }>
+                    <Text
+                      style={[
+                        Style.textColor,
+                        Style.defoultFont,
+                        { textAlign: "center" },
+                      ]}>
+                      {data.name}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <View
                   style={{
-                    borderTopWidth: 1,
-                    borderBottomWidth: 1,
-                    borderColor: "gray",
-                    padding: 10,
-                    marginVertical: 10,
                     flex: 1,
                     flexDirection: "row",
+                    justifyContent: "space-around",
+                    alignItems: "center",
                   }}>
-                  <View
-                    style={[
-                      {
-                        flex: 1,
-                      },
-                    ]}>
-                    <TouchableOpacity
-                      style={[
-                        Style.lightBackground,
-                        { height: 70, justifyContent: "center" },
-                      ]}
-                      onPress={() => getIndex(data.id)}>
-                      <Text
-                        style={[
-                          Style.textColor,
-                          Style.defoultFont,
-                          { textAlign: "center" },
-                        ]}>
-                        {data.name}
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                  <View
-                    style={{
-                      flex: 1,
-                      flexDirection: "row",
-                      justifyContent: "space-around",
-                      alignItems: "center",
-                    }}>
-                    <TouchableOpacity>
-                      <MaterialIcons name='delete' size={40} color='red' />
-                    </TouchableOpacity>
+                  <TouchableOpacity onPress={() => deleteOneFolder(data.id)}>
+                    <MaterialIcons name='delete' size={40} color='red' />
+                  </TouchableOpacity>
 
-                    {/* <View style={{ width: 20 }}></View> */}
-
-                    <TouchableOpacity>
-                      <MaterialCommunityIcons
-                        name='content-save-edit'
-                        size={40}
-                        color='white'
-                      />
-                    </TouchableOpacity>
-                  </View>
+                  <TouchableOpacity
+                    onPress={() => updateFolder(data.name, data.id)}>
+                    <MaterialCommunityIcons
+                      name='content-save-edit'
+                      size={40}
+                      color='white'
+                    />
+                  </TouchableOpacity>
                 </View>
-              );
-            })}
-          </ScrollView>
-        ) : (
-          <>
-            <View
-              style={{
-                alignItems: "stretch",
-                width: "100%",
-                marginBottom: 10,
-              }}>
-              <TouchableOpacity onPress={() => setShowFolder(true)}>
-                <Text style={Style.buttonStyle}>go Back</Text>
-              </TouchableOpacity>
-            </View>
-            {folder[Folderindex].items.map((data) => {
-              return (
-                <View key={data.id}>
-                  <Text
-                    style={[
-                      Style.defoultFont,
-                      Style.textColor,
-                      { textAlign: "center" },
-                    ]}>
-                    attack name {data.name}
-                  </Text>
-                </View>
-              );
-            })}
-          </>
-        )}
+              </View>
+            );
+          })}
+        </ScrollView>
       </View>
     </View>
   );

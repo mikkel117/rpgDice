@@ -19,6 +19,7 @@ import Settings from "./Screens/Settings";
 import SandBox from "./Screens/testScreens/sandbox";
 
 import Style from "../assets/styles/styles";
+import FoldersPresets from "./Screens/FoldersPresets";
 
 const screenOptions = (route) => {
   let iconName;
@@ -85,6 +86,13 @@ function StackScreen() {
         })}
       />
       <Stack.Screen name='settings' component={Settings} />
+      <Stack.Screen
+        name='folderPresets'
+        component={FoldersPresets}
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack.Navigator>
   );
 }

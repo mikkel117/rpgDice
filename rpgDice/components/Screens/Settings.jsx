@@ -27,9 +27,8 @@ export default function Settings() {
   const [preSetDefoultColor, setPreSetDefoultColor] = useState("green");
 
   useEffect(() => {
-    let test = preSetDefoult;
     Animated.timing(translation, {
-      toValue: test ? 40 : 0,
+      toValue: preSetDefoult ? 40 : 0,
       duration: 0,
       useNativeDriver: true,
     }).start();

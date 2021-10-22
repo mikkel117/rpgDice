@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   Text,
@@ -8,70 +8,105 @@ import {
   SafeAreaView,
   Platform,
   StatusBar,
-  Animated,
-  Pressable,
+  Button,
 } from "react-native";
 
 import Style from "../../../assets/styles/styles";
 
-export default function Sandbox() {
-  const [isOn, setIsOn] = useState(false);
-  const [color, setColor] = useState("green");
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-  const translation = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    if (isOn == false) {
-      setColor("red");
-    } else {
-      setColor("green");
-    }
-  }, [isOn]);
-
-  const animate = () => {
-    setIsOn(!isOn);
-
-    Animated.timing(translation, {
-      toValue: isOn ? 0 : 40,
-      easing: Easing.bounce,
-      /* delay: 2000, */
-      duration: 500,
-      useNativeDriver: true,
-    }).start();
-  };
-
+function HomeScreen({ navigation }) {
+  const [folder, setFolder] = useState([
+    {
+      id: 1,
+      name: "Bob the wizard",
+      items: [
+        { id: 1, name: "Staff attack", numberOfDice: 1, dice: 20, buff: 3 },
+      ],
+    },
+    {
+      id: 2,
+      name: "Alex the Rogue",
+      items: [
+        { id: 1, name: "Dagger attack", numberOfDice: 1, dice: 20, buff: 7 },
+      ],
+    },
+    {
+      id: 3,
+      name: "Peter the knight",
+      items: [
+        { id: 1, name: "Sword attack", numberOfDice: 1, dice: 20, buff: 10 },
+      ],
+    },
+  ]);
   return (
-    <SafeAreaView style={[styles.container]}>
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <Text>Home Screen</Text>
+      {/*       <Button
+        title='go to settings'
+        onPress={() =>
+          navigation.navigate("settings", {
+            folder
+          })
+        }
+      /> */}
+      {folder.map((data) => {
+        return (
+          <TouchableOpacity
+            key={data.id}
+            onPress={() =>
+              navigation.navigate("settings", {
+                id: data.id,
+                name: data.name,
+                items: data.items,
+              })
+            }>
+            <Text style={[Style.buttonStyle, { marginVertical: 20 }]}>
+              {data.name}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
+    </View>
+  );
+}
+
+function Settings({ route, navigation }) {
+  console.log(route);
+  const { name, id, items } = route.params;
+  console.log("array", items);
+  return (
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <Text>settings Screen</Text>
+      {/* <Text>item: {JSON.stringify(item)}</Text> */}
+      <Button title='go to home' onPress={() => navigation.navigate("Home")} />
+    </View>
+  );
+}
+
+const Stack = createNativeStackNavigator();
+
+export default function Sandbox() {
+  return (
+    /*     <SafeAreaView style={[styles.container]}>
       <View style={{ borderBottomWidth: 2 }}>
         <Text style={{ color: "white", textAlign: "center", fontSize: 40 }}>
           welcome to sandbox
         </Text>
       </View>
-      <View style={{ alignItems: "center" }}>
-        <Pressable onPress={() => animate()}>
-          <View
-            style={{
-              width: 70,
-              height: 30,
-              backgroundColor: `${color}`,
-              borderRadius: 20,
-            }}>
-            <Animated.View
-              style={{
-                width: 30,
-                height: 30,
-                borderRadius: 20,
-                backgroundColor: "white",
-                transform: [{ translateX: translation }],
-              }}
-            />
-          </View>
-        </Pressable>
-      </View>
-      {/*       <TouchableOpacity onPress={() => animate()}>
-        <Text style={[Style.buttonStyle]}>Start</Text>
-      </TouchableOpacity> */}
-    </SafeAreaView>
+      <View style={{ alignItems: "center" }}></View>
+    </SafeAreaView> */
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name='Home'
+          component={HomeScreen}
+          options={{ title: "Welcome" }}
+        />
+        <Stack.Screen name='settings' component={Settings} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
