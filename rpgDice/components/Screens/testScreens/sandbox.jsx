@@ -23,37 +23,29 @@ export default function Sandbox() {
         { id: 1, name: "Staff attack", numberOfDice: 1, dice: 20, buff: 3 },
       ],
     },
-    {
-      id: 2,
-      name: "Alex the Rogue",
-      items: [
-        { id: 1, name: "Dagger attack", numberOfDice: 1, dice: 20, buff: 7 },
-      ],
-    },
-    {
-      id: 3,
-      name: "Peter the knight",
-      items: [
-        { id: 1, name: "Sword attack", numberOfDice: 1, dice: 20, buff: 10 },
-      ],
-    },
   ]);
 
   const test = () => {
-    const old = array[0].items;
-    const updated = [
-      ...old,
+    let time = new Date();
+    let array = [
       {
-        id: 2,
-        name: "test",
+        id: time.toLocaleString(),
+        name: `test ${time.getTime()}`,
         numberOfDice: 2,
         dice: 30,
         buff: 20,
       },
     ];
+    return array;
+  };
+
+  const update = () => {
+    let testArray = test();
+    const old = array[0].items;
+    const updated = [...old, { testArray }];
     const clone = [...array];
-    clone[0] = updated;
-    /* console.log(clone); */
+    clone[0].items = updated;
+    /*  console.log(clone); */
     setArray(clone);
   };
 
@@ -65,8 +57,8 @@ export default function Sandbox() {
         </Text>
       </View>
       <View style={{ alignItems: "center" }}>
-        <Button title='click me' onPress={() => test()} />
-        <Button title='click me' onPress={() => console.log(array[0])} />
+        <Button title='click me' onPress={() => update()} />
+        <Button title='click me' onPress={() => console.log(array)} />
       </View>
     </SafeAreaView>
   );

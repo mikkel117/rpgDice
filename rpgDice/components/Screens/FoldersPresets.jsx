@@ -7,6 +7,7 @@ import {
   Platform,
   StyleSheet,
   Button,
+  ScrollView,
 } from "react-native";
 import Modal from "react-native-modal";
 import { Picker } from "@react-native-picker/picker";
@@ -16,6 +17,7 @@ import { DiceContext } from "../context/DiceContext";
 import { HistoryContext } from "../context/HistoryContext";
 import { FolderContext } from "../context/FolderContext";
 
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -41,10 +43,6 @@ export default function FoldersPresets({ route, navigation }) {
       setColor("black");
     }
   }, []);
-
-  useEffect(() => {
-    console.log(folder);
-  }, [folder]);
 
   const diceIconSelect = () => {
     let diceIcon;
@@ -83,50 +81,43 @@ export default function FoldersPresets({ route, navigation }) {
     setFolderIndex(index);
   }, []);
 
-  // const createPreset = () => {
-  //   let time = new Date();
-  //   let name = presetName;
-  //   let buffPlus = false;
-  //   let dice = selectedDice;
-  //   const old = folder[folderIndex].items;
-  //   // time.toLocaleString();
-  //   if (buff > 0) {
-  //     buffPlus = true;
-  //   }
-  //   if (dice == "") {
-  //     dice = 4;
-  //   }
-  //   if (name == "") {
-  //     name = time.toLocaleString();
-  //   }
+  const createPreset = () => {
+    let time = new Date();
+    let name = presetName;
+    let pBuffPlus = false;
+    let dice = selectedDice;
+    const old = folder[folderIndex].items;
+    // time.toLocaleString();
+    if (buff > 0) {
+      pBuffPlus = true;
+    }
+    if (dice == "") {
+      dice = 4;
+    }
+    if (name == "") {
+      name = time.toLocaleString();
+    }
 
-  //   let icon = diceIconSelect();
+    let icon = diceIconSelect();
 
-  //   /* folder[folderIndex].items = [
-  //     ...items,
-  //     {
-
-  //     },
-  //   ]; */
-
-  //   const updated = [
-  //     ...old,
-  //     {
-  //       id: time.toLocaleTimeString(),
-  //       numberOfDice: diceNumber,
-  //       buff: buff,
-  //       name: name,
-  //       dice: dice,
-  //       /* "pBuffplus": buffPlus, */
-  //       pIconName: icon,
-  //     },
-  //   ];
-  //   const clone = [...folder];
-  //   clone[folderIndex] = updated;
-  //   setFolder(clone);
-  //   setPresetName("");
-  //   setNewPreset(false);
-  // };
+    const updated = [
+      ...old,
+      {
+        id: time.toLocaleTimeString(),
+        numberOfDice: diceNumber,
+        buff: buff,
+        name: name,
+        dice: dice,
+        buffPlus: pBuffPlus,
+        icon: icon,
+      },
+    ];
+    const clone = [...folder];
+    clone[folderIndex].items = updated;
+    setFolder(clone);
+    setPresetName("");
+    setNewPreset(false);
+  };
 
   return (
     <View style={[Style.screenBackground, { flex: 1 }]}>
@@ -276,25 +267,104 @@ export default function FoldersPresets({ route, navigation }) {
         </Text>
       </View>
 
-      {folder[folderIndex].items.map((data) => {
-        return (
-          <View
-            key={data.id}
-            style={{
-              height: 50,
-              backgroundColor: "red",
-              width: "100%",
-              alignItems: "center",
-            }}>
-            <Text style={[Style.textColor, Style.DefaultFont]}>
-              {data.name}
-            </Text>
-            <Text style={[Style.DefaultFont, Style.textColor]}>
-              {data.numberOfDice}d{data.dice}+{data.buff}
-            </Text>
-          </View>
-        );
-      })}
+      {folder[folderIndex].items.length > 0 ? (
+        <ScrollView>
+          {folder[folderIndex].items.map((data) => {
+            return (
+              <View
+                key={data.id}
+                style={{
+                  width: "100%",
+                  borderTopWidth: 1,
+                  borderBottomWidth: 1,
+                  borderColor: "gray",
+                  padding: 10,
+                  marginVertical: 10,
+                  flex: 1,
+                }}>
+                <View style={{ flexDirection: "row", flex: 1 }}>
+                  <View style={{ flexDirection: "row", flex: 1 }}>
+                    <View
+                      style={[
+                        styles.diceContainer,
+                        Style.lightBackground,
+                        /* { alignSelf: "center" }, */
+                      ]}>
+                      <MaterialCommunityIcons
+                        name={data.icon}
+                        size={50}
+                        color='black'
+                        style={{ textAlign: "center", color: "white" }}
+                      />
+                    </View>
+                    <View
+                      style={{
+                        justifyContent: "space-around",
+                        marginLeft: 10,
+                      }}>
+                      <Text style={[Style.textColor, Style.DefaultFont]}>
+                        {data.numberOfDice}d{data.dice}
+                        {data.buff ? (
+                          <>
+                            {data.buffPlus ? (
+                              <>+{data.buff}</>
+                            ) : (
+                              <>{data.buff}</>
+                            )}
+                          </>
+                        ) : (
+                          <></>
+                        )}
+                      </Text>
+
+                      <TouchableOpacity>
+                        <Text style={[styles.buttonStyle]}>roll</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Text
+                      style={[
+                        Style.DefaultFont,
+                        Style.textColor,
+                        {
+                          marginBottom: 5,
+                          fontWeight: "bold",
+                          textAlign: "center",
+                        },
+                      ]}>
+                      {data.name}
+                    </Text>
+                    <View
+                      style={{
+                        flex: 1,
+                        flexDirection: "row",
+                        justifyContent: "space-around",
+                      }}>
+                      <TouchableOpacity onPress={() => deleteAlert(data.id)}>
+                        <MaterialIcons name='delete' size={40} color='red' />
+                      </TouchableOpacity>
+
+                      <TouchableOpacity onPress={() => update(data.id)}>
+                        <MaterialCommunityIcons
+                          name='content-save-edit'
+                          size={40}
+                          color='white'
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            );
+          })}
+        </ScrollView>
+      ) : (
+        <View
+          style={[{ flex: 1, justifyContent: "center", alignItems: "center" }]}>
+          <Text style={[Style.textColor, Style.DefaultFont]}>Empty</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -309,5 +379,19 @@ const styles = StyleSheet.create({
     height: 30,
     width: 200,
     justifyContent: "center",
+  },
+  diceContainer: {
+    width: 90,
+    height: 90,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  buttonStyle: {
+    color: "black",
+    textAlign: "center",
+    fontSize: 18,
+    padding: 10,
+    paddingHorizontal: 15,
+    backgroundColor: "white",
   },
 });
