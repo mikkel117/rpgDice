@@ -5,7 +5,7 @@ export const SettingsContext = createContext();
 
 const SettingsContextProvider = (props) => {
   const [firstTime, setFirstTime] = useState(true);
-  const [preSetDefoult, setPreSetDefoult] = useState(false);
+  const [preSetDefault, setPreSetDefault] = useState(false);
   /* const [settingsArray, setSettingsArray] = useState([]) */
   useEffect(() => {
     read();
@@ -13,7 +13,7 @@ const SettingsContextProvider = (props) => {
 
   useEffect(() => {
     set();
-  }, [firstTime, preSetDefoult]);
+  }, [firstTime, preSetDefault]);
 
   read = async () => {
     try {
@@ -21,7 +21,7 @@ const SettingsContextProvider = (props) => {
       let data = jsonValue != null ? JSON.parse(jsonValue) : null;
       if (data != null) {
         setFirstTime(data[0].value);
-        setPreSetDefoult(data[1].value);
+        setPreSetDefault(data[1].value);
       }
     } catch (e) {
       console.log("read error", e);
@@ -31,7 +31,7 @@ const SettingsContextProvider = (props) => {
   const testCall = () => {
     let settingsArray = [
       { name: "first time", value: firstTime },
-      { name: "preset", value: preSetDefoult },
+      { name: "preset", value: preSetDefault },
     ];
 
     return settingsArray;
@@ -49,7 +49,7 @@ const SettingsContextProvider = (props) => {
 
   return (
     <SettingsContext.Provider
-      value={{ firstTime, setFirstTime, preSetDefoult, setPreSetDefoult }}>
+      value={{ firstTime, setFirstTime, preSetDefault, setPreSetDefault }}>
       {props.children}
     </SettingsContext.Provider>
   );

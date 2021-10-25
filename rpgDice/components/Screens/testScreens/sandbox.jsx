@@ -12,12 +12,10 @@ import {
 } from "react-native";
 
 import Style from "../../../assets/styles/styles";
+import Folders from "../Folders";
 
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
-function HomeScreen({ navigation }) {
-  const [folder, setFolder] = useState([
+export default function Sandbox() {
+  const [array, setArray] = useState([
     {
       id: 1,
       name: "Bob the wizard",
@@ -40,73 +38,37 @@ function HomeScreen({ navigation }) {
       ],
     },
   ]);
-  return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Home Screen</Text>
-      {/*       <Button
-        title='go to settings'
-        onPress={() =>
-          navigation.navigate("settings", {
-            folder
-          })
-        }
-      /> */}
-      {folder.map((data) => {
-        return (
-          <TouchableOpacity
-            key={data.id}
-            onPress={() =>
-              navigation.navigate("settings", {
-                id: data.id,
-                name: data.name,
-                items: data.items,
-              })
-            }>
-            <Text style={[Style.buttonStyle, { marginVertical: 20 }]}>
-              {data.name}
-            </Text>
-          </TouchableOpacity>
-        );
-      })}
-    </View>
-  );
-}
 
-function Settings({ route, navigation }) {
-  console.log(route);
-  const { name, id, items } = route.params;
-  console.log("array", items);
-  return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>settings Screen</Text>
-      {/* <Text>item: {JSON.stringify(item)}</Text> */}
-      <Button title='go to home' onPress={() => navigation.navigate("Home")} />
-    </View>
-  );
-}
+  const test = () => {
+    const old = array[0].items;
+    const updated = [
+      ...old,
+      {
+        id: 2,
+        name: "test",
+        numberOfDice: 2,
+        dice: 30,
+        buff: 20,
+      },
+    ];
+    const clone = [...array];
+    clone[0] = updated;
+    /* console.log(clone); */
+    setArray(clone);
+  };
 
-const Stack = createNativeStackNavigator();
-
-export default function Sandbox() {
   return (
-    /*     <SafeAreaView style={[styles.container]}>
+    <SafeAreaView style={[styles.container]}>
       <View style={{ borderBottomWidth: 2 }}>
         <Text style={{ color: "white", textAlign: "center", fontSize: 40 }}>
           welcome to sandbox
         </Text>
       </View>
-      <View style={{ alignItems: "center" }}></View>
-    </SafeAreaView> */
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name='Home'
-          component={HomeScreen}
-          options={{ title: "Welcome" }}
-        />
-        <Stack.Screen name='settings' component={Settings} />
-      </Stack.Navigator>
-    </NavigationContainer>
+      <View style={{ alignItems: "center" }}>
+        <Button title='click me' onPress={() => test()} />
+        <Button title='click me' onPress={() => console.log(array[0])} />
+      </View>
+    </SafeAreaView>
   );
 }
 
@@ -127,17 +89,3 @@ const styles = StyleSheet.create({
     color: "white",
   },
 });
-
-/* 
-<View>
-<TouchableOpacity onPress={() => setIsOn(!isOn)}>
-  <Text
-    style={[
-      Style.defoultFont,
-      Style.textColor,
-      { padding: 20, backgroundColor: `${color}` },
-    ]}>
-    {isOn ? <>on</> : <>off</>}
-  </Text>
-</TouchableOpacity>
-</View> */

@@ -10,7 +10,7 @@ const Style = StyleSheet.create({
   textColor: {
     color: "white",
   },
-  defoultFont: {
+  DefaultFont: {
     fontSize: 20,
   },
   buttonStyle: {

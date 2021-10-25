@@ -130,7 +130,7 @@ export default function EditDice({ navigation }) {
         <View style={Style.lightBackground}>
           <TextInput
             keyboardType='number-pad'
-            style={[Style.input, Style.defoultFont]}
+            style={[Style.input, Style.DefaultFont]}
             placeholder='Number of sides'
             placeholderTextColor='white'
             maxLength={3}
@@ -161,7 +161,7 @@ export default function EditDice({ navigation }) {
         <View style={Style.lightBackground}>
           <Text
             style={[
-              Style.defoultFont,
+              Style.DefaultFont,
               Style.textColor,
               { textAlign: "center" },
             ]}>
@@ -197,7 +197,7 @@ export default function EditDice({ navigation }) {
       </Modal>
 
       <View style={{ alignItems: "center" }}>
-        <Text style={[Style.textColor, Style.defoultFont]}>
+        <Text style={[Style.textColor, Style.DefaultFont]}>
           create and edit dice here
         </Text>
         <TouchableOpacity onPress={() => setNewDice(true)}>
@@ -223,7 +223,7 @@ export default function EditDice({ navigation }) {
                       style={{ textAlign: "center", color: "white" }}
                     />
                     <View style={{ justifyContent: "center" }}>
-                      <Text style={[Style.textColor, Style.defoultFont]}>
+                      <Text style={[Style.textColor, Style.DefaultFont]}>
                         d{item.sides}
                       </Text>
                     </View>
@@ -255,7 +255,7 @@ export default function EditDice({ navigation }) {
         ) : (
           <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-            <Text style={[Style.textColor, Style.defoultFont]}>Empty</Text>
+            <Text style={[Style.textColor, Style.DefaultFont]}>Empty</Text>
           </View>
         )}
       </View>

@@ -185,7 +185,7 @@ export default function Dice() {
             <Text
               style={[
                 Style.textColor,
-                Style.defoultFont,
+                Style.DefaultFont,
                 { textAlign: "center" },
               ]}>
               d{item.sides}
@@ -194,45 +194,45 @@ export default function Dice() {
         )}
       />
 
-      <Modal isVisible={modanOpen} coverScreen={false} style={{ flex: 1 }}>
-        <View style={Style.lightBackground}>
-          <Text
-            style={[
-              Style.textColor,
-              Style.defoultFont,
-              { textAlign: "center", paddingBottom: 5 },
-            ]}>
-            {diceNumber}d{curentDice}
-            {buff ? <>{buffplus ? <>+{buff}</> : <>{buff}</>} </> : <></>}
-          </Text>
+      <Modal isVisible={modanOpen} style={{ margin: 0 }}>
+        <TouchableOpacity
+          style={{ flex: 1, justifyContent: "center" }}
+          onPress={() => Close()}>
+          <View style={Style.lightBackground}>
+            <Text
+              style={[
+                Style.textColor,
+                Style.DefaultFont,
+                { textAlign: "center", paddingBottom: 5 },
+              ]}>
+              {diceNumber}d{curentDice}
+              {buff ? <>{buffplus ? <>+{buff}</> : <>{buff}</>} </> : <></>}
+            </Text>
 
-          <Text
-            style={[
-              Style.textColor,
-              { textAlign: "center", fontSize: 25, paddingBottom: 5 },
-            ]}>
-            {plus}
-          </Text>
+            <Text
+              style={[
+                Style.textColor,
+                { textAlign: "center", fontSize: 25, paddingBottom: 5 },
+              ]}>
+              {plus}
+            </Text>
 
-          <Text
-            style={[
-              Style.textColor,
-              Style.defoultFont,
-              { textAlign: "center", paddingBottom: 5 },
-            ]}>
-            {rolled.map((data) => {
-              return (
-                <Text key={data.key}>
-                  {rolled.length == 1 ? <>{data.item}</> : <>{data.item},</>}
-                </Text>
-              );
-            })}
-          </Text>
-
-          <TouchableOpacity onPress={() => Close()}>
-            <Text style={Style.buttonStyle}>Continue</Text>
-          </TouchableOpacity>
-        </View>
+            <Text
+              style={[
+                Style.textColor,
+                Style.DefaultFont,
+                { textAlign: "center", paddingBottom: 5 },
+              ]}>
+              {rolled.map((data) => {
+                return (
+                  <Text key={data.key}>
+                    {rolled.length == 1 ? <>{data.item}</> : <>{data.item},</>}
+                  </Text>
+                );
+              })}
+            </Text>
+          </View>
+        </TouchableOpacity>
       </Modal>
 
       <Modal isVisible={diceInput} coverScreen={false} style={{ flex: 1 }}>

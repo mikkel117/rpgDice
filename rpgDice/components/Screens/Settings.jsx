@@ -17,38 +17,38 @@ import { DiceContext } from "../context/DiceContext";
 
 export default function Settings() {
   const { setHistory } = useContext(HistoryContext);
-  const { preSetDefoult, setPreSetDefoult, firstTime, setFirstTime } =
+  const { preSetDefault, setPreSetDefault, firstTime, setFirstTime } =
     useContext(SettingsContext);
   const { setDice } = useContext(DiceContext);
 
   const translation = useRef(new Animated.Value(0)).current;
 
-  const [preSetDefoultToggle, setPreSetDefoultToggle] = useState();
-  const [preSetDefoultColor, setPreSetDefoultColor] = useState("green");
+  const [preSetDefaultToggle, setPreSetDefaultToggle] = useState();
+  const [preSetDefaultColor, setPreSetDefaultColor] = useState("green");
 
   useEffect(() => {
     Animated.timing(translation, {
-      toValue: preSetDefoult ? 40 : 0,
+      toValue: preSetDefault ? 40 : 0,
       duration: 0,
       useNativeDriver: true,
     }).start();
   }, []);
 
   useEffect(() => {
-    if (preSetDefoult == true) {
-      setPreSetDefoultToggle("on");
-      setPreSetDefoultColor("green");
+    if (preSetDefault == true) {
+      setPreSetDefaultToggle("on");
+      setPreSetDefaultColor("green");
     } else {
-      setPreSetDefoultToggle("off");
-      setPreSetDefoultColor("red");
+      setPreSetDefaultToggle("off");
+      setPreSetDefaultColor("red");
     }
     Animated.timing(translation, {
-      toValue: preSetDefoult ? 40 : 0,
+      toValue: preSetDefault ? 40 : 0,
       easing: Easing.bounce,
       duration: 1000,
       useNativeDriver: true,
     }).start();
-  }, [preSetDefoult]);
+  }, [preSetDefault]);
 
   const deleteHistorieAlert = () => {
     Alert.alert(
@@ -102,12 +102,12 @@ export default function Settings() {
   return (
     <View style={[Style.screenBackground, { flex: 1 }]}>
       <View style={{ flex: 1, alignItems: "center" }}>
-        <Pressable onPress={() => setPreSetDefoult(!preSetDefoult)}>
+        <Pressable onPress={() => setPreSetDefault(!preSetDefault)}>
           <View
             style={{
               width: 70,
               height: 30,
-              backgroundColor: `${preSetDefoultColor}`,
+              backgroundColor: `${preSetDefaultColor}`,
               borderRadius: 20,
             }}>
             <Animated.View
@@ -150,7 +150,7 @@ export default function Settings() {
                   alignItems: "center",
                 },
               ]}>
-              <Text style={[Style.defoultFont, Style.textColor]}>
+              <Text style={[Style.DefaultFont, Style.textColor]}>
                 DELETE HISTORIE
               </Text>
             </View>
@@ -168,10 +168,10 @@ export default function Settings() {
                   alignItems: "center",
                 },
               ]}>
-              <Text style={[Style.defoultFont, Style.textColor]}>
+              <Text style={[Style.DefaultFont, Style.textColor]}>
                 DELETE ALL
               </Text>
-              <Text style={[Style.defoultFont, Style.textColor]}>SAVES</Text>
+              <Text style={[Style.DefaultFont, Style.textColor]}>SAVES</Text>
             </View>
           </TouchableOpacity>
         </View>

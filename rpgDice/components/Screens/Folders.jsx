@@ -15,33 +15,12 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import Style from "../../assets/styles/styles";
 import { SettingsContext } from "../context/SettingsContext";
+import { FolderContext } from "../context/FolderContext";
 
 export default function Folders({ navigation }) {
-  const { firstTime, setFirstTime, preSetDefoult, setPreSetDefoult } =
-    useContext(SettingsContext);
-  const [folder, setFolder] = useState([
-    {
-      id: 1,
-      name: "Bob the wizard",
-      items: [
-        { id: 1, name: "Staff attack", numberOfDice: 1, dice: 20, buff: 3 },
-      ],
-    },
-    {
-      id: 2,
-      name: "Alex the Rogue",
-      items: [
-        { id: 1, name: "Dagger attack", numberOfDice: 1, dice: 20, buff: 7 },
-      ],
-    },
-    {
-      id: 3,
-      name: "Peter the knight",
-      items: [
-        { id: 1, name: "Sword attack", numberOfDice: 1, dice: 20, buff: 10 },
-      ],
-    },
-  ]);
+  /*   const { firstTime, setFirstTime, preSetDefault, setPreSetDefault } =
+    useContext(SettingsContext); */
+  const { folder, setFolder } = useContext(FolderContext);
 
   //********************************************************** */
   //folder state
@@ -54,12 +33,11 @@ export default function Folders({ navigation }) {
 
   //********************************************************** */
   //create new and update folder
-
   const createFolder = () => {
     setFolderUpdate(false);
     setFolderModal(true);
   };
-
+  //to do come up with a new name
   const setFolderF = () => {
     let name = folderName;
     let time = new Date();
@@ -127,7 +105,7 @@ export default function Folders({ navigation }) {
           {folderUpdate ? (
             <TextInput
               keyboardType='default'
-              style={[Style.input, Style.defoultFont]}
+              style={[Style.input, Style.DefaultFont]}
               placeholder={`${folderUpdatePLaceHolder}`}
               placeholderTextColor='white'
               maxLength={30}
@@ -138,7 +116,7 @@ export default function Folders({ navigation }) {
           ) : (
             <TextInput
               keyboardType='default'
-              style={[Style.input, Style.defoultFont]}
+              style={[Style.input, Style.DefaultFont]}
               placeholder='folder name'
               placeholderTextColor='white'
               maxLength={30}
@@ -179,7 +157,7 @@ export default function Folders({ navigation }) {
         <TouchableOpacity onPress={() => createFolder()}>
           <MaterialIcons name='create-new-folder' size={30} color='white' />
         </TouchableOpacity>
-        <Text style={[Style.defoultFont, Style.textColor]}>
+        <Text style={[Style.DefaultFont, Style.textColor]}>
           create and edit folders here
         </Text>
       </View>
@@ -211,13 +189,13 @@ export default function Folders({ navigation }) {
                     ]}
                     onPress={() =>
                       navigation.navigate("folderPresets", {
-                        data: data,
+                        id: data.id,
                       })
                     }>
                     <Text
                       style={[
                         Style.textColor,
-                        Style.defoultFont,
+                        Style.DefaultFont,
                         { textAlign: "center" },
                       ]}>
                       {data.name}

@@ -10,11 +10,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function EditSettings({ navigation }) {
   const { setHistory } = useContext(HistoryContext);
-  const { preSetDefoult, setPreSetDefoult, firstTime, setFirstTime } =
+  const { preSetDefault, setPreSetDefault, firstTime, setFirstTime } =
     useContext(SettingsContext);
 
   const withoutFolders = () => {
-    setPreSetDefoult(true);
+    setPreSetDefault(true);
     setFirstTime(false);
   };
 
@@ -31,16 +31,16 @@ export default function EditSettings({ navigation }) {
       <Modal isVisible={firstTime} coverScreen={false} style={{ flex: 1 }}>
         <View style={Style.lightBackground}>
           <View style={{ alignItems: "center" }}>
-            <Text style={[Style.defoultFont, Style.textColor]}>
+            <Text style={[Style.DefaultFont, Style.textColor]}>
               do you want to make presets folders or
             </Text>
-            <Text style={[Style.defoultFont, Style.textColor]}>
+            <Text style={[Style.DefaultFont, Style.textColor]}>
               make presets without folders?
             </Text>
-            <Text style={[Style.defoultFont, Style.textColor]}>
+            <Text style={[Style.DefaultFont, Style.textColor]}>
               both saves the presets.
             </Text>
-            <Text style={[Style.defoultFont, Style.textColor]}>
+            <Text style={[Style.DefaultFont, Style.textColor]}>
               you can cange it later in settings.
             </Text>
           </View>
@@ -63,13 +63,13 @@ export default function EditSettings({ navigation }) {
         <Text
           style={[
             Style.textColor,
-            Style.defoultFont,
+            Style.DefaultFont,
             { textAlign: "center", marginTop: 10 },
           ]}>
           welcome to edit screen
         </Text>
 
-        {preSetDefoult ? (
+        {preSetDefault ? (
           <TouchableOpacity
             onPress={() => navigation.navigate("preset")}
             style={{ borderWidth: 2, marginVertical: 10 }}>

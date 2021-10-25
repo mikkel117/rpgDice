@@ -332,7 +332,7 @@ export default function presets({ navigation }) {
               <Text
                 style={[
                   Style.textColor,
-                  Style.defoultFont,
+                  Style.DefaultFont,
                   { textAlign: "center" },
                 ]}>
                 {diceNumber}d
@@ -366,7 +366,7 @@ export default function presets({ navigation }) {
             <View style={styles.diceNBuff}>
               <Text
                 style={[
-                  Style.defoultFont,
+                  Style.DefaultFont,
                   Style.textColor,
                   { textAlign: "center" },
                 ]}>
@@ -461,7 +461,7 @@ export default function presets({ navigation }) {
               <View style={styles.diceNBuff}>
                 <Text
                   style={[
-                    Style.defoultFont,
+                    Style.DefaultFont,
                     Style.textColor,
                     { textAlign: "center" },
                   ]}>
@@ -495,7 +495,7 @@ export default function presets({ navigation }) {
               <View style={styles.diceNBuff}>
                 <Text
                   style={[
-                    Style.defoultFont,
+                    Style.DefaultFont,
                     Style.textColor,
                     { textAlign: "center" },
                   ]}>
@@ -545,7 +545,7 @@ export default function presets({ navigation }) {
               <Text
                 style={[
                   Style.textColor,
-                  Style.defoultFont,
+                  Style.DefaultFont,
                   { marginBottom: 5 },
                 ]}>
                 {rollArray[0].diceNumber}d{rollArray[0].dice}
@@ -568,7 +568,7 @@ export default function presets({ navigation }) {
               <Text
                 style={[
                   Style.textColor,
-                  Style.defoultFont,
+                  Style.DefaultFont,
                   { marginBottom: 10 },
                 ]}>
                 {rollArray[0].rollArray.map((data) => {
@@ -638,7 +638,7 @@ export default function presets({ navigation }) {
                       justifyContent: "space-around",
                       flex: 1,
                     }}>
-                    <Text style={[Style.textColor, Style.defoultFont]}>
+                    <Text style={[Style.textColor, Style.DefaultFont]}>
                       {item.pDiceNumber}d{item.pDice}
                       {item.pBuff ? (
                         <>
@@ -662,7 +662,7 @@ export default function presets({ navigation }) {
                   <View style={{ flex: 1, alignSelf: "center" }}>
                     <Text
                       style={[
-                        Style.defoultFont,
+                        Style.DefaultFont,
                         Style.textColor,
                         {
                           marginBottom: 5,
@@ -699,7 +699,7 @@ export default function presets({ navigation }) {
       ) : (
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-          <Text style={[Style.defoultFont, Style.textColor]}>Empty</Text>
+          <Text style={[Style.DefaultFont, Style.textColor]}>Empty</Text>
         </View>
       )}
 
