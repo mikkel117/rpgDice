@@ -8,47 +8,21 @@ import {
   SafeAreaView,
   Platform,
   StatusBar,
-  Button,
 } from "react-native";
 
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
+
 import Style from "../../../assets/styles/styles";
-import Folders from "../Folders";
+import PresetStyle from "../../../assets/styles/PresetStyle";
 
 export default function Sandbox() {
-  const [array, setArray] = useState([
-    {
-      id: 1,
-      name: "Bob the wizard",
-      items: [
-        { id: 1, name: "Staff attack", numberOfDice: 1, dice: 20, buff: 3 },
-      ],
-    },
-  ]);
+  const [time, setTime] = useState("");
 
-  const test = () => {
+  useEffect(() => {
     let time = new Date();
-    let array = [
-      {
-        id: time.toLocaleString(),
-        name: `test ${time.getTime()}`,
-        numberOfDice: 2,
-        dice: 30,
-        buff: 20,
-      },
-    ];
-    return array;
-  };
-
-  const update = () => {
-    let testArray = test();
-    const old = array[0].items;
-    const updated = [...old, { testArray }];
-    const clone = [...array];
-    clone[0].items = updated;
-    /*  console.log(clone); */
-    setArray(clone);
-  };
-
+    setTime(time.toLocaleString());
+  }, []);
   return (
     <SafeAreaView style={[styles.container]}>
       <View style={{ borderBottomWidth: 2 }}>
@@ -56,9 +30,34 @@ export default function Sandbox() {
           welcome to sandbox
         </Text>
       </View>
-      <View style={{ alignItems: "center" }}>
-        <Button title='click me' onPress={() => update()} />
-        <Button title='click me' onPress={() => console.log(array)} />
+      <View style={[PresetStyle.presetContainer, {}]}>
+        <View style={PresetStyle.diceButtonContainer}>
+          <View style={[PresetStyle.diceContainer]}>
+            <MaterialCommunityIcons name='dice-d12' size={50} color='white' />
+          </View>
+          <View style={[PresetStyle.buttonContainer]}>
+            <Text style={[PresetStyle.buttonText]}>some text</Text>
+            <TouchableOpacity>
+              <Text style={[PresetStyle.button]}>roll</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={[PresetStyle.deleteEditcontainer]}>
+          <Text style={[PresetStyle.name]}>{time}</Text>
+          <View style={[PresetStyle.deleteEditWrapper]}>
+            <TouchableOpacity>
+              <MaterialIcons name='delete' size={40} color='red' />
+            </TouchableOpacity>
+
+            <TouchableOpacity>
+              <MaterialCommunityIcons
+                name='content-save-edit'
+                size={40}
+                color='white'
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
     </SafeAreaView>
   );
