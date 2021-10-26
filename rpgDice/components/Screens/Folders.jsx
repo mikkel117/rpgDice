@@ -53,11 +53,14 @@ export default function Folders({ navigation }) {
         items: [],
       },
     ]);
+    setFolderName("");
   };
 
   const callUpdateFolder = () => {
     let name = folderName;
     folder[Folderindex].name = name;
+    setFolder([...folder]);
+    setFolderName("");
     setFolderModal(false);
   };
 

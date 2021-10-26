@@ -206,6 +206,13 @@ export default function presets({ navigation }) {
           hPlusEmAll: rollArray[0].resoult,
         },
       ]);
+      /* CreateHistroy(
+        rollArray[0].diceNumber,
+        rollArray[0].dice,
+        rollArray[0].rollArray,
+        rollArray[0].buff,
+        rollArray[0].resoult
+      ); */
     }
   }, [rollPreSetModal]);
 

@@ -6,7 +6,6 @@ export const SettingsContext = createContext();
 const SettingsContextProvider = (props) => {
   const [firstTime, setFirstTime] = useState(true);
   const [preSetDefault, setPreSetDefault] = useState(false);
-  /* const [settingsArray, setSettingsArray] = useState([]) */
   useEffect(() => {
     read();
   }, []);

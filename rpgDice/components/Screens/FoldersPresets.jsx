@@ -95,7 +95,6 @@ export default function FoldersPresets({ route, navigation }) {
 
   const deleteOneAlert = (id) => {
     let objIndex = folder[folderIndex].items.findIndex((obj) => obj.id == id);
-    console.log(folder[folderIndex].items[objIndex]);
     Alert.alert(
       "Delete",
       `do you want to delete ${folder[folderIndex].items[objIndex].name}`,
@@ -241,8 +240,12 @@ export default function FoldersPresets({ route, navigation }) {
         </View>
       </Modal>
 
-      <TouchableOpacity onPress={() => navigation.navigate("folders")}>
-        <Text style={[Style.buttonStyle]}>go back to folders</Text>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("folders")}
+        style={{ alignSelf: "flex-start" }}>
+        <Text style={[Style.buttonStyle, { marginTop: 10 }]}>
+          go back to folders
+        </Text>
       </TouchableOpacity>
 
       <View style={{ alignItems: "center" }}>
@@ -252,7 +255,7 @@ export default function FoldersPresets({ route, navigation }) {
       </View>
 
       <View style={{ alignItems: "center" }}>
-        <Text style={[Style.DefaultFont, Style.textColor]}>
+        <Text style={[Style.textColor, { fontSize: 25, fontWeight: "bold" }]}>
           {folder[folderIndex].name}
         </Text>
       </View>
