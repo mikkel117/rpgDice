@@ -46,6 +46,8 @@ export default function FoldersPresets({ route, navigation }) {
   const [presetIndex, setPresetIndex] = useState();
 
   const [rollModal, setRollModal] = useState();
+  const [rollArray, setRollArray] = useState([]);
+  const [resoult, setResoult] = useState(0);
 
   const { id } = route.params;
 
@@ -59,9 +61,21 @@ export default function FoldersPresets({ route, navigation }) {
 
   useEffect(() => {
     if (rollModal == true) {
-      console.log("hey");
     }
   }, [rollModal]);
+
+  useEffect(() => {
+    //if rolled is now 0 then do this
+    if (rollArray != 0) {
+      let Plus = 0;
+      rollArray.map((data) => {
+        Plus += data.item;
+      });
+      Plus += buff;
+      setResoult(Plus);
+    }
+    //ever time rolled is updated
+  }, [rollArray]);
 
   const createPreset = () => {
     let time = new Date();
@@ -190,21 +204,24 @@ export default function FoldersPresets({ route, navigation }) {
     setNewPreset(false);
   };
 
-  /* id: time.toLocaleTimeString(),
-        numberOfDice: diceNumber,
-        buff: buff,
-        name: name,
-        dice: dice,
-        buffPlus: pBuffPlus,
-        icon: icon, */
-  /* console.log(folder[folderIndex].items); */
   const openRollModal = (id) => {
     const objIndex = folder[folderIndex].items.findIndex((obj) => obj.id == id);
-
-    setDiceNumber(folder[folderIndex].items[objIndex].numberOfDice);
-    setSelectedDice(folder[folderIndex].items[objIndex].dice);
+    const numberOfDice = folder[folderIndex].items[objIndex].numberOfDice;
+    const diceNumber = folder[folderIndex].items[objIndex].dice;
+    setDiceNumber(numberOfDice);
+    setSelectedDice(diceNumber);
     setBuff(folder[folderIndex].items[objIndex].buff);
     setBuffPlus(folder[folderIndex].items[objIndex].buffPlus);
+    let diceSides = numberOfDice;
+    let pushArray = [];
+    for (let i = 0; i < diceSides; i++) {
+      pushArray.push({
+        key: i,
+        item: Math.floor(Math.random() * diceNumber) + 1,
+      });
+    }
+    setRollArray(pushArray);
+    pushArray = [];
     setNewPreset(true);
     setRollModal(true);
   };
@@ -213,7 +230,6 @@ export default function FoldersPresets({ route, navigation }) {
     reset();
     setTimeout(() => setRollModal(false), 300);
   };
-
   return (
     <View style={[Style.screenBackground, { flex: 1 }]}>
       <Modal
@@ -239,8 +255,25 @@ export default function FoldersPresets({ route, navigation }) {
                   Style.textColor,
                   { textAlign: "center", fontSize: 25, paddingBottom: 5 },
                 ]}>
-                {/* {resoult} */}
-                42
+                {resoult}
+              </Text>
+              <Text
+                style={[
+                  Style.textColor,
+                  Style.DefaultFont,
+                  { textAlign: "center", paddingBottom: 5 },
+                ]}>
+                {rollArray.map((data) => {
+                  return (
+                    <Text key={data.key}>
+                      {rollArray.length == 1 ? (
+                        <>{data.item}</>
+                      ) : (
+                        <>{data.item},</>
+                      )}
+                    </Text>
+                  );
+                })}
               </Text>
             </View>
           </TouchableOpacity>
