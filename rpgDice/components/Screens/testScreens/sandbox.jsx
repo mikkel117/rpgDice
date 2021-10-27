@@ -8,12 +8,24 @@ import {
   SafeAreaView,
   Platform,
   StatusBar,
+  Button,
 } from "react-native";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 
 import Style from "../../../assets/styles/styles";
+
+function Test2() {
+  const [time, setTime] = useState();
+
+  useEffect(() => {
+    console.log(time);
+  }, [time]);
+
+  const getTime = new Date();
+  setTime(getTime.toLocaleString);
+}
 
 export default function Sandbox() {
   return (
@@ -23,6 +35,7 @@ export default function Sandbox() {
           welcome to sandbox
         </Text>
       </View>
+      <Button title='click me' onPress={() => Test2()} />
     </SafeAreaView>
   );
 }

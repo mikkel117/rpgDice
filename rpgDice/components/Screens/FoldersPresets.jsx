@@ -23,6 +23,7 @@ import { FolderContext } from "../context/FolderContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
 
 export default function FoldersPresets({ route, navigation }) {
   const { dice } = useContext(DiceContext);
@@ -32,12 +33,16 @@ export default function FoldersPresets({ route, navigation }) {
   const [color, setColor] = useState("white");
 
   const [folderIndex, setFolderIndex] = useState(0);
+  const [updateModal, setUpdateModal] = useState(false);
 
   const [newPreset, setNewPreset] = useState(false);
   const [presetName, setPresetName] = useState("");
+  const [presetNamePlaceholder, setPresetNamePlaceholder] =
+    useState("Enter a name");
   const [selectedDice, setSelectedDice] = useState(0);
   const [diceNumber, setDiceNumber] = useState(1);
   const [buff, setBuff] = useState(0);
+  const [presetIndex, setPresetIndex] = useState();
 
   const { id } = route.params;
 
@@ -65,7 +70,7 @@ export default function FoldersPresets({ route, navigation }) {
       name = time.toLocaleString();
     }
 
-    let icon = DiceIconSelect(selectedDice);
+    const icon = DiceIconSelect(dice);
 
     const updated = [
       ...old,
@@ -82,8 +87,21 @@ export default function FoldersPresets({ route, navigation }) {
     const clone = [...folder];
     clone[folderIndex].items = updated;
     setFolder(clone);
-    setPresetName("");
+    reset();
     setNewPreset(false);
+  };
+
+  const closeModal = () => {
+    reset();
+    setNewPreset(false);
+  };
+
+  const reset = () => {
+    setPresetNamePlaceholder("enter a name");
+    setSelectedDice(0);
+    setDiceNumber(1);
+    setBuff(0);
+    setPresetIndex();
   };
 
   const deletePreset = (id) => {
@@ -108,6 +126,42 @@ export default function FoldersPresets({ route, navigation }) {
     );
   };
 
+  const openUpdateModal = (id) => {
+    const objIndex = folder[folderIndex].items.findIndex((obj) => obj.id == id);
+    setPresetIndex(objIndex);
+    setUpdateModal(true);
+    setPresetNamePlaceholder(folder[folderIndex].items[objIndex].name);
+    setSelectedDice(folder[folderIndex].items[objIndex].dice);
+    setDiceNumber(folder[folderIndex].items[objIndex].numberOfDice);
+    setBuff(folder[folderIndex].items[objIndex].buff);
+    setNewPreset(true);
+  };
+
+  const updatePreset = () => {
+    if (presetName == "") {
+      folder[folderIndex].items[presetIndex].name = presetNamePlaceholder;
+    } else {
+      folder[folderIndex].items[presetIndex].name = presetName;
+    }
+
+    if (buff > 0) {
+      folder[folderIndex].items[presetIndex].buffPlus = true;
+    } else {
+      folder[folderIndex].items[presetIndex].buffPlus = false;
+    }
+
+    const icon = DiceIconSelect(selectedDice);
+
+    folder[folderIndex].items[presetIndex].icon = icon;
+    folder[folderIndex].items[presetIndex].dice = selectedDice;
+    folder[folderIndex].items[presetIndex].numberOfDice = diceNumber;
+    folder[folderIndex].items[presetIndex].buff = buff;
+    reset();
+    setFolder([...folder]);
+    setUpdateModal(false);
+    setNewPreset(false);
+  };
+
   return (
     <View style={[Style.screenBackground, { flex: 1 }]}>
       <Modal
@@ -118,7 +172,7 @@ export default function FoldersPresets({ route, navigation }) {
           <TextInput
             keyboardType='default'
             style={[Style.input, Style.DefaultFont]}
-            placeholder={`enter a name`}
+            placeholder={`${presetNamePlaceholder}`}
             placeholderTextColor='white'
             maxLength={30}
             onChangeText={(val) => {
@@ -225,17 +279,27 @@ export default function FoldersPresets({ route, navigation }) {
           <View style={{ flexDirection: "row" }}>
             <TouchableOpacity
               style={{ flexBasis: "45%" }}
-              onPress={() => setNewPreset(false)}>
+              onPress={() => closeModal()}>
               <Text style={[Style.buttonStyle]}>close</Text>
             </TouchableOpacity>
             <View style={{ flexBasis: "10%" }}></View>
-            <TouchableOpacity
-              style={{ flexBasis: "45%" }}
-              onPress={() => createPreset()}>
-              <Text style={[Style.buttonStyle, { backgroundColor: "green" }]}>
-                create
-              </Text>
-            </TouchableOpacity>
+            {updateModal ? (
+              <TouchableOpacity
+                style={{ flexBasis: "45%" }}
+                onPress={() => updatePreset()}>
+                <Text style={[Style.buttonStyle, { backgroundColor: "green" }]}>
+                  update
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={{ flexBasis: "45%" }}
+                onPress={() => createPreset()}>
+                <Text style={[Style.buttonStyle, { backgroundColor: "green" }]}>
+                  create
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </Modal>
@@ -243,21 +307,22 @@ export default function FoldersPresets({ route, navigation }) {
       <TouchableOpacity
         onPress={() => navigation.navigate("folders")}
         style={{ alignSelf: "flex-start" }}>
-        <Text style={[Style.buttonStyle, { marginTop: 10 }]}>
-          go back to folders
-        </Text>
+        <Entypo name='back' size={40} color='white' />
       </TouchableOpacity>
-
-      <View style={{ alignItems: "center" }}>
-        <TouchableOpacity onPress={() => setNewPreset(true)}>
-          <MaterialIcons name='create-new-folder' size={30} color='white' />
-        </TouchableOpacity>
-      </View>
 
       <View style={{ alignItems: "center" }}>
         <Text style={[Style.textColor, { fontSize: 25, fontWeight: "bold" }]}>
           {folder[folderIndex].name}
         </Text>
+
+        <TouchableOpacity onPress={() => setNewPreset(true)}>
+          <MaterialIcons
+            name='create-new-folder'
+            size={35}
+            color='white'
+            style={{ marginTop: 10 }}
+          />
+        </TouchableOpacity>
       </View>
 
       {folder[folderIndex].items.length > 0 ? (
@@ -296,7 +361,7 @@ export default function FoldersPresets({ route, navigation }) {
                       <MaterialIcons name='delete' size={40} color='red' />
                     </TouchableOpacity>
 
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => openUpdateModal(data.id)}>
                       <MaterialCommunityIcons
                         name='content-save-edit'
                         size={40}
