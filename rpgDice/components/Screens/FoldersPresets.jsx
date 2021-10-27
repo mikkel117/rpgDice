@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState, useLayoutEffect } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import {
   View,
   Text,
@@ -58,11 +58,6 @@ export default function FoldersPresets({ route, navigation }) {
       setColor("black");
     }
   }, []);
-
-  useEffect(() => {
-    if (rollModal == true) {
-    }
-  }, [rollModal]);
 
   useEffect(() => {
     //if rolled is now 0 then do this

@@ -88,6 +88,16 @@ export default function Settings() {
       { id: 6, sides: 20, name: "dice-d20" },
       { id: 7, sides: 100, name: "dice-multiple" },
     ]);
+
+    setPreSetDefault(false);
+    setFirstTime(true);
+    Animated.timing(translation, {
+      toValue: preSetDefault ? 0 : 0,
+      easing: Easing.bounce,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
+
     deleteAllSaves();
   };
 
@@ -102,6 +112,9 @@ export default function Settings() {
   return (
     <View style={[Style.screenBackground, { flex: 1 }]}>
       <View style={{ flex: 1, alignItems: "center" }}>
+        <Text style={[Style.DefaultFont, Style.textColor, {}]}>
+          use presets without folders as default
+        </Text>
         <Pressable onPress={() => setPreSetDefault(!preSetDefault)}>
           <View
             style={{
