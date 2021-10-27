@@ -26,7 +26,6 @@ export default function EditDice({ navigation }) {
 
   const [newDice, setNewDice] = useState(false);
   const [diceVal, setDiceVal] = useState("");
-  const [diceChoice, setDiceChoice] = useState(false);
 
   const [updateModal, setUpdateModal] = useState(false);
   const [diceInputPlaceholder, setDiceInputPlaceholder] =
@@ -65,20 +64,6 @@ export default function EditDice({ navigation }) {
     setDiceVal("");
   };
 
-  //update dice
-  const updateDice = () => {
-    let diceValue = parseInt(diceVal);
-    if (diceVal == "") {
-      diceValue = 4;
-    }
-    const icon = DiceIconSelect(diceValue);
-    dice[index].sides = diceValue;
-    dice[index].name = icon;
-    setDice([...dice]);
-    setNewDice(false);
-    reset();
-  };
-
   //deletes a dice using its id
   const deleteDice = (id) => {
     setDice(dice.filter((item) => item.id != id));
@@ -100,6 +85,20 @@ export default function EditDice({ navigation }) {
         },
       ]
     );
+  };
+
+  //update dice
+  const updateDice = () => {
+    let diceValue = parseInt(diceVal);
+    if (diceVal == "") {
+      diceValue = 4;
+    }
+    const icon = DiceIconSelect(diceValue);
+    dice[index].sides = diceValue;
+    dice[index].name = icon;
+    setDice([...dice]);
+    setNewDice(false);
+    reset();
   };
 
   //finds where a dice is in the array (the index of the dice) using its id.

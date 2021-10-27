@@ -25,7 +25,7 @@ const PresetStyle = StyleSheet.create({
   },
   buttonContainer: {
     flexShrink: 1,
-    justifyContent: "space-between",
+    justifyContent: "center",
     marginLeft: 5,
   },
   buttonText: {

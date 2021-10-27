@@ -85,10 +85,10 @@ export default function presets({ navigation }) {
 
   //makes a new preSet
   const MakePreSet = () => {
-    var time = new Date();
+    const time = new Date();
     let checkName = name;
     let checkBuffplus = false;
-    let diceCheck = selectedDice;
+    let diceCheck;
 
     if (checkName == "") {
       checkName = time.toLocaleString();
@@ -96,11 +96,11 @@ export default function presets({ navigation }) {
     if (buff > 0) {
       checkBuffplus = true;
     }
-    if (diceCheck == "") {
+    if (selectedDice == "") {
       diceCheck = 4;
     }
 
-    let icon = DiceIconSelect(selectedDice);
+    let icon = DiceIconSelect(diceCheck);
 
     setPreSet([
       ...preSet,
@@ -206,13 +206,6 @@ export default function presets({ navigation }) {
           hPlusEmAll: rollArray[0].resoult,
         },
       ]);
-      /* CreateHistroy(
-        rollArray[0].diceNumber,
-        rollArray[0].dice,
-        rollArray[0].rollArray,
-        rollArray[0].buff,
-        rollArray[0].resoult
-      ); */
     }
   }, [rollPreSetModal]);
 
@@ -583,13 +576,15 @@ export default function presets({ navigation }) {
             return (
               <View style={[PresetStyle.presetContainer, {}]} key={data.id}>
                 <View style={PresetStyle.diceButtonContainer}>
-                  <View style={[PresetStyle.diceContainer]}>
-                    <MaterialCommunityIcons
-                      name={data.pIconName}
-                      size={50}
-                      color='white'
-                    />
-                  </View>
+                  <TouchableOpacity onPress={() => rollPreSet(data.id)}>
+                    <View style={[PresetStyle.diceContainer]}>
+                      <MaterialCommunityIcons
+                        name={data.pIconName}
+                        size={50}
+                        color='white'
+                      />
+                    </View>
+                  </TouchableOpacity>
                   <View style={[PresetStyle.buttonContainer]}>
                     <Text style={[PresetStyle.buttonText]}>
                       {data.pDiceNumber}d{data.pDice}
@@ -605,9 +600,9 @@ export default function presets({ navigation }) {
                         <></>
                       )}
                     </Text>
-                    <TouchableOpacity onPress={() => rollPreSet(data.id)}>
+                    {/* <TouchableOpacity onPress={() => rollPreSet(data.id)}>
                       <Text style={[PresetStyle.button]}>roll</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                   </View>
                 </View>
                 <View style={[PresetStyle.deleteEditcontainer]}>
