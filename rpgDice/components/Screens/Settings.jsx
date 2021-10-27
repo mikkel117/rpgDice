@@ -23,7 +23,6 @@ export default function Settings() {
 
   const translation = useRef(new Animated.Value(0)).current;
 
-  const [preSetDefaultToggle, setPreSetDefaultToggle] = useState();
   const [preSetDefaultColor, setPreSetDefaultColor] = useState("green");
 
   useEffect(() => {
@@ -36,10 +35,8 @@ export default function Settings() {
 
   useEffect(() => {
     if (preSetDefault == true) {
-      setPreSetDefaultToggle("on");
       setPreSetDefaultColor("green");
     } else {
-      setPreSetDefaultToggle("off");
       setPreSetDefaultColor("red");
     }
     Animated.timing(translation, {
