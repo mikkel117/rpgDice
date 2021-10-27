@@ -73,6 +73,7 @@ export default function FoldersPresets({ route, navigation }) {
       });
       Plus += buff;
       setResoult(Plus);
+      History(Plus);
     }
     //ever time rolled is updated
   }, [rollArray]);
@@ -221,6 +222,7 @@ export default function FoldersPresets({ route, navigation }) {
       });
     }
     setRollArray(pushArray);
+
     pushArray = [];
     setNewPreset(true);
     setRollModal(true);
@@ -230,6 +232,24 @@ export default function FoldersPresets({ route, navigation }) {
     reset();
     setTimeout(() => setRollModal(false), 300);
   };
+
+  const History = (Plus) => {
+    let time = new Date();
+
+    setHistory([
+      ...history,
+      {
+        createdAt: time.toLocaleTimeString(),
+        key: time.getMilliseconds(),
+        hNumberOfDice: diceNumber,
+        hDice: selectedDice,
+        hRolled: rollArray,
+        hBuff: buff,
+        hPlusEmAll: Plus,
+      },
+    ]);
+  };
+
   return (
     <View style={[Style.screenBackground, { flex: 1 }]}>
       <Modal
