@@ -2,10 +2,10 @@ const DiceIconSelect = (dice) => {
   let diceIcon;
   switch (dice) {
     case 4:
-      diceIcon = "dice-4";
+      diceIcon = "dice-d4";
       break;
     case 6:
-      diceIcon = "dice-6";
+      diceIcon = "dice-d6";
       break;
     case 8:
       diceIcon = "dice-d8";
@@ -19,13 +19,18 @@ const DiceIconSelect = (dice) => {
     case 20:
       diceIcon = "dice-d20";
       break;
-    case 100:
+    /* case 100:
       diceIcon = "dice-multiple";
-      break;
+      break; */
+    /* case dice > 100:
+      diceIcon = "dice-multiple";
+      break; */
     default:
       diceIcon = "dice-1";
-
       break;
+  }
+  if (dice > 100 || dice == 100) {
+    diceIcon = "dice-multiple";
   }
   return diceIcon;
 };

@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from "react";
+import React, { useEffect, useContext, useState, useLayoutEffect } from "react";
 import {
   View,
   Text,
@@ -122,6 +122,25 @@ export default function FoldersPresets({ route, navigation }) {
           style: "cancel",
         },
         { text: "yes", onPress: () => deletePreset(id) },
+      ]
+    );
+  };
+
+  const deleteAllPresets = () => {
+    folder[folderIndex].items = [];
+    setFolder([...folder]);
+  };
+
+  const deleteAllAlert = () => {
+    Alert.alert(
+      "Delete",
+      `do you want to all delete presets in "${folder[folderIndex].name}" folder`,
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        { text: "yes", onPress: () => deleteAllPresets() },
       ]
     );
   };
@@ -379,6 +398,22 @@ export default function FoldersPresets({ route, navigation }) {
           style={[{ flex: 1, justifyContent: "center", alignItems: "center" }]}>
           <Text style={[Style.textColor, Style.DefaultFont]}>Empty</Text>
         </View>
+      )}
+
+      {folder[folderIndex].items.length > 0 ? (
+        <TouchableOpacity
+          style={{ alignSelf: "flex-end" }}
+          onPress={() => deleteAllAlert()}>
+          <Text
+            style={[
+              Style.buttonStyle,
+              { backgroundColor: "red", fontSize: 15, padding: 5 },
+            ]}>
+            DELETE ALL PRESETS
+          </Text>
+        </TouchableOpacity>
+      ) : (
+        <></>
       )}
     </View>
   );

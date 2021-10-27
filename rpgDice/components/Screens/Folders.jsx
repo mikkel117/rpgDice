@@ -32,7 +32,7 @@ export default function Folders({ navigation }) {
   //********************************************************** */
 
   //********************************************************** */
-  //create new and update folder
+  //create new, update and delete folder
   const createFolder = () => {
     setFolderUpdate(false);
     setFolderModal(true);
@@ -64,11 +64,6 @@ export default function Folders({ navigation }) {
     setFolderModal(false);
   };
 
-  /*   const getIndex = (id) => {
-    let index = folder.findIndex((obj) => obj.id == id);
-    setFolderIndex(index);
-  }; */
-
   const deleteOneFolder = (id) => {
     let index = folder.findIndex((obj) => obj.id == id);
     Alert.alert(
@@ -95,6 +90,24 @@ export default function Folders({ navigation }) {
     setFolderUpdate(true);
     setFolderModal(true);
   };
+
+  const deleteAllAlert = () => {
+    Alert.alert(
+      `delete folder`,
+      `you are about to delete all folders this will delete evey preset for this folder. Are you sure this is what you want?`,
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "delete",
+          onPress: () => setFolder([]),
+        },
+      ]
+    );
+  };
+
   //********************************************************** */
 
   return (
@@ -157,79 +170,105 @@ export default function Folders({ navigation }) {
       </Modal>
 
       <View style={{ alignItems: "center" }}>
-        <TouchableOpacity onPress={() => createFolder()}>
-          <MaterialIcons name='create-new-folder' size={30} color='white' />
-        </TouchableOpacity>
         <Text style={[Style.DefaultFont, Style.textColor]}>
           create and edit folders here
         </Text>
+        <TouchableOpacity onPress={() => createFolder()}>
+          <MaterialIcons name='create-new-folder' size={30} color='white' />
+        </TouchableOpacity>
       </View>
       <View style={{ flex: 1 }}>
-        <ScrollView style={{ flex: 1 }}>
-          {folder.map((data) => {
-            return (
-              <View
-                key={data.id}
-                style={{
-                  borderTopWidth: 1,
-                  borderBottomWidth: 1,
-                  borderColor: "gray",
-                  padding: 10,
-                  marginVertical: 10,
-                  flex: 1,
-                  flexDirection: "row",
-                }}>
+        {folder.length > 0 ? (
+          <ScrollView style={{ flex: 1 }}>
+            {folder.map((data) => {
+              return (
                 <View
-                  style={[
-                    {
-                      flex: 1,
-                    },
-                  ]}>
-                  <TouchableOpacity
-                    style={[
-                      Style.lightBackground,
-                      { height: 70, justifyContent: "center" },
-                    ]}
-                    onPress={() =>
-                      navigation.navigate("folderPresets", {
-                        id: data.id,
-                      })
-                    }>
-                    <Text
-                      style={[
-                        Style.textColor,
-                        Style.DefaultFont,
-                        { textAlign: "center" },
-                      ]}>
-                      {data.name}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-                <View
+                  key={data.id}
                   style={{
+                    borderTopWidth: 1,
+                    borderBottomWidth: 1,
+                    borderColor: "gray",
+                    padding: 10,
+                    marginVertical: 10,
                     flex: 1,
                     flexDirection: "row",
-                    justifyContent: "space-around",
-                    alignItems: "center",
                   }}>
-                  <TouchableOpacity onPress={() => deleteOneFolder(data.id)}>
-                    <MaterialIcons name='delete' size={40} color='red' />
-                  </TouchableOpacity>
+                  <View
+                    style={[
+                      {
+                        flex: 1,
+                      },
+                    ]}>
+                    <TouchableOpacity
+                      style={[
+                        Style.lightBackground,
+                        { height: 70, justifyContent: "center" },
+                      ]}
+                      onPress={() =>
+                        navigation.navigate("folderPresets", {
+                          id: data.id,
+                        })
+                      }>
+                      <Text
+                        style={[
+                          Style.textColor,
+                          Style.DefaultFont,
+                          { textAlign: "center" },
+                        ]}>
+                        {data.name}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View
+                    style={{
+                      flex: 1,
+                      flexDirection: "row",
+                      justifyContent: "space-around",
+                      alignItems: "center",
+                    }}>
+                    <TouchableOpacity onPress={() => deleteOneFolder(data.id)}>
+                      <MaterialIcons name='delete' size={40} color='red' />
+                    </TouchableOpacity>
 
-                  <TouchableOpacity
-                    onPress={() => updateFolder(data.name, data.id)}>
-                    <MaterialCommunityIcons
-                      name='content-save-edit'
-                      size={40}
-                      color='white'
-                    />
-                  </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => updateFolder(data.name, data.id)}>
+                      <MaterialCommunityIcons
+                        name='content-save-edit'
+                        size={40}
+                        color='white'
+                      />
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </View>
-            );
-          })}
-        </ScrollView>
+              );
+            })}
+          </ScrollView>
+        ) : (
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              flex: 1,
+            }}>
+            <Text style={[Style.DefaultFont, Style.textColor]}>Empty</Text>
+          </View>
+        )}
       </View>
+      {folder.length > 0 ? (
+        <TouchableOpacity
+          style={{ alignSelf: "flex-end" }}
+          onPress={() => deleteAllAlert()}>
+          <Text
+            style={[
+              Style.buttonStyle,
+              { backgroundColor: "red", fontSize: 15, padding: 5 },
+            ]}>
+            DELETE ALL FOLDERS
+          </Text>
+        </TouchableOpacity>
+      ) : (
+        <></>
+      )}
     </View>
   );
 }

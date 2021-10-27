@@ -15,6 +15,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 
+import DiceIconSelect from "../functions/DiceIconSelect";
 import Style from "../../assets/styles/styles";
 import { DiceContext } from "../context/DiceContext";
 
@@ -27,42 +28,55 @@ export default function EditDice({ navigation }) {
   const [diceVal, setDiceVal] = useState("");
   const [diceChoice, setDiceChoice] = useState(false);
 
+  const [updateModal, setUpdateModal] = useState(false);
+  const [diceInputPlaceholder, setDiceInputPlaceholder] =
+    useState("Number of sides");
+
+  const reset = () => {
+    setIndex(0);
+    setDiceVal("");
+    setDiceInputPlaceholder("Number of sides");
+    setUpdateModal(false);
+  };
+
+  const close = () => {
+    reset();
+    setNewDice(false);
+  };
+
   //adds a new dice
   const addDice = () => {
-    var time = new Date();
-    let diceValue = diceVal;
-    if (diceValue == "") {
+    /* setDiceNumber((item) => parseInt(item)); */
+    let diceValue = parseInt(diceVal);
+    const time = new Date();
+    if (diceVal == "") {
       diceValue = 4;
     }
+    const icon = DiceIconSelect(diceValue);
     setDice([
       ...dice,
       {
         id: time.getTime(),
         sides: diceValue,
-        name: "dice-1",
+        name: icon,
       },
     ]);
     setNewDice(false);
     setDiceVal("");
   };
 
-  //checks if the value is 0 and if it is not it will set diceval to whatever the user tipes
-  const zeroCheck = (val) => {
-    if (val != "") {
-      setDiceVal(val);
-    }
-  };
-
   //update dice
   const updateDice = () => {
-    let diceValue = diceVal;
-    if (diceValue == "") {
+    let diceValue = parseInt(diceVal);
+    if (diceVal == "") {
       diceValue = 4;
     }
+    const icon = DiceIconSelect(diceValue);
     dice[index].sides = diceValue;
+    dice[index].name = icon;
     setDice([...dice]);
-    setDiceChoice(false);
-    setDiceVal("");
+    setNewDice(false);
+    reset();
   };
 
   //deletes a dice using its id
@@ -90,11 +104,13 @@ export default function EditDice({ navigation }) {
 
   //finds where a dice is in the array (the index of the dice) using its id.
   //and opens a modal
-  const callDiceChose = (id) => {
+  const callUpdateDice = (id) => {
     let index = dice.findIndex((obj) => obj.id == id);
     setIndex(index);
     setDiceVal(dice[index].sides);
-    setDiceChoice(true);
+    setDiceInputPlaceholder(dice[index].sides);
+    setUpdateModal(true);
+    setNewDice(true);
   };
 
   //a alert for when the dice gets reset
@@ -131,67 +147,42 @@ export default function EditDice({ navigation }) {
           <TextInput
             keyboardType='number-pad'
             style={[Style.input, Style.DefaultFont]}
-            placeholder='Number of sides'
+            placeholder={`${diceInputPlaceholder}`}
             placeholderTextColor='white'
             maxLength={3}
-            onChangeText={(val) => setDiceVal(val)}
+            onChangeText={(val) => {
+              if (val != "") {
+                setDiceVal(val);
+              }
+            }}
           />
 
           <View style={{ flexDirection: "row" }}>
             <TouchableOpacity
               style={{ flexBasis: "45%" }}
-              onPress={() => setNewDice(false)}>
+              onPress={() => close()}>
               <Text style={Style.buttonStyle}>close</Text>
             </TouchableOpacity>
 
             <View style={{ flexBasis: "10%" }}></View>
 
-            <TouchableOpacity
-              onPress={() => addDice()}
-              style={{ flexBasis: "45%" }}>
-              <Text style={[Style.buttonStyle, { backgroundColor: "green" }]}>
-                Add dice
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-      <Modal isVisible={diceChoice} coverScreen={false} style={{ flex: 1 }}>
-        <View style={Style.lightBackground}>
-          <Text
-            style={[
-              Style.DefaultFont,
-              Style.textColor,
-              { textAlign: "center" },
-            ]}>
-            d{dice[index].sides}
-          </Text>
-          <TextInput
-            keyboardType='number-pad'
-            style={[Style.input]}
-            placeholder={`d${dice[index].sides}`}
-            placeholderTextColor='white'
-            maxLength={3}
-            onChangeText={(val) => zeroCheck(val)}
-          />
-
-          <View style={{ flexDirection: "row" }}>
-            <TouchableOpacity
-              onPress={() => setDiceChoice(false)}
-              style={{ flexBasis: "45%" }}>
-              <Text style={Style.buttonStyle}>Close</Text>
-            </TouchableOpacity>
-
-            <View style={{ flexBasis: "10%" }}></View>
-
-            <TouchableOpacity
-              style={{ flexBasis: "45%" }}
-              onPress={() => updateDice()}>
-              <Text style={[Style.buttonStyle, { backgroundColor: "green" }]}>
-                update
-              </Text>
-            </TouchableOpacity>
+            {updateModal ? (
+              <TouchableOpacity
+                onPress={() => updateDice()}
+                style={{ flexBasis: "45%" }}>
+                <Text style={[Style.buttonStyle, { backgroundColor: "green" }]}>
+                  Update dice
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                onPress={() => addDice()}
+                style={{ flexBasis: "45%" }}>
+                <Text style={[Style.buttonStyle, { backgroundColor: "green" }]}>
+                  Add dice
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </Modal>
@@ -240,7 +231,7 @@ export default function EditDice({ navigation }) {
 
                     <TouchableOpacity
                       style={{ marginLeft: 20 }}
-                      onPress={() => callDiceChose(item.id)}>
+                      onPress={() => callUpdateDice(item.id)}>
                       <MaterialCommunityIcons
                         name='content-save-edit'
                         size={45}
