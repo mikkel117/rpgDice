@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import {
   Text,
@@ -10,32 +10,46 @@ import {
   StatusBar,
   Button,
 } from "react-native";
+import Modal from "react-native-modal";
+import { HistoryContext } from "../../context/HistoryContext";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 
 import Style from "../../../assets/styles/styles";
 
-function Test2() {
-  const [time, setTime] = useState();
-
-  useEffect(() => {
-    console.log(time);
-  }, [time]);
-
-  const getTime = new Date();
-  setTime(getTime.toLocaleString);
+function Test(number) {
+  const { modalOpen, setModalOpen } = useContext(HistoryContext);
+  return (
+    <>
+      <Modal isVisible={modalOpen} style={{ margin: 0 }}>
+        <View style={[Style.lightBackground]}>
+          <Text style={[Style.DefaultFont, Style.textColor]}>{number}</Text>
+          <Button title='close' onPress={() => setModalOpen(false)} />
+        </View>
+      </Modal>
+    </>
+  );
 }
 
 export default function Sandbox() {
+  const { modalOpen, setModalOpen } = useContext(HistoryContext);
+  const [number, setNumber] = useState(0);
+
+  const openModal = () => {
+    setNumber(Math.floor(Math.random() * 10) + 1);
+    setModalOpen(true);
+  };
+
   return (
     <SafeAreaView style={[styles.container]}>
       <View style={{ borderBottomWidth: 2 }}>
         <Text style={{ color: "white", textAlign: "center", fontSize: 40 }}>
           welcome to sandbox
         </Text>
+        <Button title='click me' onPress={() => openModal()} />
       </View>
-      <Button title='click me' onPress={() => Test2()} />
+      {Test(number)}
     </SafeAreaView>
   );
 }

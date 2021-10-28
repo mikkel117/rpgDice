@@ -8,6 +8,7 @@ import {
   View,
   StyleSheet,
   ScrollView,
+  FlatList,
 } from "react-native";
 import Modal from "react-native-modal";
 import { Picker } from "@react-native-picker/picker";
@@ -23,12 +24,24 @@ import Style from "../../assets/styles/styles";
 import { DiceContext } from "../context/DiceContext";
 import { HistoryContext } from "../context/HistoryContext";
 
-export default function presets({ navigation }) {
+export default function Presets({ navigation }) {
   const { dice } = useContext(DiceContext);
   const { history, setHistory } = useContext(HistoryContext);
 
-  const [preSet, setPreSet] = useState([]);
-  const [newPreSet, setNewPreSet] = useState(false);
+  /******************************************************* */
+  //update Preset
+  const [diceInputPlaceholder, setDiceInputPlaceholder] =
+    useState("enter a name");
+  const [updateModal, setUpdateModal] = useState(false);
+  const [updateId, setUpdateId] = useState(0);
+  /******************************************************* */
+
+  /******************************************************* */
+  //never reset this unless you delete all presets
+  const [preset, setPreset] = useState([]);
+  /******************************************************* */
+
+  const [newPreset, setNewPreset] = useState(false);
   const [diceNumber, setDiceNumber] = useState(1);
   const [buff, setBuff] = useState(0);
 
@@ -38,14 +51,8 @@ export default function presets({ navigation }) {
 
   const [selectedDice, setSelectedDice] = useState(0);
 
-  const [updateModal, setUpdateModal] = useState(false);
-  const [updateId, setUpdateId] = useState(0);
-
-  const [rollPreSetModal, setRollPreSetModal] = useState(false);
-  const [index, setIndex] = useState(0);
+  const [rollPresetModal, setRollPresetModal] = useState(false);
   const [rollArray, setRollArray] = useState([]);
-
-  const [diceIcon, setDiceIcon] = useState();
 
   //checks the platform and if it is android it will set color to black
   //it will also call read
@@ -55,40 +62,50 @@ export default function presets({ navigation }) {
     }
     read();
   }, []);
-  //call updatePresetSave every time preSet is change
+  //call updatePresetSave every time Preset is change
   useEffect(() => {
     updatePersetSave();
-  }, [preSet]);
+  }, [preset]);
 
-  //search the save file for the key presets and if it is not empty setPreSet to what it finds
+  const reset = () => {
+    setDiceInputPlaceholder("enter a name");
+    setDiceNumber(1);
+    setBuff(0);
+    setSelectedDice(0);
+    setName("");
+    setUpdateModal(false);
+    setUpdateId(0);
+  };
+
+  //search the save file for the key Presets and if it is not empty setPreset to what it finds
   const read = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem("presets");
       let jsonData = jsonValue != null ? JSON.parse(jsonValue) : null;
       if (jsonData != null) {
-        setPreSet(jsonData);
+        setPreset(jsonData);
       }
     } catch (e) {
       console.log("error", e);
     }
   };
 
-  //updates the save file with preSet
+  //updates the save file with Preset
   const updatePersetSave = async () => {
     try {
-      const jsonValue = JSON.stringify(preSet);
+      const jsonValue = JSON.stringify(preset);
       await AsyncStorage.setItem("presets", jsonValue);
     } catch (e) {
       console.log(e);
     }
   };
 
-  //makes a new preSet
-  const MakePreSet = () => {
+  //makes a new Preset
+  const MakePreset = () => {
     const time = new Date();
     let checkName = name;
     let checkBuffplus = false;
-    let diceCheck;
+    let diceCheck = selectedDice;
 
     if (checkName == "") {
       checkName = time.toLocaleString();
@@ -102,8 +119,8 @@ export default function presets({ navigation }) {
 
     let icon = DiceIconSelect(diceCheck);
 
-    setPreSet([
-      ...preSet,
+    setPreset([
+      ...preset,
       {
         id: time.toLocaleTimeString(),
         pDiceNumber: diceNumber,
@@ -114,35 +131,35 @@ export default function presets({ navigation }) {
         pIconName: icon,
       },
     ]);
-    setName("");
+    reset();
   };
 
-  //sets newPreSet to false so the modal closes and then calls makePreSet
+  //sets newPreset to false so the modal closes and then calls makePreset
   const create = () => {
-    setNewPreSet(false);
-    MakePreSet();
+    setNewPreset(false);
+    MakePreset();
   };
 
-  //saves the canges that has been made to a preSet
+  //saves the canges that has been made to a Preset
   const saveUpdate = () => {
     let icon = DiceIconSelect(selectedDice);
     let checkName = name;
     if (checkName == "") {
-      checkName = preSet[updateId].pName;
+      checkName = preset[updateId].pName;
     }
     let checkBuffplus = false;
     if (buff > 0) {
       checkBuffplus = true;
     }
-    preSet[updateId].pName = checkName;
-    preSet[updateId].pBuff = buff;
-    preSet[updateId].pDiceNumber = diceNumber;
-    preSet[updateId].pBuffplus = checkBuffplus;
-    preSet[updateId].pDice = selectedDice;
-    preSet[updateId].pIconName = icon;
+    preset[updateId].pName = checkName;
+    preset[updateId].pBuff = buff;
+    preset[updateId].pDiceNumber = diceNumber;
+    preset[updateId].pBuffplus = checkBuffplus;
+    preset[updateId].pDice = selectedDice;
+    preset[updateId].pIconName = icon;
     updatePersetSave();
-    setUpdateId(0);
-    setUpdateModal(false);
+    setNewPreset(false);
+    reset();
   };
 
   // updates dice if value if not 0
@@ -152,20 +169,23 @@ export default function presets({ navigation }) {
     }
   };
 
-  // findes the posison of the preSet you want to find using the id
+  // findes the posison of the Preset you want to find using the id
   const update = (id) => {
-    let objIndex = preSet.findIndex((obj) => obj.id == id);
+    let objIndex = preset.findIndex((obj) => obj.id == id);
     setUpdateId(objIndex);
-    setDiceNumber(preSet[objIndex].pDiceNumber);
-    setSelectedDice(preSet[objIndex].pDice);
-    setBuff(preSet[objIndex].pBuff);
+    setDiceNumber(preset[objIndex].pDiceNumber);
+    setSelectedDice(preset[objIndex].pDice);
+    setBuff(preset[objIndex].pBuff);
+    setName(preset[objIndex].pName);
+    setDiceInputPlaceholder(preset[objIndex].pName);
     //opens the modal
+    setNewPreset(true);
     setUpdateModal(true);
   };
 
   // delete a preSet using its id
-  const deletePreSet = (id) => {
-    setPreSet(preSet.filter((item) => item.id !== id));
+  const deletePreset = (id) => {
+    setPreset(preset.filter((item) => item.id !== id));
   };
 
   // alert for when you want to empty the preSet array
@@ -174,24 +194,24 @@ export default function presets({ navigation }) {
       {
         text: "Cancel",
       },
-      { text: "yes", onPress: () => setPreSet([]) },
+      { text: "yes", onPress: () => setPreset([]) },
     ]);
   };
 
   // alert for when you want to delete one preSet
   const deleteAlert = (id) => {
-    let objIndex = preSet.findIndex((obj) => obj.id == id);
-    Alert.alert("Delete", `do you want to delete ${preSet[objIndex].pName}`, [
+    let objIndex = preset.findIndex((obj) => obj.id == id);
+    Alert.alert("Delete", `do you want to delete ${preset[objIndex].pName}`, [
       {
         text: "Cancel",
         style: "cancel",
       },
-      { text: "yes", onPress: () => deletePreSet(id) },
+      { text: "yes", onPress: () => deletePreset(id) },
     ]);
   };
 
   useEffect(() => {
-    if (rollPreSetModal == true) {
+    if (rollPresetModal == true) {
       let time = new Date();
 
       setHistory([
@@ -207,19 +227,18 @@ export default function presets({ navigation }) {
         },
       ]);
     }
-  }, [rollPreSetModal]);
+  }, [rollPresetModal]);
 
-  const rollPreSet = (id) => {
+  const rollPreset = (id) => {
     var time = new Date();
-    let lIndex = preSet.findIndex((obj) => obj.id == id);
+    let pIndex = preset.findIndex((obj) => obj.id == id);
     let plus = 0;
-    setIndex(lIndex);
 
     let roll = [];
-    for (let i = 0; i < preSet[lIndex].pDiceNumber; i++) {
+    for (let i = 0; i < preset[pIndex].pDiceNumber; i++) {
       roll.push({
         key: i,
-        item: Math.floor(Math.random() * preSet[lIndex].pDice) + 1,
+        item: Math.floor(Math.random() * preset[pIndex].pDice) + 1,
       });
     }
     {
@@ -231,31 +250,41 @@ export default function presets({ navigation }) {
     setRollArray([
       {
         id: time.getMilliseconds(),
-        dice: preSet[lIndex].pDice,
-        diceNumber: preSet[lIndex].pDiceNumber,
-        buff: preSet[lIndex].pBuff,
+        dice: preset[pIndex].pDice,
+        diceNumber: preset[pIndex].pDiceNumber,
+        buff: preset[pIndex].pBuff,
         rollArray: roll,
-        resoult: (plus += preSet[lIndex].pBuff),
+        resoult: (plus += preset[pIndex].pBuff),
       },
     ]);
 
-    setRollPreSetModal(true);
+    setRollPresetModal(true);
   };
   const CloseRollModal = () => {
-    setRollPreSetModal(false);
+    setRollPresetModal(false);
+    reset();
+  };
+
+  const closeModal = () => {
+    setNewPreset(false);
+    reset();
   };
 
   return (
     <View style={[Style.screenBackground, { flex: 1 }]}>
-      <Modal isVisible={newPreSet} coverScreen={false} style={{ flex: 1 }}>
+      <Modal isVisible={newPreset} style={{ margin: 0 }}>
         <View style={Style.lightBackground}>
           <TextInput
             keyboardType='default'
             style={[Style.input]}
-            placeholder='enter a name'
+            placeholder={`${diceInputPlaceholder}`}
             placeholderTextColor='white'
             maxLength={30}
-            onChangeText={(val) => setName(val)}
+            onChangeText={(val) => {
+              if (val != "") {
+                setName(val);
+              }
+            }}
           />
 
           <View
@@ -358,31 +387,41 @@ export default function presets({ navigation }) {
           <View style={{ flexDirection: "row" }}>
             <TouchableOpacity
               style={{ flexBasis: "45%" }}
-              onPress={() => setNewPreSet(false)}>
+              onPress={() => closeModal()}>
               <Text style={[Style.buttonStyle]}>close</Text>
             </TouchableOpacity>
 
             <View style={{ flexBasis: "10%" }}></View>
 
-            <TouchableOpacity
-              onPress={() => create()}
-              style={{ flexBasis: "45%" }}>
-              <Text style={[Style.buttonStyle, { backgroundColor: "green" }]}>
-                create
-              </Text>
-            </TouchableOpacity>
+            {updateModal ? (
+              <TouchableOpacity
+                onPress={() => saveUpdate()}
+                style={{ flexBasis: "45%" }}>
+                <Text style={[Style.buttonStyle, { backgroundColor: "green" }]}>
+                  update
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                onPress={() => create()}
+                style={{ flexBasis: "45%" }}>
+                <Text style={[Style.buttonStyle, { backgroundColor: "green" }]}>
+                  create
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </Modal>
 
       {/* update modal */}
       {updateModal ? (
-        <Modal isVisible={updateModal} coverScreen={false} style={{ flex: 1 }}>
+        <Modal isVisible={false} coverScreen={false} style={{ flex: 1 }}>
           <View style={Style.lightBackground}>
             <TextInput
               keyboardType='default'
               style={[Style.input]}
-              placeholder={preSet[updateId].pName}
+              placeholder={preset[updateId].pName}
               placeholderTextColor='white'
               maxLength={30}
               onChangeText={(val) => setName(val)}
@@ -505,8 +544,8 @@ export default function presets({ navigation }) {
         <></>
       )}
 
-      {rollPreSetModal ? (
-        <Modal isVisible={rollPreSetModal} style={{ margin: 0 }}>
+      {rollPresetModal ? (
+        <Modal isVisible={rollPresetModal} style={{ margin: 0 }}>
           <TouchableOpacity
             style={{ flex: 1, justifyContent: "center" }}
             onPress={() => CloseRollModal()}>
@@ -565,84 +604,82 @@ export default function presets({ navigation }) {
         <Text style={[Style.textColor, { fontSize: 25 }]}>
           Create pre set rolles here
         </Text>
-        <TouchableOpacity onPress={() => setNewPreSet(true)}>
+        <TouchableOpacity onPress={() => setNewPreset(true)}>
           <MaterialCommunityIcons name='folder-plus' size={30} color='white' />
         </TouchableOpacity>
       </View>
 
-      {preSet.length > 0 ? (
-        <ScrollView style={[Style.screenBackground, { flex: 1 }]}>
-          {preSet.map((data) => {
-            return (
-              <View style={[PresetStyle.presetContainer, {}]} key={data.id}>
-                <View style={PresetStyle.diceButtonContainer}>
-                  <TouchableOpacity onPress={() => rollPreSet(data.id)}>
-                    <View style={[PresetStyle.diceContainer]}>
-                      <MaterialCommunityIcons
-                        name={data.pIconName}
-                        size={50}
-                        color='white'
-                      />
+      {preset.length > 0 ? (
+        <>
+          <ScrollView style={[Style.screenBackground, { flex: 1 }]}>
+            {preset.map((data) => {
+              return (
+                <View style={[PresetStyle.presetContainer, {}]} key={data.id}>
+                  <View style={PresetStyle.diceButtonContainer}>
+                    <TouchableOpacity onPress={() => rollPreset(data.id)}>
+                      <View style={[PresetStyle.diceContainer]}>
+                        <MaterialCommunityIcons
+                          name={data.pIconName}
+                          size={50}
+                          color='white'
+                        />
+                      </View>
+                    </TouchableOpacity>
+                    <View style={[PresetStyle.buttonContainer]}>
+                      <Text style={[PresetStyle.buttonText]}>
+                        {data.pDiceNumber}d{data.pDice}
+                        {data.pBuff ? (
+                          <>
+                            {data.pBuffplus ? (
+                              <>+{data.pBuff}</>
+                            ) : (
+                              <>{data.pBuff}</>
+                            )}
+                          </>
+                        ) : (
+                          <></>
+                        )}
+                      </Text>
                     </View>
-                  </TouchableOpacity>
-                  <View style={[PresetStyle.buttonContainer]}>
-                    <Text style={[PresetStyle.buttonText]}>
-                      {data.pDiceNumber}d{data.pDice}
-                      {data.pBuff ? (
-                        <>
-                          {data.pBuffplus ? (
-                            <>+{data.pBuff}</>
-                          ) : (
-                            <>{data.pBuff}</>
-                          )}
-                        </>
-                      ) : (
-                        <></>
-                      )}
-                    </Text>
-                    {/* <TouchableOpacity onPress={() => rollPreSet(data.id)}>
-                      <Text style={[PresetStyle.button]}>roll</Text>
-                    </TouchableOpacity> */}
                   </View>
-                </View>
-                <View style={[PresetStyle.deleteEditcontainer]}>
-                  <Text style={[PresetStyle.name]}>{data.pName}</Text>
-                  <View style={[PresetStyle.deleteEditWrapper]}>
-                    <TouchableOpacity onPress={() => deleteAlert(data.id)}>
-                      <MaterialIcons name='delete' size={40} color='red' />
-                    </TouchableOpacity>
+                  <View style={[PresetStyle.deleteEditcontainer]}>
+                    <Text style={[PresetStyle.name]}>{data.pName}</Text>
+                    <View style={[PresetStyle.deleteEditWrapper]}>
+                      <TouchableOpacity onPress={() => deleteAlert(data.id)}>
+                        <MaterialIcons name='delete' size={40} color='red' />
+                      </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => update(data.id)}>
-                      <MaterialCommunityIcons
-                        name='content-save-edit'
-                        size={40}
-                        color='white'
-                      />
-                    </TouchableOpacity>
+                      <TouchableOpacity onPress={() => update(data.id)}>
+                        <MaterialCommunityIcons
+                          name='content-save-edit'
+                          size={40}
+                          color='white'
+                        />
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 </View>
-              </View>
-            );
-          })}
-        </ScrollView>
+              );
+            })}
+          </ScrollView>
+          <TouchableOpacity
+            onPress={() => deleteAllPresets()}
+            style={{ alignSelf: "flex-end" }}>
+            <Text
+              style={[
+                Style.buttonStyle,
+                { backgroundColor: "red", fontSize: 15, padding: 5 },
+              ]}>
+              DELETE ALL PRESETS
+            </Text>
+          </TouchableOpacity>
+        </>
       ) : (
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
           <Text style={[Style.DefaultFont, Style.textColor]}>Empty</Text>
         </View>
       )}
-
-      <TouchableOpacity
-        onPress={() => deleteAllPresets()}
-        style={{ alignSelf: "flex-end" }}>
-        <Text
-          style={[
-            Style.buttonStyle,
-            { backgroundColor: "red", fontSize: 15, padding: 5 },
-          ]}>
-          DELETE ALL PRESETS
-        </Text>
-      </TouchableOpacity>
     </View>
   );
 }

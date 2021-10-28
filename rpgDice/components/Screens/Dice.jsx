@@ -6,7 +6,6 @@ import {
   FlatList,
   TouchableOpacity,
   TextInput,
-  Platform,
 } from "react-native";
 
 import Modal from "react-native-modal";
@@ -17,14 +16,12 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Style from "../../assets/styles/styles";
 import { HistoryContext } from "../context/HistoryContext";
 import { DiceContext } from "../context/DiceContext";
+import HistoryRoll from "../functions/HistoryRoll";
 
 export default function Dice() {
   //saves all the thowes in the app as long as it is open
   const { history, setHistory } = useContext(HistoryContext);
   const { dice, setDice } = useContext(DiceContext);
-
-  /*   const [newDice, setNewDice] = useState(false);
-  const [diceVal, setDiceVal] = useState(); */
 
   //opens the modal to see the dice thow details
   const [modanOpen, setModanOpen] = useState(false);
@@ -193,7 +190,15 @@ export default function Dice() {
           </TouchableOpacity>
         )}
       />
-
+      {/* {HistoryRoll(
+        modanOpen,
+        diceNumber,
+        curentDice,
+        buff,
+        buffplus,
+        rolled,
+        plus
+      )} */}
       <Modal isVisible={modanOpen} style={{ margin: 0 }}>
         <TouchableOpacity
           style={{ flex: 1, justifyContent: "center" }}
