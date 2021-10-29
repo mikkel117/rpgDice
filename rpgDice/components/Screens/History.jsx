@@ -24,7 +24,6 @@ export default function History() {
             <View
               key={data.key}
               style={{
-                width: "100%",
                 borderTopWidth: 1,
                 borderBottomWidth: 1,
                 borderColor: "gray",
@@ -32,34 +31,51 @@ export default function History() {
                 padding: 10,
                 marginBottom: 20,
               }}>
-              <View style={{ flex: 1, flexDirection: "row" }}>
-                <View style={[styles.resultContainer, Style.lightBackground]}>
-                  <Text
-                    style={[
-                      Style.DefaultFont,
-                      Style.textColor,
-                      { fontWeight: "bold" },
-                    ]}>
-                    {data.hPlusEmAll}
-                  </Text>
-                </View>
-
-                <View style={{ paddingLeft: 5, flexShrink: 1 }}>
-                  <Text style={[Style.textColor, Style.DefaultFont]}>
-                    {data.hNumberOfDice}d{data.hDice}
-                    {data.hBuff ? (
-                      <>
-                        {data.hBuff > 0 ? (
-                          <>+{data.hBuff}</>
+              <View style={[styles.resultContainer, Style.lightBackground]}>
+                <Text
+                  style={[
+                    Style.DefaultFont,
+                    Style.textColor,
+                    { fontWeight: "bold" },
+                  ]}>
+                  {data.hPlusEmAll}
+                </Text>
+              </View>
+              <View
+                style={{
+                  marginLeft: 10,
+                  flex: 1,
+                  flexDirection: "column",
+                }}>
+                <View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      flex: 1,
+                      marginBottom: 5,
+                    }}>
+                    <View style={{ flex: 1 }}>
+                      <Text style={[Style.textColor, Style.DefaultFont]}>
+                        {data.hNumberOfDice}d{data.hDice}
+                        {data.hBuff ? (
+                          <>
+                            {data.hBuff > 0 ? (
+                              <>+{data.hBuff}</>
+                            ) : (
+                              <>{data.hBuff}</>
+                            )}{" "}
+                          </>
                         ) : (
-                          <>{data.hBuff}</>
-                        )}{" "}
-                      </>
-                    ) : (
-                      <></>
-                    )}
-                  </Text>
-
+                          <></>
+                        )}
+                      </Text>
+                    </View>
+                    <View style={[{ flex: 1, alignItems: "flex-end" }]}>
+                      <Text style={[Style.DefaultFont, Style.textColor]}>
+                        {data.createdAt}
+                      </Text>
+                    </View>
+                  </View>
                   <Text style={{ justifyContent: "flex-start", fontSize: 15 }}>
                     {data.hRolled.map((item) => {
                       return (
@@ -75,22 +91,6 @@ export default function History() {
                   </Text>
                 </View>
               </View>
-
-              <View
-                style={{
-                  flex: 0.5,
-                  alignItems: "flex-end",
-                  justifyContent: "center",
-                }}>
-                <Text
-                  style={[
-                    Style.DefaultFont,
-                    Style.textColor,
-                    { textAlign: "center" },
-                  ]}>
-                  {data.createdAt}
-                </Text>
-              </View>
             </View>
           );
         })}
@@ -100,9 +100,6 @@ export default function History() {
 }
 
 const styles = StyleSheet.create({
-  font: {
-    fontSize: 20,
-  },
   resultContainer: {
     width: 75,
     height: 75,
