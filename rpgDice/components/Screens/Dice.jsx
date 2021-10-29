@@ -20,11 +20,12 @@ import HistoryRoll from "../functions/HistoryRoll";
 
 export default function Dice() {
   //saves all the thowes in the app as long as it is open
-  const { history, setHistory } = useContext(HistoryContext);
+  const { history, setHistory, modalOpen, setModalOpen } =
+    useContext(HistoryContext);
   const { dice, setDice } = useContext(DiceContext);
 
   //opens the modal to see the dice thow details
-  const [modanOpen, setModanOpen] = useState(false);
+  /* const [modanOpen, setmodalOpen] = useState(false); */
   //set the number of dices that needs to be thowen
   const [diceNumber, setDiceNumber] = useState(1);
 
@@ -32,7 +33,7 @@ export default function Dice() {
   //see if the number of dice has been pressed
   const [diceInput, setDiceInput] = useState(false);
   //the curent dice
-  const [curentDice, setCurentDice] = useState();
+  const [curentDice, setCurentDice] = useState(0);
 
   //the number that has been rolled
   const [rolled, setRolled] = useState([]);
@@ -48,22 +49,27 @@ export default function Dice() {
   //if the buff is + or -
   const [buffplus, setBuffPlus] = useState(false);
 
-  useEffect(() => {
-    //if rolled is now 0 then do this
-    if (rolled != 0) {
-      let Plus = 0;
-      rolled.map((data) => {
-        Plus += data.item;
-      });
-      Plus += buff;
-      setPlus(Plus);
-      History(Plus);
+  // useEffect(() => {
+  //   //if rolled is now 0 then do this
+  //   if (rolled != 0) {
+  //     let Plus = 0;
+  //     rolled.map((data) => {
+  //       Plus += data.item;
+  //     });
+  //     Plus += buff;
+  //     setPlus(Plus);
+  //   }
+  //   //ever time rolled is updated
+  // }, [rolled]);
+
+  /*   useEffect(() => {
+    if (modalOpen == false) {
+      setRolled([]);
     }
-    //ever time rolled is updated
-  }, [rolled]);
+  }, [modalOpen]); */
 
   //if there is more then one dice
-  const MultipleDices = (diceSides) => {
+  /* const MultipleDices = (diceSides) => {
     let idk = [];
     for (let i = 0; i < diceNumber; i++) {
       idk.push({
@@ -73,70 +79,53 @@ export default function Dice() {
     }
     setRolled(...rolled, idk);
     idk = [];
-    setModanOpen(true);
-  };
-
-  //sets the history
-  const History = (Plus) => {
-    let time = new Date();
-
-    setHistory([
-      ...history,
-      {
-        createdAt: time.toLocaleTimeString(),
-        key: time.getMilliseconds(),
-        hNumberOfDice: diceNumber,
-        hDice: curentDice,
-        hRolled: rolled,
-        hBuff: buff,
-        hPlusEmAll: Plus,
-      },
-    ]);
-  };
+    setModalOpen(true);
+  }; */
 
   //makes the dice that has been choisen
-  const DiceChoice = (id) => {
-    if (buff > 0) {
-      setBuffPlus(true);
-    } else {
-      setBuffPlus(false);
-    }
+  // const DiceChoice = (id) => {
+  //   if (buff > 0) {
+  //     setBuffPlus(true);
+  //   } else {
+  //     setBuffPlus(false);
+  //   }
 
-    let index = dice.findIndex((obj) => obj.id == id);
-    let diceSides = dice[index].sides;
-    setCurentDice(diceSides);
+  //   let index = dice.findIndex((obj) => obj.id == id);
+  //   let diceSides = dice[index].sides;
+  //   setCurentDice(diceSides);
 
-    //if diceNumber is over 1 calls a function with the sids of the dice. else make a new date and make how mutch there has been rolled and set it
-    if (diceNumber > 1) {
-      MultipleDices(diceSides);
-    } else {
-      let time = new Date();
-      let Rolled = Math.floor(Math.random() * diceSides) + 1;
-      setRolled([
-        ...rolled,
-        {
-          key: time.getMilliseconds(),
-          item: Rolled,
-        },
-      ]);
-      setModanOpen(true);
-    }
-  };
+  //   //if diceNumber is over 1 calls a function with the sids of the dice. else make a new date and make how mutch there has been rolled and set it
+  //   if (diceNumber > 1) {
+  //     MultipleDices(diceSides);
+  //   } else {
+  //     /* let time = new Date(); */
+  //     let Rolled = Math.floor(Math.random() * diceSides) + 1;
+  //     setRolled([
+  //       ...rolled,
+  //       {
+  //         key: time.getMilliseconds(),
+  //         item: Rolled,
+  //       },
+  //     ]);
+  //     setModalOpen(true);
+  //   }
+  // };
 
   //check if buff or diceNumber has been pressed
-  const BuffInputCheck = (id) => {
+  /*  const BuffInputCheck = (id) => {
     setDiceInput(true);
     if (id == 1) {
       setBuffInput(true);
     } else {
       setBuffInput(false);
     }
-  };
+  }; */
 
-  //empty rolled and closes the modal
-  const Close = () => {
-    setRolled([]);
-    setModanOpen(false);
+  const openRollModal = (id) => {
+    let index = dice.findIndex((obj) => obj.id == id);
+    /* console.log(dice[index]); */
+    setCurentDice(dice[index].sides);
+    setModalOpen(true);
   };
 
   //check if the user has given a wrong input
@@ -172,7 +161,7 @@ export default function Dice() {
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.dices}
-            onPress={() => DiceChoice(item.id)}>
+            onPress={() => openRollModal(item.id)}>
             <MaterialCommunityIcons
               name={item.name}
               size={50}
@@ -190,55 +179,12 @@ export default function Dice() {
           </TouchableOpacity>
         )}
       />
-      {/* {HistoryRoll(
-        modanOpen,
+      {HistoryRoll(
         diceNumber,
         curentDice,
-        buff,
-        buffplus,
-        rolled,
-        plus
-      )} */}
-      <Modal isVisible={modanOpen} style={{ margin: 0 }}>
-        <TouchableOpacity
-          style={{ flex: 1, justifyContent: "center" }}
-          onPress={() => Close()}>
-          <View style={Style.lightBackground}>
-            <Text
-              style={[
-                Style.textColor,
-                Style.DefaultFont,
-                { textAlign: "center", paddingBottom: 5 },
-              ]}>
-              {diceNumber}d{curentDice}
-              {buff ? <>{buffplus ? <>+{buff}</> : <>{buff}</>} </> : <></>}
-            </Text>
-
-            <Text
-              style={[
-                Style.textColor,
-                { textAlign: "center", fontSize: 25, paddingBottom: 5 },
-              ]}>
-              {plus}
-            </Text>
-
-            <Text
-              style={[
-                Style.textColor,
-                Style.DefaultFont,
-                { textAlign: "center", paddingBottom: 5 },
-              ]}>
-              {rolled.map((data) => {
-                return (
-                  <Text key={data.key}>
-                    {rolled.length == 1 ? <>{data.item}</> : <>{data.item},</>}
-                  </Text>
-                );
-              })}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </Modal>
+        buff
+        // rolled, plus
+      )}
 
       <Modal isVisible={diceInput} coverScreen={false} style={{ flex: 1 }}>
         <View style={Style.lightBackground}>

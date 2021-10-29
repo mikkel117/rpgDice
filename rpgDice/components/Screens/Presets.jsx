@@ -8,7 +8,7 @@ import {
   View,
   StyleSheet,
   ScrollView,
-  FlatList,
+  Button,
 } from "react-native";
 import Modal from "react-native-modal";
 import { Picker } from "@react-native-picker/picker";
@@ -21,12 +21,13 @@ import { MaterialIcons } from "@expo/vector-icons";
 import DiceIconSelect from "../functions/DiceIconSelect";
 import PresetStyle from "../../assets/styles/PresetStyle";
 import Style from "../../assets/styles/styles";
+import HistoryRoll from "../functions/HistoryRoll";
 import { DiceContext } from "../context/DiceContext";
 import { HistoryContext } from "../context/HistoryContext";
 
 export default function Presets({ navigation }) {
   const { dice } = useContext(DiceContext);
-  const { history, setHistory } = useContext(HistoryContext);
+  const { modalOpen, setModalOpen } = useContext(HistoryContext);
 
   /******************************************************* */
   //update Preset
@@ -41,18 +42,19 @@ export default function Presets({ navigation }) {
   const [preset, setPreset] = useState([]);
   /******************************************************* */
 
-  const [newPreset, setNewPreset] = useState(false);
-  const [diceNumber, setDiceNumber] = useState(1);
-  const [buff, setBuff] = useState(0);
-
-  const [name, setName] = useState("");
-
+  /******************************************************* */
+  //creat presets
   const [color, setColor] = useState("white");
-
+  const [numberOfDice, setNumberOfDice] = useState(1);
   const [selectedDice, setSelectedDice] = useState(0);
-
-  const [rollPresetModal, setRollPresetModal] = useState(false);
+  const [buff, setBuff] = useState(0);
   const [rollArray, setRollArray] = useState([]);
+  const [resoult, setResoult] = useState(0);
+  /******************************************************* */
+  const [presetName, setPresetName] = useState("");
+  const [presetInputPlaceholder, setPresetInputPlaceholder] =
+    useState("enter a name");
+  const [presetModal, setPresetModal] = useState(false);
 
   //checks the platform and if it is android it will set color to black
   //it will also call read
@@ -68,11 +70,11 @@ export default function Presets({ navigation }) {
   }, [preset]);
 
   const reset = () => {
-    setDiceInputPlaceholder("enter a name");
-    setDiceNumber(1);
+    setPresetInputPlaceholder("enter a name");
+    setNumberOfDice(1);
     setBuff(0);
     setSelectedDice(0);
-    setName("");
+    setPresetName("");
     setUpdateModal(false);
     setUpdateId(0);
   };
@@ -98,89 +100,6 @@ export default function Presets({ navigation }) {
     } catch (e) {
       console.log(e);
     }
-  };
-
-  //makes a new Preset
-  const MakePreset = () => {
-    const time = new Date();
-    let checkName = name;
-    let checkBuffplus = false;
-    let diceCheck = selectedDice;
-
-    if (checkName == "") {
-      checkName = time.toLocaleString();
-    }
-    if (buff > 0) {
-      checkBuffplus = true;
-    }
-    if (selectedDice == "") {
-      diceCheck = 4;
-    }
-
-    let icon = DiceIconSelect(diceCheck);
-
-    setPreset([
-      ...preset,
-      {
-        id: time.toLocaleTimeString(),
-        pDiceNumber: diceNumber,
-        pBuff: buff,
-        pName: checkName,
-        pDice: diceCheck,
-        pBuffplus: checkBuffplus,
-        pIconName: icon,
-      },
-    ]);
-    reset();
-  };
-
-  //sets newPreset to false so the modal closes and then calls makePreset
-  const create = () => {
-    setNewPreset(false);
-    MakePreset();
-  };
-
-  //saves the canges that has been made to a Preset
-  const saveUpdate = () => {
-    let icon = DiceIconSelect(selectedDice);
-    let checkName = name;
-    if (checkName == "") {
-      checkName = preset[updateId].pName;
-    }
-    let checkBuffplus = false;
-    if (buff > 0) {
-      checkBuffplus = true;
-    }
-    preset[updateId].pName = checkName;
-    preset[updateId].pBuff = buff;
-    preset[updateId].pDiceNumber = diceNumber;
-    preset[updateId].pBuffplus = checkBuffplus;
-    preset[updateId].pDice = selectedDice;
-    preset[updateId].pIconName = icon;
-    updatePersetSave();
-    setNewPreset(false);
-    reset();
-  };
-
-  // updates dice if value if not 0
-  const updateDiceChange = (val) => {
-    if (val != 0) {
-      setSelectedDice(val);
-    }
-  };
-
-  // findes the posison of the Preset you want to find using the id
-  const update = (id) => {
-    let objIndex = preset.findIndex((obj) => obj.id == id);
-    setUpdateId(objIndex);
-    setDiceNumber(preset[objIndex].pDiceNumber);
-    setSelectedDice(preset[objIndex].pDice);
-    setBuff(preset[objIndex].pBuff);
-    setName(preset[objIndex].pName);
-    setDiceInputPlaceholder(preset[objIndex].pName);
-    //opens the modal
-    setNewPreset(true);
-    setUpdateModal(true);
   };
 
   // delete a preSet using its id
@@ -210,83 +129,97 @@ export default function Presets({ navigation }) {
     ]);
   };
 
-  useEffect(() => {
-    if (rollPresetModal == true) {
-      let time = new Date();
+  const close = () => {
+    reset();
+    setPresetModal(false);
+  };
 
-      setHistory([
-        ...history,
-        {
-          createdAt: time.toLocaleTimeString(),
-          key: time.toLocaleTimeString(),
-          hNumberOfDice: rollArray[0].diceNumber,
-          hDice: rollArray[0].dice,
-          hRolled: rollArray[0].rollArray,
-          hBuff: rollArray[0].buff,
-          hPlusEmAll: rollArray[0].resoult,
-        },
-      ]);
+  const saveUpdate = () => {
+    if (presetName == "") {
+      updateId.name = presetInputPlaceholder;
+    } else {
+      updateId.name = presetName;
     }
-  }, [rollPresetModal]);
-
-  const rollPreset = (id) => {
-    var time = new Date();
-    let pIndex = preset.findIndex((obj) => obj.id == id);
-    let plus = 0;
-
-    let roll = [];
-    for (let i = 0; i < preset[pIndex].pDiceNumber; i++) {
-      roll.push({
-        key: i,
-        item: Math.floor(Math.random() * preset[pIndex].pDice) + 1,
-      });
-    }
-    {
-      roll.map((data) => {
-        plus += data.item;
-      });
+    if (buff > 0) {
+      updateId.buffPlus = true;
+    } else {
+      updateId.buffPlus = false;
     }
 
-    setRollArray([
+    const icon = DiceIconSelect(selectedDice);
+    updateId.icon = icon;
+    updateId.dice = selectedDice;
+    updateId.buff = buff;
+    updateId.numberOfDice = numberOfDice;
+    reset();
+    setPreset([...preset]);
+    setUpdateModal(false);
+    setUpdateId(0);
+    setPresetModal(false);
+  };
+
+  const createPreset = () => {
+    let time = new Date();
+    let name = presetName;
+    let pBuffPlus = false;
+    let dice = selectedDice;
+    if (buff > 0) {
+      pBuffPlus = true;
+    }
+    if (dice == "") {
+      dice = 4;
+    }
+    if (name == "") {
+      name = time.toLocaleString();
+    }
+
+    const icon = DiceIconSelect(dice);
+
+    setPreset([
+      ...preset,
       {
-        id: time.getMilliseconds(),
-        dice: preset[pIndex].pDice,
-        diceNumber: preset[pIndex].pDiceNumber,
-        buff: preset[pIndex].pBuff,
-        rollArray: roll,
-        resoult: (plus += preset[pIndex].pBuff),
+        id: time.toLocaleTimeString(),
+        numberOfDice: numberOfDice,
+        buff: buff,
+        name: name,
+        dice: dice,
+        buffPlus: pBuffPlus,
+        icon: icon,
       },
     ]);
-
-    setRollPresetModal(true);
-  };
-  const CloseRollModal = () => {
-    setRollPresetModal(false);
     reset();
+    setPresetModal(false);
   };
 
-  const closeModal = () => {
-    setNewPreset(false);
-    reset();
+  const update = (id) => {
+    const index = preset.findIndex((obj) => obj.id == id);
+    const presetPath = preset[index];
+    setUpdateId(presetPath);
+    setBuff(presetPath.buff);
+    setSelectedDice(presetPath.dice);
+    setPresetName(presetPath.name);
+    setPresetInputPlaceholder(presetPath.name);
+    setNumberOfDice(presetPath.numberOfDice);
+    setPresetModal(true);
+    setUpdateModal(true);
   };
 
   return (
     <View style={[Style.screenBackground, { flex: 1 }]}>
-      <Modal isVisible={newPreset} style={{ margin: 0 }}>
-        <View style={Style.lightBackground}>
+      <Modal isVisible={presetModal} style={{ margin: 0 }}>
+        <View style={[Style.lightBackground, {}]}>
           <TextInput
             keyboardType='default'
-            style={[Style.input]}
-            placeholder={`${diceInputPlaceholder}`}
-            placeholderTextColor='white'
+            style={Style.input}
+            placeholder={`${presetInputPlaceholder}`}
             maxLength={30}
+            placeholderTextColor='white'
             onChangeText={(val) => {
               if (val != "") {
-                setName(val);
+                setPresetName(val);
               }
             }}
           />
-
           <View
             style={{
               marginHorizontal: 10,
@@ -297,9 +230,9 @@ export default function Presets({ navigation }) {
             <Picker
               selectedValue={selectedDice}
               style={{ color: "white", margin: 10 }}
-              onValueChange={(itemValue, itemIndex) =>
-                updateDiceChange(itemValue)
-              }>
+              onValueChange={(itemValue, itemIndex) => {
+                if (itemValue != 0) setSelectedDice(itemValue);
+              }}>
               <Picker.Item color={color} label='chose a dice' value='0' />
               {dice.map((data) => {
                 return (
@@ -317,12 +250,12 @@ export default function Presets({ navigation }) {
           <View style={styles.DiceNBuffContainer}>
             <TouchableOpacity
               onPress={() => {
-                if (diceNumber != 1) {
-                  setDiceNumber((diceNumber) => diceNumber - 1);
+                if (numberOfDice != 1) {
+                  setNumberOfDice((numberOfDice) => numberOfDice - 1);
                 }
               }}
               onLongPress={() => {
-                setDiceNumber(1);
+                setNumberOfDice(1);
               }}>
               <AntDesign name='minuscircle' size={30} color='white' />
             </TouchableOpacity>
@@ -334,18 +267,18 @@ export default function Presets({ navigation }) {
                   Style.DefaultFont,
                   { textAlign: "center" },
                 ]}>
-                {diceNumber}d
+                {numberOfDice}d
               </Text>
             </View>
 
             <TouchableOpacity
               onPress={() => {
-                if (diceNumber != 100) {
-                  setDiceNumber((diceNumber) => diceNumber + 1);
+                if (numberOfDice != 100) {
+                  setNumberOfDice((numberOfDice) => numberOfDice + 1);
                 }
               }}
               onLongPress={() => {
-                setDiceNumber(100);
+                setNumberOfDice(100);
               }}>
               <AntDesign name='pluscircle' size={30} color='white' />
             </TouchableOpacity>
@@ -387,24 +320,22 @@ export default function Presets({ navigation }) {
           <View style={{ flexDirection: "row" }}>
             <TouchableOpacity
               style={{ flexBasis: "45%" }}
-              onPress={() => closeModal()}>
+              onPress={() => close()}>
               <Text style={[Style.buttonStyle]}>close</Text>
             </TouchableOpacity>
-
             <View style={{ flexBasis: "10%" }}></View>
-
             {updateModal ? (
               <TouchableOpacity
-                onPress={() => saveUpdate()}
-                style={{ flexBasis: "45%" }}>
+                style={{ flexBasis: "45%" }}
+                onPress={() => saveUpdate()}>
                 <Text style={[Style.buttonStyle, { backgroundColor: "green" }]}>
                   update
                 </Text>
               </TouchableOpacity>
             ) : (
               <TouchableOpacity
-                onPress={() => create()}
-                style={{ flexBasis: "45%" }}>
+                style={{ flexBasis: "45%" }}
+                onPress={() => createPreset()}>
                 <Text style={[Style.buttonStyle, { backgroundColor: "green" }]}>
                   create
                 </Text>
@@ -414,201 +345,14 @@ export default function Presets({ navigation }) {
         </View>
       </Modal>
 
-      {/* update modal */}
-      {updateModal ? (
-        <Modal isVisible={false} coverScreen={false} style={{ flex: 1 }}>
-          <View style={Style.lightBackground}>
-            <TextInput
-              keyboardType='default'
-              style={[Style.input]}
-              placeholder={preset[updateId].pName}
-              placeholderTextColor='white'
-              maxLength={30}
-              onChangeText={(val) => setName(val)}
-            />
-
-            <View
-              style={{
-                marginHorizontal: 10,
-                marginVertical: 20,
-                borderWidth: 1,
-                borderColor: "#A9CEC2",
-              }}>
-              <Picker
-                selectedValue={selectedDice}
-                style={{ color: "white", margin: 10 }}
-                onValueChange={(itemValue, itemIndex) =>
-                  updateDiceChange(itemValue)
-                }>
-                <Picker.Item color={color} label='chose a dice' value='0' />
-                {dice.map((data) => {
-                  return (
-                    <Picker.Item
-                      color={color}
-                      label={`${data.sides}d`}
-                      value={data.sides}
-                      key={data.id}
-                    />
-                  );
-                })}
-              </Picker>
-            </View>
-
-            <View style={styles.DiceNBuffContainer}>
-              <TouchableOpacity
-                onPress={() => {
-                  if (diceNumber != 1) {
-                    setDiceNumber((diceNumber) => diceNumber - 1);
-                  }
-                }}
-                onLongPress={() => {
-                  setDiceNumber(1);
-                }}>
-                <AntDesign name='minuscircle' size={30} color='white' />
-              </TouchableOpacity>
-
-              <View style={styles.diceNBuff}>
-                <Text
-                  style={[
-                    Style.DefaultFont,
-                    Style.textColor,
-                    { textAlign: "center" },
-                  ]}>
-                  {diceNumber}d
-                </Text>
-              </View>
-
-              <TouchableOpacity
-                onPress={() => {
-                  if (diceNumber != 100) {
-                    setDiceNumber((diceNumber) => diceNumber + 1);
-                  }
-                }}
-                onLongPress={() => {
-                  setDiceNumber(100);
-                }}>
-                <AntDesign name='pluscircle' size={30} color='white' />
-              </TouchableOpacity>
-            </View>
-
-            <View style={{ height: 40 }}></View>
-            <View style={styles.DiceNBuffContainer}>
-              <TouchableOpacity
-                onPress={() => setBuff((buff) => buff - 1)}
-                onLongPress={() => {
-                  setBuff(0);
-                }}>
-                <AntDesign name='minuscircle' size={30} color='white' />
-              </TouchableOpacity>
-
-              <View style={styles.diceNBuff}>
-                <Text
-                  style={[
-                    Style.DefaultFont,
-                    Style.textColor,
-                    { textAlign: "center" },
-                  ]}>
-                  {buff}
-                </Text>
-              </View>
-
-              <TouchableOpacity
-                onPress={() => setBuff((buff) => buff + 1)}
-                onLongPress={() => {
-                  setBuff(100);
-                }}>
-                <AntDesign name='pluscircle' size={30} color='white' />
-              </TouchableOpacity>
-            </View>
-            <View style={{ height: 20 }}></View>
-            <View style={{ flexDirection: "row" }}>
-              <TouchableOpacity
-                style={{ flexBasis: "45%" }}
-                onPress={() => setUpdateModal(false)}>
-                <Text style={[Style.buttonStyle]}>close</Text>
-              </TouchableOpacity>
-
-              <View style={{ flexBasis: "10%" }}></View>
-
-              <TouchableOpacity
-                onPress={() => saveUpdate()}
-                style={{ flexBasis: "45%" }}>
-                <Text style={[Style.buttonStyle, { backgroundColor: "green" }]}>
-                  update
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
-      ) : (
-        <></>
-      )}
-
-      {rollPresetModal ? (
-        <Modal isVisible={rollPresetModal} style={{ margin: 0 }}>
-          <TouchableOpacity
-            style={{ flex: 1, justifyContent: "center" }}
-            onPress={() => CloseRollModal()}>
-            <View style={[Style.lightBackground]}>
-              <View style={{ alignItems: "center" }}>
-                <Text
-                  style={[
-                    Style.textColor,
-                    Style.DefaultFont,
-                    { marginBottom: 5 },
-                  ]}>
-                  {rollArray[0].diceNumber}d{rollArray[0].dice}
-                  {rollArray[0].buff ? (
-                    <>
-                      {rollArray[0].buff > 0 ? (
-                        <>+{rollArray[0].buff}</>
-                      ) : (
-                        <>{rollArray[0].buff}</>
-                      )}
-                    </>
-                  ) : (
-                    <></>
-                  )}
-                </Text>
-                <Text
-                  style={[Style.textColor, { fontSize: 25, marginBottom: 5 }]}>
-                  {rollArray[0].resoult}
-                </Text>
-                <Text
-                  style={[
-                    Style.textColor,
-                    Style.DefaultFont,
-                    { marginBottom: 10 },
-                  ]}>
-                  {rollArray[0].rollArray.map((data) => {
-                    return (
-                      <Text key={data.key} style={[Style.textColor]}>
-                        {rollArray[0].rollArray.length == 1 ? (
-                          <>{data.item}</>
-                        ) : (
-                          <>{data.item},</>
-                        )}
-                      </Text>
-                    );
-                  })}
-                </Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-        </Modal>
-      ) : (
-        <></>
-      )}
-
       <View style={{ alignItems: "center" }}>
         <Text style={[Style.textColor, { fontSize: 25 }]}>
           Create pre set rolles here
         </Text>
-        <TouchableOpacity onPress={() => setNewPreset(true)}>
+        <TouchableOpacity onPress={() => setPresetModal(true)}>
           <MaterialCommunityIcons name='folder-plus' size={30} color='white' />
         </TouchableOpacity>
       </View>
-
       {preset.length > 0 ? (
         <>
           <ScrollView style={[Style.screenBackground, { flex: 1 }]}>
@@ -619,7 +363,7 @@ export default function Presets({ navigation }) {
                     <TouchableOpacity onPress={() => rollPreset(data.id)}>
                       <View style={[PresetStyle.diceContainer]}>
                         <MaterialCommunityIcons
-                          name={data.pIconName}
+                          name={data.icon}
                           size={50}
                           color='white'
                         />
@@ -627,13 +371,13 @@ export default function Presets({ navigation }) {
                     </TouchableOpacity>
                     <View style={[PresetStyle.buttonContainer]}>
                       <Text style={[PresetStyle.buttonText]}>
-                        {data.pDiceNumber}d{data.pDice}
-                        {data.pBuff ? (
+                        {data.numberOfDice}d{data.dice}
+                        {data.buff ? (
                           <>
-                            {data.pBuffplus ? (
-                              <>+{data.pBuff}</>
+                            {data.buffPlus ? (
+                              <>+{data.buff}</>
                             ) : (
-                              <>{data.pBuff}</>
+                              <>{data.buff}</>
                             )}
                           </>
                         ) : (
@@ -643,7 +387,7 @@ export default function Presets({ navigation }) {
                     </View>
                   </View>
                   <View style={[PresetStyle.deleteEditcontainer]}>
-                    <Text style={[PresetStyle.name]}>{data.pName}</Text>
+                    <Text style={[PresetStyle.name]}>{data.name}</Text>
                     <View style={[PresetStyle.deleteEditWrapper]}>
                       <TouchableOpacity onPress={() => deleteAlert(data.id)}>
                         <MaterialIcons name='delete' size={40} color='red' />
@@ -711,6 +455,3 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
 });
-
-{
-}
