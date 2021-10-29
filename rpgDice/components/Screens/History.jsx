@@ -25,16 +25,18 @@ export default function History() {
               key={data.key}
               style={{
                 width: "100%",
+                borderTopWidth: 1,
                 borderBottomWidth: 1,
                 borderColor: "gray",
                 flexDirection: "row",
                 padding: 10,
+                marginBottom: 20,
               }}>
               <View style={{ flex: 1, flexDirection: "row" }}>
                 <View style={[styles.resultContainer, Style.lightBackground]}>
                   <Text
                     style={[
-                      styles.font,
+                      Style.DefaultFont,
                       Style.textColor,
                       { fontWeight: "bold" },
                     ]}>
@@ -43,7 +45,7 @@ export default function History() {
                 </View>
 
                 <View style={{ paddingLeft: 5, flexShrink: 1 }}>
-                  <Text style={[Style.textColor, { fontSize: 20 }]}>
+                  <Text style={[Style.textColor, Style.DefaultFont]}>
                     {data.hNumberOfDice}d{data.hDice}
                     {data.hBuff ? (
                       <>
@@ -76,11 +78,16 @@ export default function History() {
 
               <View
                 style={{
-                  flex: 0.3,
+                  flex: 0.5,
                   alignItems: "flex-end",
                   justifyContent: "center",
                 }}>
-                <Text style={[styles.font, Style.textColor]}>
+                <Text
+                  style={[
+                    Style.DefaultFont,
+                    Style.textColor,
+                    { textAlign: "center" },
+                  ]}>
                   {data.createdAt}
                 </Text>
               </View>
@@ -97,7 +104,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   resultContainer: {
-    /* borderWidth: 1,  */
     width: 75,
     height: 75,
     alignItems: "center",

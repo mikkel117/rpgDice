@@ -31,8 +31,8 @@ export default function Presets({ navigation }) {
 
   /******************************************************* */
   //update Preset
-  const [diceInputPlaceholder, setDiceInputPlaceholder] =
-    useState("enter a name");
+  /*   const [diceInputPlaceholder, setDiceInputPlaceholder] =
+    useState("enter a name"); */
   const [updateModal, setUpdateModal] = useState(false);
   const [updateId, setUpdateId] = useState(0);
   /******************************************************* */
@@ -453,20 +453,5 @@ const styles = StyleSheet.create({
   DiceNBuffContainer: {
     flexDirection: "row",
     justifyContent: "center",
-  },
-
-  diceContainer: {
-    width: 90,
-    height: 90,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  buttonStyle: {
-    color: "black",
-    textAlign: "center",
-    fontSize: 18,
-    padding: 10,
-    paddingHorizontal: 15,
-    backgroundColor: "white",
   },
 });

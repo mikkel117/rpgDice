@@ -428,12 +428,6 @@ export default function FoldersPresets({ route, navigation }) {
           <Text style={[Style.textColor, Style.DefaultFont]}>Empty</Text>
         </View>
       )}
-
-      {/* {folder[folderIndex].items.length > 0 ? (
-        
-      ) : (
-        <></>
-      )} */}
     </View>
   );
 }
@@ -448,19 +442,5 @@ const styles = StyleSheet.create({
     height: 30,
     width: 200,
     justifyContent: "center",
-  },
-  diceContainer: {
-    width: 90,
-    height: 90,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  buttonStyle: {
-    color: "black",
-    textAlign: "center",
-    fontSize: 18,
-    padding: 10,
-    paddingHorizontal: 15,
-    backgroundColor: "white",
   },
 });
