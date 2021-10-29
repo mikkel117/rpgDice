@@ -1,18 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-
-import Style from "../../assets/styles/styles";
 import Modal from "react-native-modal";
 
+import Style from "../../assets/styles/styles";
 import { HistoryContext } from "../context/HistoryContext";
 
-export default function HistoryRoll(
-  diceNumber,
-  dice,
-  buff
-  /*  rollArray */
-  /* resoult */
-) {
+export default function HistoryRoll(diceNumber, dice, buff) {
   const { history, setHistory, modalOpen, setModalOpen } =
     useContext(HistoryContext);
 
@@ -34,13 +27,15 @@ export default function HistoryRoll(
       });
     }
     setRollArray(puchArray);
+    let plus = 0;
     puchArray.map((data) => {
-      setResoult((resoult) => resoult + data.item);
+      plus += data.item;
     });
+    setResoult(plus + buff);
     puchArray = [];
   };
 
-  const History = () => {
+  const setTheHistory = () => {
     let time = new Date();
 
     setHistory([
@@ -58,9 +53,7 @@ export default function HistoryRoll(
   };
 
   const close = () => {
-    History();
-    setRollArray([]);
-    setResoult(0);
+    setTheHistory();
     setModalOpen(false);
   };
 

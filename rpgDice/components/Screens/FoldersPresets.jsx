@@ -15,6 +15,7 @@ import { Picker } from "@react-native-picker/picker";
 import Style from "../../assets/styles/styles";
 import PresetStyle from "../../assets/styles/PresetStyle";
 import DiceIconSelect from "../functions/DiceIconSelect";
+import HistoryRoll from "../functions/HistoryRoll";
 
 import { DiceContext } from "../context/DiceContext";
 import { HistoryContext } from "../context/HistoryContext";
@@ -28,7 +29,7 @@ import { Entypo } from "@expo/vector-icons";
 export default function FoldersPresets({ route, navigation }) {
   const { dice } = useContext(DiceContext);
   const { folder, setFolder } = useContext(FolderContext);
-  const { history, setHistory } = useContext(HistoryContext);
+  const { setModalOpen } = useContext(HistoryContext);
 
   const [color, setColor] = useState("white");
 
@@ -42,12 +43,7 @@ export default function FoldersPresets({ route, navigation }) {
   const [selectedDice, setSelectedDice] = useState(0);
   const [diceNumber, setDiceNumber] = useState(1);
   const [buff, setBuff] = useState(0);
-  const [buffPlus, setBuffPlus] = useState(false);
   const [presetIndex, setPresetIndex] = useState();
-
-  const [rollModal, setRollModal] = useState();
-  const [rollArray, setRollArray] = useState([]);
-  const [resoult, setResoult] = useState(0);
 
   const { id } = route.params;
 
@@ -58,20 +54,6 @@ export default function FoldersPresets({ route, navigation }) {
       setColor("black");
     }
   }, []);
-
-  useEffect(() => {
-    //if rolled is now 0 then do this
-    if (rollArray != 0) {
-      let Plus = 0;
-      rollArray.map((data) => {
-        Plus += data.item;
-      });
-      Plus += buff;
-      setResoult(Plus);
-      History(Plus);
-    }
-    //ever time rolled is updated
-  }, [rollArray]);
 
   const createPreset = () => {
     let time = new Date();
@@ -202,47 +184,10 @@ export default function FoldersPresets({ route, navigation }) {
 
   const openRollModal = (id) => {
     const objIndex = folder[folderIndex].items.findIndex((obj) => obj.id == id);
-    const numberOfDice = folder[folderIndex].items[objIndex].numberOfDice;
-    const diceNumber = folder[folderIndex].items[objIndex].dice;
-    setDiceNumber(numberOfDice);
-    setSelectedDice(diceNumber);
+    setDiceNumber(folder[folderIndex].items[objIndex].numberOfDice);
+    setSelectedDice(folder[folderIndex].items[objIndex].dice);
     setBuff(folder[folderIndex].items[objIndex].buff);
-    setBuffPlus(folder[folderIndex].items[objIndex].buffPlus);
-    let diceSides = numberOfDice;
-    let pushArray = [];
-    for (let i = 0; i < diceSides; i++) {
-      pushArray.push({
-        key: i,
-        item: Math.floor(Math.random() * diceNumber) + 1,
-      });
-    }
-    setRollArray(pushArray);
-
-    pushArray = [];
-    setNewPreset(true);
-    setRollModal(true);
-  };
-  const closeRollModal = () => {
-    setNewPreset(false);
-    reset();
-    setTimeout(() => setRollModal(false), 300);
-  };
-
-  const History = (Plus) => {
-    let time = new Date();
-
-    setHistory([
-      ...history,
-      {
-        createdAt: time.toLocaleTimeString(),
-        key: time.getMilliseconds(),
-        hNumberOfDice: diceNumber,
-        hDice: selectedDice,
-        hRolled: rollArray,
-        hBuff: buff,
-        hPlusEmAll: Plus,
-      },
-    ]);
+    setModalOpen(true);
   };
 
   return (
@@ -251,187 +196,145 @@ export default function FoldersPresets({ route, navigation }) {
         isVisible={newPreset}
         coverScreen={true}
         style={{ margin: 0, flex: 1 }}>
-        {rollModal ? (
-          <TouchableOpacity
-            onPress={() => closeRollModal()}
-            style={{ flex: 1, justifyContent: "center" }}>
-            <View style={[Style.lightBackground]}>
-              <Text
-                style={[
-                  Style.textColor,
-                  Style.DefaultFont,
-                  { textAlign: "center", paddingBottom: 5 },
-                ]}>
-                {diceNumber}d{selectedDice}
-                {buff ? <>{buffPlus ? <>+{buff}</> : <>{buff}</>} </> : <></>}
-              </Text>
-              <Text
-                style={[
-                  Style.textColor,
-                  { textAlign: "center", fontSize: 25, paddingBottom: 5 },
-                ]}>
-                {resoult}
-              </Text>
-              <Text
-                style={[
-                  Style.textColor,
-                  Style.DefaultFont,
-                  { textAlign: "center", paddingBottom: 5 },
-                ]}>
-                {rollArray.map((data) => {
-                  return (
-                    <Text key={data.key}>
-                      {rollArray.length == 1 ? (
-                        <>{data.item}</>
-                      ) : (
-                        <>{data.item},</>
-                      )}
-                    </Text>
-                  );
-                })}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        ) : (
-          <View style={[Style.lightBackground, {}]}>
-            <TextInput
-              keyboardType='default'
-              style={[Style.input, Style.DefaultFont]}
-              placeholder={`${presetNamePlaceholder}`}
-              placeholderTextColor='white'
-              maxLength={30}
-              onChangeText={(val) => {
-                if (val != 0) setPresetName(val);
-              }}
-            />
-            <View
-              style={{
-                marginHorizontal: 10,
-                marginVertical: 20,
-                borderWidth: 1,
-                borderColor: "#A9CEC2",
+        <View style={[Style.lightBackground, {}]}>
+          <TextInput
+            keyboardType='default'
+            style={[Style.input, Style.DefaultFont]}
+            placeholder={`${presetNamePlaceholder}`}
+            placeholderTextColor='white'
+            maxLength={30}
+            onChangeText={(val) => {
+              if (val != 0) setPresetName(val);
+            }}
+          />
+          <View
+            style={{
+              marginHorizontal: 10,
+              marginVertical: 20,
+              borderWidth: 1,
+              borderColor: "#A9CEC2",
+            }}>
+            <Picker
+              selectedValue={selectedDice}
+              style={{ color: "white", margin: 10 }}
+              onValueChange={(itemValue, itemIndex) => {
+                if (itemValue != 0) setSelectedDice(itemValue);
               }}>
-              <Picker
-                selectedValue={selectedDice}
-                style={{ color: "white", margin: 10 }}
-                onValueChange={(itemValue, itemIndex) => {
-                  if (itemValue != 0) setSelectedDice(itemValue);
-                }}>
-                <Picker.Item color={color} label='chose a dice' value='0' />
-                {dice.map((data) => {
-                  return (
-                    <Picker.Item
-                      color={color}
-                      label={`${data.sides}d`}
-                      value={data.sides}
-                      key={data.id}
-                    />
-                  );
-                })}
-              </Picker>
+              <Picker.Item color={color} label='chose a dice' value='0' />
+              {dice.map((data) => {
+                return (
+                  <Picker.Item
+                    color={color}
+                    label={`${data.sides}d`}
+                    value={data.sides}
+                    key={data.id}
+                  />
+                );
+              })}
+            </Picker>
+          </View>
+
+          <View style={styles.DiceNBuffContainer}>
+            <TouchableOpacity
+              onPress={() => {
+                if (diceNumber != 1) {
+                  setDiceNumber((diceNumber) => diceNumber - 1);
+                }
+              }}
+              onLongPress={() => {
+                setDiceNumber(1);
+              }}>
+              <AntDesign name='minuscircle' size={30} color='white' />
+            </TouchableOpacity>
+
+            <View style={styles.diceNBuff}>
+              <Text
+                style={[
+                  Style.textColor,
+                  Style.DefaultFont,
+                  { textAlign: "center" },
+                ]}>
+                {diceNumber}d
+              </Text>
             </View>
 
-            <View style={styles.DiceNBuffContainer}>
-              <TouchableOpacity
-                onPress={() => {
-                  if (diceNumber != 1) {
-                    setDiceNumber((diceNumber) => diceNumber - 1);
-                  }
-                }}
-                onLongPress={() => {
-                  setDiceNumber(1);
-                }}>
-                <AntDesign name='minuscircle' size={30} color='white' />
-              </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                if (diceNumber != 100) {
+                  setDiceNumber((diceNumber) => diceNumber + 1);
+                }
+              }}
+              onLongPress={() => {
+                setDiceNumber(100);
+              }}>
+              <AntDesign name='pluscircle' size={30} color='white' />
+            </TouchableOpacity>
+          </View>
 
-              <View style={styles.diceNBuff}>
-                <Text
-                  style={[
-                    Style.textColor,
-                    Style.DefaultFont,
-                    { textAlign: "center" },
-                  ]}>
-                  {diceNumber}d
-                </Text>
-              </View>
+          <View style={{ height: 40 }}></View>
 
-              <TouchableOpacity
-                onPress={() => {
-                  if (diceNumber != 100) {
-                    setDiceNumber((diceNumber) => diceNumber + 1);
-                  }
-                }}
-                onLongPress={() => {
-                  setDiceNumber(100);
-                }}>
-                <AntDesign name='pluscircle' size={30} color='white' />
-              </TouchableOpacity>
+          <View style={styles.DiceNBuffContainer}>
+            <TouchableOpacity
+              onPress={() => setBuff((buff) => buff - 1)}
+              onLongPress={() => {
+                setBuff(0);
+              }}>
+              <AntDesign name='minuscircle' size={30} color='white' />
+            </TouchableOpacity>
+
+            <View style={styles.diceNBuff}>
+              <Text
+                style={[
+                  Style.DefaultFont,
+                  Style.textColor,
+                  { textAlign: "center" },
+                ]}>
+                {buff}
+              </Text>
             </View>
 
-            <View style={{ height: 40 }}></View>
+            <TouchableOpacity
+              onPress={() => setBuff((buff) => buff + 1)}
+              onLongPress={() => {
+                setBuff(100);
+              }}>
+              <AntDesign name='pluscircle' size={30} color='white' />
+            </TouchableOpacity>
+          </View>
 
-            <View style={styles.DiceNBuffContainer}>
-              <TouchableOpacity
-                onPress={() => setBuff((buff) => buff - 1)}
-                onLongPress={() => {
-                  setBuff(0);
-                }}>
-                <AntDesign name='minuscircle' size={30} color='white' />
-              </TouchableOpacity>
+          <View style={{ height: 20 }}></View>
 
-              <View style={styles.diceNBuff}>
-                <Text
-                  style={[
-                    Style.DefaultFont,
-                    Style.textColor,
-                    { textAlign: "center" },
-                  ]}>
-                  {buff}
-                </Text>
-              </View>
-
-              <TouchableOpacity
-                onPress={() => setBuff((buff) => buff + 1)}
-                onLongPress={() => {
-                  setBuff(100);
-                }}>
-                <AntDesign name='pluscircle' size={30} color='white' />
-              </TouchableOpacity>
-            </View>
-
-            <View style={{ height: 20 }}></View>
-
-            <View style={{ flexDirection: "row" }}>
+          <View style={{ flexDirection: "row" }}>
+            <TouchableOpacity
+              style={{ flexBasis: "45%" }}
+              onPress={() => closeModal()}>
+              <Text style={[Style.buttonStyle]}>close</Text>
+            </TouchableOpacity>
+            <View style={{ flexBasis: "10%" }}></View>
+            {updateModal ? (
               <TouchableOpacity
                 style={{ flexBasis: "45%" }}
-                onPress={() => closeModal()}>
-                <Text style={[Style.buttonStyle]}>close</Text>
+                onPress={() => updatePreset()}>
+                <Text style={[Style.buttonStyle, { backgroundColor: "green" }]}>
+                  update
+                </Text>
               </TouchableOpacity>
-              <View style={{ flexBasis: "10%" }}></View>
-              {updateModal ? (
-                <TouchableOpacity
-                  style={{ flexBasis: "45%" }}
-                  onPress={() => updatePreset()}>
-                  <Text
-                    style={[Style.buttonStyle, { backgroundColor: "green" }]}>
-                    update
-                  </Text>
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity
-                  style={{ flexBasis: "45%" }}
-                  onPress={() => createPreset()}>
-                  <Text
-                    style={[Style.buttonStyle, { backgroundColor: "green" }]}>
-                    create
-                  </Text>
-                </TouchableOpacity>
-              )}
-            </View>
+            ) : (
+              <TouchableOpacity
+                style={{ flexBasis: "45%" }}
+                onPress={() => createPreset()}>
+                <Text style={[Style.buttonStyle, { backgroundColor: "green" }]}>
+                  create
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
-        )}
+        </View>
       </Modal>
 
+      {HistoryRoll(diceNumber, selectedDice, buff)}
+
+      {/* back */}
       <TouchableOpacity
         onPress={() => navigation.navigate("folders")}
         style={{ alignSelf: "flex-start" }}>
@@ -454,53 +357,71 @@ export default function FoldersPresets({ route, navigation }) {
       </View>
 
       {folder[folderIndex].items.length > 0 ? (
-        <ScrollView>
-          {folder[folderIndex].items.map((data) => {
-            return (
-              <View style={[PresetStyle.presetContainer, {}]} key={data.id}>
-                <View style={PresetStyle.diceButtonContainer}>
-                  <TouchableOpacity onPress={() => openRollModal(data.id)}>
-                    <View style={[PresetStyle.diceContainer]}>
-                      <MaterialCommunityIcons
-                        name={data.icon}
-                        size={50}
-                        color='white'
-                      />
+        <>
+          <ScrollView>
+            {folder[folderIndex].items.map((data) => {
+              return (
+                <View style={[PresetStyle.presetContainer, {}]} key={data.id}>
+                  <View style={PresetStyle.diceButtonContainer}>
+                    <TouchableOpacity onPress={() => openRollModal(data.id)}>
+                      <View style={[PresetStyle.diceContainer]}>
+                        <MaterialCommunityIcons
+                          name={data.icon}
+                          size={50}
+                          color='white'
+                        />
+                      </View>
+                    </TouchableOpacity>
+                    <View style={[PresetStyle.buttonContainer]}>
+                      <Text style={[PresetStyle.buttonText]}>
+                        {data.numberOfDice}d{data.dice}
+                        {data.buff ? (
+                          <>
+                            {data.buffPlus ? (
+                              <>+{data.buff}</>
+                            ) : (
+                              <>{data.buff}</>
+                            )}
+                          </>
+                        ) : (
+                          <></>
+                        )}
+                      </Text>
                     </View>
-                  </TouchableOpacity>
-                  <View style={[PresetStyle.buttonContainer]}>
-                    <Text style={[PresetStyle.buttonText]}>
-                      {data.numberOfDice}d{data.dice}
-                      {data.buff ? (
-                        <>
-                          {data.buffPlus ? <>+{data.buff}</> : <>{data.buff}</>}
-                        </>
-                      ) : (
-                        <></>
-                      )}
-                    </Text>
                   </View>
-                </View>
-                <View style={[PresetStyle.deleteEditcontainer]}>
-                  <Text style={[PresetStyle.name]}>{data.name}</Text>
-                  <View style={[PresetStyle.deleteEditWrapper]}>
-                    <TouchableOpacity onPress={() => deleteOneAlert(data.id)}>
-                      <MaterialIcons name='delete' size={40} color='red' />
-                    </TouchableOpacity>
+                  <View style={[PresetStyle.deleteEditcontainer]}>
+                    <Text style={[PresetStyle.name]}>{data.name}</Text>
+                    <View style={[PresetStyle.deleteEditWrapper]}>
+                      <TouchableOpacity onPress={() => deleteOneAlert(data.id)}>
+                        <MaterialIcons name='delete' size={40} color='red' />
+                      </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => openUpdateModal(data.id)}>
-                      <MaterialCommunityIcons
-                        name='content-save-edit'
-                        size={40}
-                        color='white'
-                      />
-                    </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => openUpdateModal(data.id)}>
+                        <MaterialCommunityIcons
+                          name='content-save-edit'
+                          size={40}
+                          color='white'
+                        />
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 </View>
-              </View>
-            );
-          })}
-        </ScrollView>
+              );
+            })}
+          </ScrollView>
+          <TouchableOpacity
+            style={{ alignSelf: "flex-end" }}
+            onPress={() => deleteAllAlert()}>
+            <Text
+              style={[
+                Style.buttonStyle,
+                { backgroundColor: "red", fontSize: 15, padding: 5 },
+              ]}>
+              DELETE ALL PRESETS
+            </Text>
+          </TouchableOpacity>
+        </>
       ) : (
         <View
           style={[{ flex: 1, justifyContent: "center", alignItems: "center" }]}>
@@ -508,21 +429,11 @@ export default function FoldersPresets({ route, navigation }) {
         </View>
       )}
 
-      {folder[folderIndex].items.length > 0 ? (
-        <TouchableOpacity
-          style={{ alignSelf: "flex-end" }}
-          onPress={() => deleteAllAlert()}>
-          <Text
-            style={[
-              Style.buttonStyle,
-              { backgroundColor: "red", fontSize: 15, padding: 5 },
-            ]}>
-            DELETE ALL PRESETS
-          </Text>
-        </TouchableOpacity>
+      {/* {folder[folderIndex].items.length > 0 ? (
+        
       ) : (
         <></>
-      )}
+      )} */}
     </View>
   );
 }

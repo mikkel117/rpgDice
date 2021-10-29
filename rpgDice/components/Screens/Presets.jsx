@@ -48,8 +48,6 @@ export default function Presets({ navigation }) {
   const [numberOfDice, setNumberOfDice] = useState(1);
   const [selectedDice, setSelectedDice] = useState(0);
   const [buff, setBuff] = useState(0);
-  const [rollArray, setRollArray] = useState([]);
-  const [resoult, setResoult] = useState(0);
   /******************************************************* */
   const [presetName, setPresetName] = useState("");
   const [presetInputPlaceholder, setPresetInputPlaceholder] =
@@ -68,6 +66,12 @@ export default function Presets({ navigation }) {
   useEffect(() => {
     updatePersetSave();
   }, [preset]);
+
+  useEffect(() => {
+    if (modalOpen == false) {
+      reset();
+    }
+  }, [modalOpen]);
 
   const reset = () => {
     setPresetInputPlaceholder("enter a name");
@@ -202,6 +206,15 @@ export default function Presets({ navigation }) {
     setNumberOfDice(presetPath.numberOfDice);
     setPresetModal(true);
     setUpdateModal(true);
+  };
+
+  //sets the CurentDice to what is pressed on and then opens the roll modal
+  const openRollModal = (id) => {
+    let index = preset.findIndex((obj) => obj.id == id);
+    setSelectedDice(preset[index].dice);
+    setBuff(preset[index].buff);
+    setNumberOfDice(preset[index].numberOfDice);
+    setModalOpen(true);
   };
 
   return (
@@ -345,6 +358,8 @@ export default function Presets({ navigation }) {
         </View>
       </Modal>
 
+      {HistoryRoll(numberOfDice, selectedDice, buff)}
+
       <View style={{ alignItems: "center" }}>
         <Text style={[Style.textColor, { fontSize: 25 }]}>
           Create pre set rolles here
@@ -360,7 +375,7 @@ export default function Presets({ navigation }) {
               return (
                 <View style={[PresetStyle.presetContainer, {}]} key={data.id}>
                   <View style={PresetStyle.diceButtonContainer}>
-                    <TouchableOpacity onPress={() => rollPreset(data.id)}>
+                    <TouchableOpacity onPress={() => openRollModal(data.id)}>
                       <View style={[PresetStyle.diceContainer]}>
                         <MaterialCommunityIcons
                           name={data.icon}

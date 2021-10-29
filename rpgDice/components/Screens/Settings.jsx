@@ -88,6 +88,7 @@ export default function Settings() {
 
     setPreSetDefault(false);
     setFirstTime(true);
+    setHistory([]);
     Animated.timing(translation, {
       toValue: preSetDefault ? 0 : 0,
       easing: Easing.bounce,

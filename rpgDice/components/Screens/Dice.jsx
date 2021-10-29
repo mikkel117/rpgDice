@@ -24,8 +24,6 @@ export default function Dice() {
     useContext(HistoryContext);
   const { dice, setDice } = useContext(DiceContext);
 
-  //opens the modal to see the dice thow details
-  /* const [modanOpen, setmodalOpen] = useState(false); */
   //set the number of dices that needs to be thowen
   const [diceNumber, setDiceNumber] = useState(1);
 
@@ -34,96 +32,16 @@ export default function Dice() {
   const [diceInput, setDiceInput] = useState(false);
   //the curent dice
   const [curentDice, setCurentDice] = useState(0);
-
-  //the number that has been rolled
-  const [rolled, setRolled] = useState([]);
-  //saves the numbers + toghter
-  const [plus, setPlus] = useState(0);
-
   //saves the buff
   const [buff, setBuff] = useState(0);
 
   const [uBuffInput, setUBuffInput] = useState(0);
   //see if the buff has been pressed
   const [buffInput, setBuffInput] = useState(false);
-  //if the buff is + or -
-  const [buffplus, setBuffPlus] = useState(false);
 
-  // useEffect(() => {
-  //   //if rolled is now 0 then do this
-  //   if (rolled != 0) {
-  //     let Plus = 0;
-  //     rolled.map((data) => {
-  //       Plus += data.item;
-  //     });
-  //     Plus += buff;
-  //     setPlus(Plus);
-  //   }
-  //   //ever time rolled is updated
-  // }, [rolled]);
-
-  /*   useEffect(() => {
-    if (modalOpen == false) {
-      setRolled([]);
-    }
-  }, [modalOpen]); */
-
-  //if there is more then one dice
-  /* const MultipleDices = (diceSides) => {
-    let idk = [];
-    for (let i = 0; i < diceNumber; i++) {
-      idk.push({
-        key: i,
-        item: Math.floor(Math.random() * diceSides) + 1,
-      });
-    }
-    setRolled(...rolled, idk);
-    idk = [];
-    setModalOpen(true);
-  }; */
-
-  //makes the dice that has been choisen
-  // const DiceChoice = (id) => {
-  //   if (buff > 0) {
-  //     setBuffPlus(true);
-  //   } else {
-  //     setBuffPlus(false);
-  //   }
-
-  //   let index = dice.findIndex((obj) => obj.id == id);
-  //   let diceSides = dice[index].sides;
-  //   setCurentDice(diceSides);
-
-  //   //if diceNumber is over 1 calls a function with the sids of the dice. else make a new date and make how mutch there has been rolled and set it
-  //   if (diceNumber > 1) {
-  //     MultipleDices(diceSides);
-  //   } else {
-  //     /* let time = new Date(); */
-  //     let Rolled = Math.floor(Math.random() * diceSides) + 1;
-  //     setRolled([
-  //       ...rolled,
-  //       {
-  //         key: time.getMilliseconds(),
-  //         item: Rolled,
-  //       },
-  //     ]);
-  //     setModalOpen(true);
-  //   }
-  // };
-
-  //check if buff or diceNumber has been pressed
-  /*  const BuffInputCheck = (id) => {
-    setDiceInput(true);
-    if (id == 1) {
-      setBuffInput(true);
-    } else {
-      setBuffInput(false);
-    }
-  }; */
-
+  //sets the CurentDice to what is pressed on and then opens the roll modal
   const openRollModal = (id) => {
     let index = dice.findIndex((obj) => obj.id == id);
-    /* console.log(dice[index]); */
     setCurentDice(dice[index].sides);
     setModalOpen(true);
   };
@@ -179,12 +97,7 @@ export default function Dice() {
           </TouchableOpacity>
         )}
       />
-      {HistoryRoll(
-        diceNumber,
-        curentDice,
-        buff
-        // rolled, plus
-      )}
+      {HistoryRoll(diceNumber, curentDice, buff)}
 
       <Modal isVisible={diceInput} coverScreen={false} style={{ flex: 1 }}>
         <View style={Style.lightBackground}>
