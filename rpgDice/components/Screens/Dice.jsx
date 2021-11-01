@@ -18,11 +18,12 @@ import { HistoryContext } from "../context/HistoryContext";
 import { DiceContext } from "../context/DiceContext";
 import HistoryRoll from "../functions/HistoryRoll";
 
-export default function Dice() {
+export default function Dice({ navigation }) {
   //saves all the thowes in the app as long as it is open
   const { history, setHistory, modalOpen, setModalOpen } =
     useContext(HistoryContext);
-  const { dice, setDice } = useContext(DiceContext);
+  const { dice, setDice, multipleRoll, setMultipleRoll } =
+    useContext(DiceContext);
 
   //set the number of dices that needs to be thowen
   const [diceNumber, setDiceNumber] = useState(1);
@@ -69,6 +70,18 @@ export default function Dice() {
     setDiceInput(false);
   };
 
+  const multipleDiceRoll = (item) => {
+    let tiem = new Date();
+    setMultipleRoll([
+      ...multipleRoll,
+      {
+        id: tiem.toLocaleString(),
+        name: item.name,
+        sides: item.sides,
+      },
+    ]);
+  };
+
   return (
     <View style={[Style.screenBackground, { flex: 1 }]}>
       <FlatList
@@ -79,7 +92,8 @@ export default function Dice() {
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.dices}
-            onPress={() => openRollModal(item.id)}>
+            onPress={() => openRollModal(item.id)}
+            onLongPress={() => multipleDiceRoll(item)}>
             <MaterialCommunityIcons
               name={item.name}
               size={50}

@@ -13,6 +13,7 @@ const DiceContextProvider = (props) => {
     { id: 6, sides: 20, name: "dice-d20" },
     { id: 7, sides: 100, name: "dice-multiple" },
   ]);
+  const [multipleRoll, setMultipleRoll] = useState([]);
 
   useEffect(() => {
     read();
@@ -45,7 +46,8 @@ const DiceContextProvider = (props) => {
   };
 
   return (
-    <DiceContext.Provider value={{ dice, setDice }}>
+    <DiceContext.Provider
+      value={{ dice, setDice, multipleRoll, setMultipleRoll }}>
       {props.children}
     </DiceContext.Provider>
   );

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 
 import { NavigationContainer } from "@react-navigation/native";
@@ -7,6 +7,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
 
 import Dice from "./Screens/Dice";
 import Historie from "./Screens/History";
@@ -20,6 +21,7 @@ import SandBox from "./Screens/testScreens/sandbox";
 
 import Style from "../assets/styles/styles";
 import FoldersPresets from "./Screens/FoldersPresets";
+import MultipleRoll from "./Screens/MultipleRoll";
 
 const screenOptions = (route) => {
   let iconName;
@@ -85,6 +87,7 @@ function StackScreen() {
           ),
         })}
       />
+
       <Stack.Screen name='settings' component={Settings} />
       <Stack.Screen
         name='folderPresets'
@@ -93,6 +96,29 @@ function StackScreen() {
           headerShown: false,
         }}
       />
+    </Stack.Navigator>
+  );
+}
+
+function homeDice() {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#47494E",
+        },
+        headerTintColor: "white",
+        headerTitleAlign: "center",
+        animation: "fade",
+      }}>
+      <Stack.Screen
+        name='Dice'
+        component={Dice}
+        options={() => ({
+          headerShown: false,
+        })}
+      />
+      <Stack.Screen name='multipleRoll' component={MultipleRoll} />
     </Stack.Navigator>
   );
 }
@@ -119,13 +145,28 @@ export default function Nav() {
           headerStyle: {
             backgroundColor: "#47494E",
           },
+          headerTitleStyle: {
+            fontSize: 25,
+          },
           headerTintColor: "white",
           headerTitleAlign: "center",
           tabBarActiveBackgroundColor: "#47494E",
           tabBarActiveTintColor: "#A9CEC2",
           tabBarInactiveTintColor: "white",
         })}>
-        <Tab.Screen name='Home' component={Dice} />
+        <Tab.Screen
+          name='Home'
+          component={homeDice}
+          options={({ navigation }) => ({
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate("multipleRoll")}
+                style={{ marginRight: 15 }}>
+                <FontAwesome5 name='dice' size={30} color='white' />
+              </TouchableOpacity>
+            ),
+          })}
+        />
         <Tab.Screen name='Historie' component={Historie} />
         <Tab.Screen
           name='Edit'
@@ -134,13 +175,9 @@ export default function Nav() {
             headerRight: () => (
               <View>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate("settings")}>
-                  <Ionicons
-                    name='settings'
-                    size={30}
-                    color='white'
-                    style={{ marginRight: 15 }}
-                  />
+                  onPress={() => navigation.navigate("settings")}
+                  style={{ marginRight: 15 }}>
+                  <Ionicons name='settings' size={30} color='white' />
                 </TouchableOpacity>
               </View>
             ),

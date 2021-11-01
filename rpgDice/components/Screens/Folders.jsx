@@ -18,8 +18,6 @@ import { SettingsContext } from "../context/SettingsContext";
 import { FolderContext } from "../context/FolderContext";
 
 export default function Folders({ navigation }) {
-  /*   const { firstTime, setFirstTime, preSetDefault, setPreSetDefault } =
-    useContext(SettingsContext); */
   const { folder, setFolder } = useContext(FolderContext);
 
   //********************************************************** */

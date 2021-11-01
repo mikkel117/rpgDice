@@ -15,9 +15,7 @@ import Sandbox from "./components/Screens/testScreens/sandbox";
 //https://www.canva.com/colors/color-wheel/
 export default function App() {
   return (
-    // <HistoryContextProvider>
-    //   <Sandbox />
-    // </HistoryContextProvider>
+    // <Sandbox />
 
     <FolderContextProvider>
       <SettingsContextProvider>

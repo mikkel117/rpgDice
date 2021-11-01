@@ -14,12 +14,14 @@ import Style from "../../assets/styles/styles";
 import { HistoryContext } from "../context/HistoryContext";
 import { SettingsContext } from "../context/SettingsContext";
 import { DiceContext } from "../context/DiceContext";
+import { FolderContext } from "../context/FolderContext";
 
 export default function Settings() {
   const { setHistory } = useContext(HistoryContext);
   const { preSetDefault, setPreSetDefault, firstTime, setFirstTime } =
     useContext(SettingsContext);
   const { setDice } = useContext(DiceContext);
+  const { setFolder } = useContext(FolderContext);
 
   const translation = useRef(new Animated.Value(0)).current;
 
@@ -89,6 +91,7 @@ export default function Settings() {
     setPreSetDefault(false);
     setFirstTime(true);
     setHistory([]);
+    setFolder([]);
     Animated.timing(translation, {
       toValue: preSetDefault ? 0 : 0,
       easing: Easing.bounce,

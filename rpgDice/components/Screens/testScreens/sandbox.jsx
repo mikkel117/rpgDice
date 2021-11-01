@@ -1,28 +1,19 @@
-import React, { useState, useEffect, useContext } from "react";
-
+import React from "react";
 import {
   Text,
   View,
   StyleSheet,
-  TouchableOpacity,
   SafeAreaView,
   Platform,
   StatusBar,
-  Button,
-  ScrollView,
-  Dimensions,
 } from "react-native";
-import Modal from "react-native-modal";
-import { HistoryContext } from "../../context/HistoryContext";
 
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
-
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Style from "../../../assets/styles/styles";
 
-export default function Sandbox() {
-  const { history, setHistory } = useContext(HistoryContext);
-
+/* export default function Sandbox() {
   return (
     <SafeAreaView style={[styles.container]}>
       <View style={{ borderBottomWidth: 2 }}>
@@ -31,6 +22,55 @@ export default function Sandbox() {
         </Text>
       </View>
     </SafeAreaView>
+  );
+} */
+
+function home() {
+  return (
+    <View style={[Style.screenBackground, { flex: 1, alignItems: "center" }]}>
+      <Text style={[Style.textColor, Style.DefaultFont]}>Home</Text>
+    </View>
+  );
+}
+function settings() {
+  return (
+    <View style={[Style.screenBackground, { flex: 1, alignItems: "center" }]}>
+      <Text style={[Style.textColor, Style.DefaultFont]}>Settings</Text>
+    </View>
+  );
+}
+
+const Tab = createBottomTabNavigator();
+
+export default function Nav() {
+  return (
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={() => ({
+          tabBarLabelPosition: "beside-icon",
+          tabBarLabelStyle: {
+            fontWeight: "700",
+            fontSize: 20,
+          },
+          tabBarStyle: {
+            backgroundColor: "#47494E",
+          },
+          tabBarItemStyle: {
+            borderWidth: 1,
+          },
+          headerStyle: {
+            backgroundColor: "#47494E",
+          },
+          headerTintColor: "white",
+          headerTitleAlign: "center",
+          tabBarActiveBackgroundColor: "#47494E",
+          tabBarActiveTintColor: "#A9CEC2",
+          tabBarInactiveTintColor: "white",
+        })}>
+        <Tab.Screen name='home' component={home} />
+        <Tab.Screen name='settings' component={settings} />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 }
 
