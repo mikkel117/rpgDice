@@ -15,18 +15,18 @@ import Sandbox from "./components/Screens/testScreens/sandbox";
 //https://www.canva.com/colors/color-wheel/
 export default function App() {
   return (
-    // <HistoryContextProvider>
-    //   <Sandbox />
-    // </HistoryContextProvider>
+    <HistoryContextProvider>
+      <Sandbox />
+    </HistoryContextProvider>
 
-    <FolderContextProvider>
-      <SettingsContextProvider>
-        <DiceContextProvider>
-          <HistoryContextProvider>
-            <Nav />
-          </HistoryContextProvider>
-        </DiceContextProvider>
-      </SettingsContextProvider>
-    </FolderContextProvider>
+    // <FolderContextProvider>
+    //   <SettingsContextProvider>
+    //     <DiceContextProvider>
+    //       <HistoryContextProvider>
+    //         <Nav />
+    //       </HistoryContextProvider>
+    //     </DiceContextProvider>
+    //   </SettingsContextProvider>
+    // </FolderContextProvider>
   );
 }
