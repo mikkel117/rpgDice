@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -7,13 +7,25 @@ import {
   Platform,
   StatusBar,
 } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
-import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Style from "../../../assets/styles/styles";
 
-/* export default function Sandbox() {
+export default function Sandbox() {
+  const [test, setTest] = useState(0);
+
+  useEffect(() => {
+    console.log(test);
+  }, [test]);
+
+  const roll = () => {
+    let test1 = 0;
+    for (let i = 0; i < 10; i++) {
+      test1 = Math.floor(Math.random() * 10) + 1;
+      console.log(test1);
+    }
+  };
+
   return (
     <SafeAreaView style={[styles.container]}>
       <View style={{ borderBottomWidth: 2 }}>
@@ -21,56 +33,20 @@ import Style from "../../../assets/styles/styles";
           welcome to sandbox
         </Text>
       </View>
+      <TouchableOpacity onPress={() => roll()}>
+        <Text style={[Style.buttonStyle]}>click me</Text>
+      </TouchableOpacity>
+
+      <View style={{ height: 50 }}></View>
+
+      <TouchableOpacity onPress={() => console.log(test)}>
+        <Text style={[Style.buttonStyle]}>log</Text>
+      </TouchableOpacity>
+      <View style={{ height: 50 }}></View>
+      <TouchableOpacity onPress={() => setTest([])}>
+        <Text style={[Style.buttonStyle]}>reset</Text>
+      </TouchableOpacity>
     </SafeAreaView>
-  );
-} */
-
-function home() {
-  return (
-    <View style={[Style.screenBackground, { flex: 1, alignItems: "center" }]}>
-      <Text style={[Style.textColor, Style.DefaultFont]}>Home</Text>
-    </View>
-  );
-}
-function settings() {
-  return (
-    <View style={[Style.screenBackground, { flex: 1, alignItems: "center" }]}>
-      <Text style={[Style.textColor, Style.DefaultFont]}>Settings</Text>
-    </View>
-  );
-}
-
-const Tab = createBottomTabNavigator();
-
-export default function Nav() {
-  return (
-    <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={() => ({
-          tabBarLabelPosition: "beside-icon",
-          tabBarLabelStyle: {
-            fontWeight: "700",
-            fontSize: 20,
-          },
-          tabBarStyle: {
-            backgroundColor: "#47494E",
-          },
-          tabBarItemStyle: {
-            borderWidth: 1,
-          },
-          headerStyle: {
-            backgroundColor: "#47494E",
-          },
-          headerTintColor: "white",
-          headerTitleAlign: "center",
-          tabBarActiveBackgroundColor: "#47494E",
-          tabBarActiveTintColor: "#A9CEC2",
-          tabBarInactiveTintColor: "white",
-        })}>
-        <Tab.Screen name='home' component={home} />
-        <Tab.Screen name='settings' component={settings} />
-      </Tab.Navigator>
-    </NavigationContainer>
   );
 }
 

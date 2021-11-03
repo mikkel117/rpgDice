@@ -78,6 +78,7 @@ export default function History() {
                   </View>
                   <Text style={{ justifyContent: "flex-start", fontSize: 15 }}>
                     {data.hRolled.map((item) => {
+                      /* console.log(data.hRolled[data.hRolled.length - 1]); */
                       return (
                         <Text key={item.key} style={Style.textColor}>
                           {data.hRolled.length == 1 ? (

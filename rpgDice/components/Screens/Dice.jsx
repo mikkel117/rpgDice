@@ -22,7 +22,7 @@ export default function Dice({ navigation }) {
   //saves all the thowes in the app as long as it is open
   const { history, setHistory, modalOpen, setModalOpen } =
     useContext(HistoryContext);
-  const { dice, setDice, multipleRoll, setMultipleRoll } =
+  const { dice, multipleRoll, setMultipleRoll, diceColor, setDiceColor } =
     useContext(DiceContext);
 
   //set the number of dices that needs to be thowen
@@ -39,6 +39,15 @@ export default function Dice({ navigation }) {
   const [uBuffInput, setUBuffInput] = useState(0);
   //see if the buff has been pressed
   const [buffInput, setBuffInput] = useState(false);
+
+  const BuffInputCheck = (number) => {
+    setDiceInput(true);
+    if (number == 1) {
+      setBuffInput(true);
+    } else {
+      setBuffInput(false);
+    }
+  };
 
   //sets the CurentDice to what is pressed on and then opens the roll modal
   const openRollModal = (id) => {
@@ -80,6 +89,13 @@ export default function Dice({ navigation }) {
         sides: item.sides,
       },
     ]);
+
+    if (diceColor == "white") {
+      setDiceColor("green");
+      setTimeout(() => {
+        setDiceColor("white");
+      }, 200);
+    }
   };
 
   return (
@@ -172,7 +188,7 @@ export default function Dice({ navigation }) {
             <AntDesign name='minuscircle' size={30} color='white' />
           </TouchableOpacity>
 
-          <Text style={Style.diceNBuff} onPress={() => BuffInputCheck(2)}>
+          <Text style={Style.diceNBuff} onPress={() => BuffInputCheck(0)}>
             {diceNumber}d
           </Text>
 
@@ -199,7 +215,6 @@ export default function Dice({ navigation }) {
           <Text style={Style.diceNBuff} onPress={() => BuffInputCheck(1)}>
             {buff}
           </Text>
-
           <TouchableOpacity
             onPress={() => setBuff((buff) => buff + 1)}
             onLongPress={() => {

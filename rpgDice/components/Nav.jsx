@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 
 import { NavigationContainer } from "@react-navigation/native";
@@ -16,6 +16,8 @@ import EditDice from "./Screens/EditDice";
 import EditSettings from "./Screens/EditSettings";
 import Folders from "./Screens/Folders";
 import Settings from "./Screens/Settings";
+
+import { DiceContext } from "./context/DiceContext";
 
 import SandBox from "./Screens/testScreens/sandbox";
 
@@ -46,7 +48,6 @@ function StackScreen() {
   return (
     <Stack.Navigator
       screenOptions={{
-        /* headerShown: false, */
         headerStyle: {
           backgroundColor: "#47494E",
         },
@@ -118,7 +119,13 @@ function homeDice() {
           headerShown: false,
         })}
       />
-      <Stack.Screen name='multipleRoll' component={MultipleRoll} />
+      <Stack.Screen
+        name='multipleRoll'
+        component={MultipleRoll}
+        options={() => ({
+          title: "multiple roll",
+        })}
+      />
     </Stack.Navigator>
   );
 }
@@ -126,6 +133,7 @@ function homeDice() {
 const Tab = createBottomTabNavigator();
 
 export default function Nav() {
+  const { diceColor, setDiceColor } = useContext(DiceContext);
   return (
     <NavigationContainer>
       <Tab.Navigator
@@ -162,7 +170,7 @@ export default function Nav() {
               <TouchableOpacity
                 onPress={() => navigation.navigate("multipleRoll")}
                 style={{ marginRight: 15 }}>
-                <FontAwesome5 name='dice' size={30} color='white' />
+                <FontAwesome5 name='dice' size={30} color={`${diceColor}`} />
               </TouchableOpacity>
             ),
           })}

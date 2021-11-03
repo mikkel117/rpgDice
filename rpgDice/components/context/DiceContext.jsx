@@ -14,6 +14,7 @@ const DiceContextProvider = (props) => {
     { id: 7, sides: 100, name: "dice-multiple" },
   ]);
   const [multipleRoll, setMultipleRoll] = useState([]);
+  const [diceColor, setDiceColor] = useState("white");
 
   useEffect(() => {
     read();
@@ -47,7 +48,14 @@ const DiceContextProvider = (props) => {
 
   return (
     <DiceContext.Provider
-      value={{ dice, setDice, multipleRoll, setMultipleRoll }}>
+      value={{
+        dice,
+        setDice,
+        multipleRoll,
+        setMultipleRoll,
+        diceColor,
+        setDiceColor,
+      }}>
       {props.children}
     </DiceContext.Provider>
   );
