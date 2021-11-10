@@ -18,30 +18,19 @@ export default function EditSettings({ navigation }) {
     setFirstTime(false);
   };
 
-  clearAll = async () => {
-    try {
-      await AsyncStorage.clear();
-    } catch (e) {
-      // clear error
-    }
-  };
-
   return (
     <View style={[Style.screenBackground, { flex: 1 }]}>
       <Modal isVisible={firstTime} coverScreen={false} style={{ flex: 1 }}>
         <View style={Style.lightBackground}>
           <View style={{ alignItems: "center" }}>
-            <Text style={[Style.DefaultFont, Style.textColor]}>
-              do you want to make presets folders or
-            </Text>
-            <Text style={[Style.DefaultFont, Style.textColor]}>
-              make presets without folders?
-            </Text>
-            <Text style={[Style.DefaultFont, Style.textColor]}>
-              both saves the presets.
-            </Text>
-            <Text style={[Style.DefaultFont, Style.textColor]}>
-              you can cange it later in settings.
+            <Text
+              style={[
+                Style.DefaultFont,
+                Style.textColor,
+                { textAlign: "center" },
+              ]}>
+              do you want to make presets with folders? or without folders? (you
+              can change this later in settings)
             </Text>
           </View>
           <View style={{ flexDirection: "row", marginTop: 10 }}>

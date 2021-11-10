@@ -43,12 +43,11 @@ export default function HistoryRoll(diceCount, dice, diceModifier) {
       {
         createdAt: time.toLocaleTimeString(),
         key: time.getMilliseconds(),
-        hNumberOfDice: diceCount,
-        hDice: dice,
-        hRolled: rollArray,
-        hBuff: diceModifier,
-        /* hTotal: rollTotal, */
-        hPlusEmAll: rollTotal,
+        diceCount: diceCount,
+        dice: dice,
+        diceModifier: diceModifier,
+        rollArray: rollArray,
+        rollTotal: rollTotal,
       },
     ]);
   };

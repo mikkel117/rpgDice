@@ -28,8 +28,6 @@ export default function Dice({ navigation }) {
   //set the number of dices that needs to be thowen
   const [diceCount, setDiceCount] = useState(1);
 
-  const [diceNumberInput, setDiecNumberInput] = useState(1);
-
   //imput for the number of dices
   const [diceCountInput, setDiceCountInput] = useState(1);
   //see if the number of dice has been pressed

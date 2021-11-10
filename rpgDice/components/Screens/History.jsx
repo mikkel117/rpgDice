@@ -20,6 +20,7 @@ export default function History() {
     <>
       <ScrollView style={[Style.screenBackground, { flex: 1 }]}>
         {history.map((data) => {
+          console.log(data);
           return (
             <View
               key={data.key}
@@ -38,7 +39,7 @@ export default function History() {
                     Style.textColor,
                     { fontWeight: "bold" },
                   ]}>
-                  {data.hPlusEmAll}
+                  {data.rollTotal}
                 </Text>
               </View>
               <View
@@ -56,14 +57,14 @@ export default function History() {
                     }}>
                     <View style={{ flex: 1 }}>
                       <Text style={[Style.textColor, Style.DefaultFont]}>
-                        {data.hNumberOfDice}d{data.hDice}
-                        {data.hBuff ? (
+                        {data.diceCount}d{data.dice}
+                        {data.diceModifier ? (
                           <>
-                            {data.hBuff > 0 ? (
-                              <>+{data.hBuff}</>
+                            {data.diceModifier > 0 ? (
+                              <>+{data.diceModifier}</>
                             ) : (
-                              <>{data.hBuff}</>
-                            )}{" "}
+                              <>{data.diceModifier}</>
+                            )}
                           </>
                         ) : (
                           <></>
@@ -77,11 +78,10 @@ export default function History() {
                     </View>
                   </View>
                   <Text style={{ justifyContent: "flex-start", fontSize: 15 }}>
-                    {data.hRolled.map((item) => {
-                      /* console.log(data.hRolled[data.hRolled.length - 1]); */
+                    {data.rollArray.map((item) => {
                       return (
                         <Text key={item.key} style={Style.textColor}>
-                          {data.hRolled.length == 1 ? (
+                          {data.rollArray.length == 1 ? (
                             <>{item.item}</>
                           ) : (
                             <>{item.item},</>

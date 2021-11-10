@@ -31,12 +31,12 @@ export default function Folders({ navigation }) {
 
   //********************************************************** */
   //create new, update and delete folder
-  const createFolder = () => {
+  const openModal = () => {
     setFolderUpdate(false);
     setFolderModal(true);
   };
-  //to do come up with a new name
-  const setFolderF = () => {
+  //todo come up with a new name
+  const createFolder = () => {
     let name = folderName;
     let time = new Date();
     if (name == "") {
@@ -157,7 +157,7 @@ export default function Folders({ navigation }) {
             ) : (
               <TouchableOpacity
                 style={{ flexBasis: "45%" }}
-                onPress={() => setFolderF()}>
+                onPress={() => createFolder()}>
                 <Text style={[Style.buttonStyle, { backgroundColor: "green" }]}>
                   create
                 </Text>
@@ -171,7 +171,7 @@ export default function Folders({ navigation }) {
         <Text style={[Style.DefaultFont, Style.textColor]}>
           create and edit folders here
         </Text>
-        <TouchableOpacity onPress={() => createFolder()}>
+        <TouchableOpacity onPress={() => openModal()}>
           <MaterialIcons name='create-new-folder' size={30} color='white' />
         </TouchableOpacity>
       </View>

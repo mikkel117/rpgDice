@@ -87,7 +87,6 @@ export default function Settings() {
       { id: 6, sides: 20, name: "dice-d20" },
       { id: 7, sides: 100, name: "dice-multiple" },
     ]);
-
     setPreSetDefault(false);
     setFirstTime(true);
     setHistory([]);
