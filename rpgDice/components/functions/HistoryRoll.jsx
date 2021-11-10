@@ -5,12 +5,12 @@ import Modal from "react-native-modal";
 import Style from "../../assets/styles/styles";
 import { HistoryContext } from "../context/HistoryContext";
 
-export default function HistoryRoll(diceNumber, dice, buff) {
+export default function HistoryRoll(diceCount, dice, diceModifier) {
   const { history, setHistory, modalOpen, setModalOpen } =
     useContext(HistoryContext);
 
   const [rollArray, setRollArray] = useState([]);
-  const [resoult, setResoult] = useState(0);
+  const [rollTotal, setRollTotal] = useState(0);
 
   useEffect(() => {
     if (modalOpen == true) {
@@ -20,7 +20,7 @@ export default function HistoryRoll(diceNumber, dice, buff) {
 
   const roll = () => {
     let puchArray = [];
-    for (let i = 0; i < diceNumber; i++) {
+    for (let i = 0; i < diceCount; i++) {
       puchArray.push({
         key: i,
         item: Math.floor(Math.random() * dice) + 1,
@@ -31,7 +31,7 @@ export default function HistoryRoll(diceNumber, dice, buff) {
     puchArray.map((data) => {
       plus += data.item;
     });
-    setResoult(plus + buff);
+    setRollTotal(plus + diceModifier);
     puchArray = [];
   };
 
@@ -43,11 +43,12 @@ export default function HistoryRoll(diceNumber, dice, buff) {
       {
         createdAt: time.toLocaleTimeString(),
         key: time.getMilliseconds(),
-        hNumberOfDice: diceNumber,
+        hNumberOfDice: diceCount,
         hDice: dice,
         hRolled: rollArray,
-        hBuff: buff,
-        hPlusEmAll: resoult,
+        hBuff: diceModifier,
+        /* hTotal: rollTotal, */
+        hPlusEmAll: rollTotal,
       },
     ]);
   };
@@ -69,8 +70,14 @@ export default function HistoryRoll(diceNumber, dice, buff) {
               Style.DefaultFont,
               { textAlign: "center", paddingBottom: 5 },
             ]}>
-            {diceNumber}d{dice}
-            {buff ? <>{buff > 0 ? <>+{buff}</> : <>{buff}</>} </> : <></>}
+            {diceCount}d{dice}
+            {diceModifier ? (
+              <>
+                {diceModifier > 0 ? <>+{diceModifier}</> : <>{diceModifier}</>}{" "}
+              </>
+            ) : (
+              <></>
+            )}
           </Text>
 
           <Text
@@ -78,7 +85,7 @@ export default function HistoryRoll(diceNumber, dice, buff) {
               Style.textColor,
               { textAlign: "center", fontSize: 25, paddingBottom: 5 },
             ]}>
-            {resoult}
+            {rollTotal}
           </Text>
 
           <Text

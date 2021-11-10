@@ -12,19 +12,14 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import Style from "../../../assets/styles/styles";
 
 export default function Sandbox() {
-  const [test, setTest] = useState(0);
-
-  useEffect(() => {
-    console.log(test);
-  }, [test]);
-
-  const roll = () => {
-    let test1 = 0;
-    for (let i = 0; i < 10; i++) {
-      test1 = Math.floor(Math.random() * 10) + 1;
-      console.log(test1);
-    }
-  };
+  const [dice, setDice] = useState([]); // array of dice
+  const [diceCount, setDiceCount] = useState(0); // number of dice
+  const [diceType, setDiceType] = useState(0); // type of dice
+  const [diceMod, setDiceMod] = useState(0); // modifier for dice
+  const [diceRoll, setDiceRoll] = useState(0); // total of dice roll
+  const [diceRolls, setDiceRolls] = useState([]); // array of dice rolls
+  const [diceRollsCount, setDiceRollsCount] = useState(0); // number of dice rolls
+  const [diceRollsTotal, setDiceRollsTotal] = useState(0); // total of dice rolls
 
   return (
     <SafeAreaView style={[styles.container]}>
@@ -33,19 +28,6 @@ export default function Sandbox() {
           welcome to sandbox
         </Text>
       </View>
-      <TouchableOpacity onPress={() => roll()}>
-        <Text style={[Style.buttonStyle]}>click me</Text>
-      </TouchableOpacity>
-
-      <View style={{ height: 50 }}></View>
-
-      <TouchableOpacity onPress={() => console.log(test)}>
-        <Text style={[Style.buttonStyle]}>log</Text>
-      </TouchableOpacity>
-      <View style={{ height: 50 }}></View>
-      <TouchableOpacity onPress={() => setTest([])}>
-        <Text style={[Style.buttonStyle]}>reset</Text>
-      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -62,7 +44,18 @@ const styles = StyleSheet.create({
     padding: 8,
     margin: 10,
   },
-  color: {
+  listItem: {
+    borderWidth: 1,
+    borderColor: "black",
+  },
+  /* style text */
+  listItemText: {
+    color: "white",
+    textAlign: "center",
+    fontSize: 25,
+    padding: 10,
+  },
+  listBodyItem: {
     fontSize: 20,
     color: "white",
   },

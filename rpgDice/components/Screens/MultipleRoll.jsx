@@ -1,5 +1,13 @@
 import React, { useContext, useState } from "react";
-import { View, Text, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Alert,
+  Platform,
+  StatusBar,
+  SafeAreaView,
+} from "react-native";
 import Modal from "react-native-modal";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -8,12 +16,14 @@ import { AntDesign } from "@expo/vector-icons";
 
 import Style from "../../assets/styles/styles";
 import { DiceContext } from "../context/DiceContext";
+import { HistoryContext } from "../context/HistoryContext";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 
 export default function MultipleRoll({ navigation }) {
   const { multipleRoll, setMultipleRoll } = useContext(DiceContext);
+  const { history, setHistory } = useContext(HistoryContext);
 
-  const [buff, setBuff] = useState(10);
+  const [buff, setBuff] = useState(0);
   const [buffInput, setBuffInput] = useState(0);
   const [diceNumber, setDiceNumber] = useState(1);
   const [diceInput, setDiceInput] = useState(1);
@@ -47,6 +57,24 @@ export default function MultipleRoll({ navigation }) {
     );
   };
 
+  //a alert that comes up before you can empty multipleRoll
+  const deleteAllAlert = () => {
+    Alert.alert(
+      "EMPTY MULTIPLE ROLL",
+      `you are about to EMPTY multiple roll is this what you want`,
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "empty",
+          onPress: () => setMultipleRoll([]),
+        },
+      ]
+    );
+  };
+
   const openInputModal = (number) => {
     if (number == 0) {
       setIsBuff(false);
@@ -72,19 +100,20 @@ export default function MultipleRoll({ navigation }) {
       }
       setDiceNumber((item) => parseInt(item));
     }
+    setInputModal(false);
   };
 
   const rollArray = () => {
-    const time = new Date();
     let multipleArray = [];
     let rollNumber = 1;
+    let historyArray = [];
     for (let i = 0; i < multipleRoll.length; i++) {
       let puchArray = [];
       let resoult = 0;
 
-      for (let i = 0; i < diceNumber; i++) {
+      for (let j = 0; j < diceNumber; j++) {
         puchArray.push({
-          key: i,
+          key: j,
           item: Math.floor(Math.random() * multipleRoll[i].sides) + 1,
         });
       }
@@ -96,98 +125,131 @@ export default function MultipleRoll({ navigation }) {
       multipleArray = [
         ...multipleArray,
         {
-          id: time.toLocaleString(),
+          id: i,
           item: resoult,
           dice: multipleRoll[i].name,
+          sides: multipleRoll[i].sides,
           array: puchArray,
           rollNumber: rollNumber,
         },
       ];
+      historyArray = [...historyArray, ...creatHistory(puchArray, i, resoult)];
+      /* setTheHistory(puchArray, i, resoult); */
       puchArray = [];
       rollNumber++;
     }
     setResoultArray(multipleArray);
+    setHistory([...history, ...historyArray]);
     setResoultModal(true);
+  };
+
+  const creatHistory = (puchArray, i, resoult) => {
+    let test = [];
+    let time = new Date();
+    test = [
+      {
+        createdAt: time.toLocaleTimeString(),
+        key: time.getMilliseconds(),
+        hNumberOfDice: diceNumber,
+        hDice: multipleRoll[i].sides,
+        hRolled: puchArray,
+        hBuff: buff,
+        hPlusEmAll: resoult,
+      },
+    ];
+    return test;
   };
 
   const closeRollModal = () => {
     setResoultArray([]);
     setResoultModal(false);
   };
-
   return (
     <View style={[Style.screenBackground, { flex: 1 }]}>
       <Modal isVisible={resoultModal} style={{ margin: 0 }}>
-        <TouchableOpacity
-          onPress={() => closeRollModal()}
-          style={{ flex: 1, justifyContent: "center" }}>
-          <View style={[Style.lightBackground, { flex: 1 }]}>
-            <ScrollView>
-              {resoultArray.map((data) => {
-                return (
+        <SafeAreaView
+          style={[
+            Style.lightBackground,
+            {
+              flex: 1,
+              paddingTop:
+                Platform.OS === "android" ? StatusBar.currentHeight : 0,
+            },
+          ]}>
+          <ScrollView>
+            {resoultArray.map((data) => {
+              return (
+                <View
+                  style={{
+                    borderWidth: 1,
+                    marginVertical: 10,
+                    flexDirection: "row",
+                    marginVertical: 10,
+                  }}
+                  key={data.id}>
                   <View
-                    style={{
-                      borderWidth: 1,
-                      marginVertical: 10,
-                      flexDirection: "row",
-                      /* marginHorizontal: 10, */
-                      marginVertical: 10,
-                    }}
-                    key={data.id}>
-                    <View
-                      style={[
-                        {
-                          flex: 1,
-                          alignItems: "center",
-                          justifyContent: "center",
-                        },
-                      ]}>
-                      <Text style={[Style.textColor, { fontSize: 25 }]}>
-                        #{data.rollNumber}
-                      </Text>
-                    </View>
-                    <View
-                      style={[
-                        {
-                          flex: 1,
-                          alignItems: "center",
-                          justifyContent: "center",
-                          borderRightWidth: 1,
-                          borderLeftWidth: 1,
-                          paddingVertical: 10,
-                        },
-                      ]}>
-                      <Text
-                        style={[
-                          Style.textColor,
-                          { fontSize: 30, fontWeight: "bold" },
-                        ]}>
-                        {data.item}
-                      </Text>
-                    </View>
-                    <View
-                      style={[
-                        {
-                          flex: 1,
-                          alignItems: "center",
-                          justifyContent: "center",
-                        },
-                      ]}>
-                      <MaterialCommunityIcons
-                        name={data.dice}
-                        size={40}
-                        color='white'
-                      />
-                    </View>
+                    style={[
+                      {
+                        flex: 1,
+                        alignItems: "center",
+                        justifyContent: "center",
+                      },
+                    ]}>
+                    <Text style={[Style.textColor, { fontSize: 25 }]}>
+                      #{data.rollNumber}
+                    </Text>
                   </View>
-                );
-              })}
-            </ScrollView>
-            <TouchableOpacity onPress={() => console.log(resoultArray)}>
-              <Text style={Style.buttonStyle}>log</Text>
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
+                  <View
+                    style={[
+                      {
+                        flex: 1,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        borderRightWidth: 1,
+                        borderLeftWidth: 1,
+                        paddingVertical: 10,
+                      },
+                    ]}>
+                    <Text
+                      style={[
+                        Style.textColor,
+                        { fontSize: 30, fontWeight: "bold" },
+                      ]}>
+                      {data.item}
+                    </Text>
+                  </View>
+                  <View
+                    style={[
+                      {
+                        flex: 1,
+                        alignItems: "center",
+                        justifyContent: "center",
+                      },
+                    ]}>
+                    <MaterialCommunityIcons
+                      name={data.dice}
+                      size={40}
+                      color='white'
+                    />
+                    <Text
+                      style={[
+                        Style.textColor,
+                        { textAlign: "center", fontSize: 15 },
+                      ]}>
+                      d{data.sides}
+                    </Text>
+                  </View>
+                </View>
+              );
+            })}
+          </ScrollView>
+          <TouchableOpacity onPress={() => closeRollModal()}>
+            <Text
+              style={[Style.buttonStyle, { fontSize: 25, fontWeight: "bold" }]}>
+              close
+            </Text>
+          </TouchableOpacity>
+        </SafeAreaView>
       </Modal>
 
       <Modal isVisible={inputModal} style={{ margin: 0 }}>
@@ -231,12 +293,34 @@ export default function MultipleRoll({ navigation }) {
       </Modal>
 
       {multipleRoll.length > 0 ? (
-        <View style={{ alignItems: "flex-end" }}>
-          <TouchableOpacity onPress={() => rollArray()}>
-            <Text style={[Style.buttonStyle, { width: 100, margin: 10 }]}>
-              Roll
-            </Text>
-          </TouchableOpacity>
+        <View
+          style={{
+            /*  alignItems: "flex-end", */
+            borderBottomWidth: 2,
+            borderColor: "gray",
+            marginBottom: 10,
+            flexDirection: "row",
+          }}>
+          <View style={{ flexBasis: "45%", alignItems: "flex-start" }}>
+            <TouchableOpacity onPress={() => rollArray()}>
+              <Text style={[Style.buttonStyle, { width: 100, margin: 10 }]}>
+                Roll
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{ flexBasis: "10%" }}></View>
+
+          <View style={{ flexBasis: "45%", alignItems: "flex-end" }}>
+            <TouchableOpacity onPress={() => deleteAllAlert()}>
+              <Text
+                style={[
+                  Style.buttonStyle,
+                  { width: 100, margin: 10, backgroundColor: "red" },
+                ]}>
+                EMPTY
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       ) : (
         <></>
@@ -291,25 +375,31 @@ export default function MultipleRoll({ navigation }) {
       )}
       <View style={{ flexDirection: "row" }}>
         <View style={[Style.DiceNBuffContainer, { flexBasis: "50%" }]}>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              if (diceNumber != 1) {
+                setDiceNumber((diceNumber) => diceNumber - 1);
+              }
+            }}>
             <AntDesign name='minuscircle' size={30} color='white' />
           </TouchableOpacity>
           <Text style={[Style.diceNBuff]} onPress={() => openInputModal(0)}>
             {diceNumber}d
           </Text>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setDiceNumber((diceNumber) => diceNumber + 1)}>
             <AntDesign name='pluscircle' size={30} color='white' />
           </TouchableOpacity>
         </View>
 
         <View style={[Style.DiceNBuffContainer, { flexBasis: "50%" }]}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => setBuff((buff) => buff - 1)}>
             <AntDesign name='minuscircle' size={30} color='white' />
           </TouchableOpacity>
           <Text style={[Style.diceNBuff]} onPress={() => openInputModal(1)}>
             {buff}
           </Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => setBuff((buff) => buff + 1)}>
             <AntDesign name='pluscircle' size={30} color='white' />
           </TouchableOpacity>
         </View>

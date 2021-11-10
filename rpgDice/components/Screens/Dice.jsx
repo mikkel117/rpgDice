@@ -26,57 +26,63 @@ export default function Dice({ navigation }) {
     useContext(DiceContext);
 
   //set the number of dices that needs to be thowen
-  const [diceNumber, setDiceNumber] = useState(1);
+  const [diceCount, setDiceCount] = useState(1);
 
   const [diceNumberInput, setDiecNumberInput] = useState(1);
-  //see if the number of dice has been pressed
-  const [diceInput, setDiceInput] = useState(false);
-  //the curent dice
-  const [curentDice, setCurentDice] = useState(0);
-  //saves the buff
-  const [buff, setBuff] = useState(0);
 
-  const [uBuffInput, setUBuffInput] = useState(0);
+  //imput for the number of dices
+  const [diceCountInput, setDiceCountInput] = useState(1);
+  //see if the number of dice has been pressed
+  const [diceCountPressed, setDiceCountPressed] = useState(false);
+
+  //current dice that is being thowen
+  const [currentDice, setCurrentDice] = useState(0);
+
+  //set the dice modifer
+  const [diceModifier, setDiceModifier] = useState(0);
+
+  //set the dice modifer input
+  const [diceModifierInput, setDiceModifierInput] = useState(0);
+
   //see if the buff has been pressed
-  const [buffInput, setBuffInput] = useState(false);
+  const [diceModifierPressed, setDiceModifierPressed] = useState(false);
 
   const BuffInputCheck = (number) => {
-    setDiceInput(true);
+    setDiceCountPressed(true);
     if (number == 1) {
-      setBuffInput(true);
+      setDiceModifierPressed(true);
     } else {
-      setBuffInput(false);
+      setDiceModifierPressed(false);
     }
   };
 
-  //sets the CurentDice to what is pressed on and then opens the roll modal
+  //sets the currentDice to what is pressed on and then opens the roll modal
   const openRollModal = (id) => {
     let index = dice.findIndex((obj) => obj.id == id);
-    setCurentDice(dice[index].sides);
+    setCurrentDice(dice[index].sides);
     setModalOpen(true);
   };
 
   //check if the user has given a wrong input
   const ZeroCheck = () => {
-    let diceNumber = diceNumberInput;
-    let buff = uBuffInput;
-    /* setDiceNumber(diceNumberInput); */
-    /* setBuff(uBuffInput); */
-    if (buffInput == true) {
-      setBuff(buff);
+    let diceNumber = diceCountInput;
+    let buff = diceModifierInput;
+    if (diceModifierPressed == true) {
+      setDiceModifier(buff);
       if (buff == "") {
-        setBuff(0);
+        setDiceModifier(0);
       }
     } else {
-      setDiceNumber(diceNumber);
       if (diceNumber == "" || diceNumber < 0 || diceNumber == 0) {
-        setDiceNumber(1);
+        setDiceCount(1);
+      } else {
+        setDiceCount(diceNumber);
       }
     }
     //sets the inputs to int(number)
-    setDiceNumber((item) => parseInt(item));
-    setBuff((item) => parseInt(item));
-    setDiceInput(false);
+    setDiceCount((item) => parseInt(item));
+    setDiceModifier((item) => parseInt(item));
+    setDiceCountPressed(false);
   };
 
   const multipleDiceRoll = (item) => {
@@ -127,11 +133,14 @@ export default function Dice({ navigation }) {
           </TouchableOpacity>
         )}
       />
-      {HistoryRoll(diceNumber, curentDice, buff)}
+      {HistoryRoll(diceCount, currentDice, diceModifier)}
 
-      <Modal isVisible={diceInput} coverScreen={false} style={{ flex: 1 }}>
+      <Modal
+        isVisible={diceCountPressed}
+        coverScreen={false}
+        style={{ flex: 1 }}>
         <View style={Style.lightBackground}>
-          {buffInput ? (
+          {diceModifierPressed ? (
             <>
               <TextInput
                 keyboardType='numeric'
@@ -139,7 +148,7 @@ export default function Dice({ navigation }) {
                 placeholder='0'
                 maxLength={3}
                 placeholderTextColor='white'
-                onChangeText={(val) => setUBuffInput(val)}
+                onChangeText={(val) => setDiceModifierInput(val)}
               />
             </>
           ) : (
@@ -149,13 +158,13 @@ export default function Dice({ navigation }) {
               placeholder='1d'
               maxLength={3}
               placeholderTextColor='white'
-              onChangeText={(val) => setDiecNumberInput(val)}
+              onChangeText={(val) => setDiceCountInput(val)}
             />
           )}
           <View style={{ flexDirection: "row" }}>
             <TouchableOpacity
               style={{ flexBasis: "45%" }}
-              onPress={() => setDiceInput(false)}>
+              onPress={() => setDiceCountPressed(false)}>
               <Text style={Style.buttonStyle}>close</Text>
             </TouchableOpacity>
 
@@ -178,26 +187,26 @@ export default function Dice({ navigation }) {
         <View style={Style.DiceNBuffContainer}>
           <TouchableOpacity
             onPress={() => {
-              if (diceNumber != 1) {
-                setDiceNumber((diceNumber) => diceNumber - 1);
+              if (diceCount != 1) {
+                setDiceCount((diceCount) => diceCount - 1);
               }
             }}
             onLongPress={() => {
-              setDiceNumber(1);
+              setDiceCount(1);
             }}>
             <AntDesign name='minuscircle' size={30} color='white' />
           </TouchableOpacity>
 
           <Text style={Style.diceNBuff} onPress={() => BuffInputCheck(0)}>
-            {diceNumber}d
+            {diceCount}d
           </Text>
 
           <TouchableOpacity
             onPress={() => {
-              setDiceNumber((diceNumber) => diceNumber + 1);
+              setDiceCount((diceCount) => diceCount + 1);
             }}
             onLongPress={() => {
-              setDiceNumber((diceNumber) => diceNumber + 10);
+              setDiceCount((diceCount) => diceCount + 10);
             }}>
             <AntDesign name='pluscircle' size={30} color='white' />
           </TouchableOpacity>
@@ -205,20 +214,20 @@ export default function Dice({ navigation }) {
 
         <View style={Style.DiceNBuffContainer}>
           <TouchableOpacity
-            onPress={() => setBuff((buff) => buff - 1)}
+            onPress={() => setDiceModifier((diceModifier) => diceModifier - 1)}
             onLongPress={() => {
-              setBuff(0);
+              setDiceModifier(0);
             }}>
             <AntDesign name='minuscircle' size={30} color='white' />
           </TouchableOpacity>
 
           <Text style={Style.diceNBuff} onPress={() => BuffInputCheck(1)}>
-            {buff}
+            {diceModifier}
           </Text>
           <TouchableOpacity
-            onPress={() => setBuff((buff) => buff + 1)}
+            onPress={() => setDiceModifier((diceModifier) => diceModifier + 1)}
             onLongPress={() => {
-              setBuff((buff) => buff + 10);
+              setDiceModifier((diceModifier) => diceModifier + 10);
             }}>
             <AntDesign name='pluscircle' size={30} color='white' />
           </TouchableOpacity>

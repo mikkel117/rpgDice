@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { Text, View, ScrollView, StyleSheet } from "react-native";
 
 import { HistoryContext } from "../context/HistoryContext";
