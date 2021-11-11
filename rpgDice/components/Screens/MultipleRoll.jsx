@@ -23,14 +23,10 @@ export default function MultipleRoll({ navigation }) {
   const { multipleRoll, setMultipleRoll } = useContext(DiceContext);
   const { history, setHistory } = useContext(HistoryContext);
 
-  const [buff, setBuff] = useState(0);
   const [diceModifier, setDiceModifier] = useState(0);
-  const [buffInput, setBuffInput] = useState(0);
   const [diceModifierInput, setDiceModifierInput] = useState(0);
-  const [diceNumber, setDiceNumber] = useState(1);
   const [diceCount, setDiceCount] = useState(1);
   const [diceInput, setDiceInput] = useState(1);
-  const [isBuff, setIsBuff] = useState(false);
   const [isDiceModifier, setIsDiceModifier] = useState(false);
   const [inputModal, setInputModal] = useState(false);
 
@@ -81,28 +77,28 @@ export default function MultipleRoll({ navigation }) {
 
   const openInputModal = (number) => {
     if (number == 0) {
-      setIsBuff(false);
+      setIsDiceModifier(false);
     } else {
-      setIsBuff(true);
+      setIsDiceModifier(true);
     }
     setInputModal(true);
   };
 
   const setInput = () => {
-    if (isBuff == true) {
-      setBuff(buffInput);
-      if (buff == "") {
-        setBuff(0);
+    if (isDiceModifier == true) {
+      setDiceModifier(diceModifierInput);
+      if (diceModifier == "") {
+        setDiceModifier(0);
       }
-      setBuff((item) => parseInt(item));
+      setDiceModifier((item) => parseInt(item));
     } else {
       const dice = diceInput;
       if (dice == "" || dice < 0 || dice == 0) {
-        setDiceNumber(1);
+        setDiceCount(1);
       } else {
-        setDiceNumber(dice);
+        setDiceCount(dice);
       }
-      setDiceNumber((item) => parseInt(item));
+      setDiceCount((item) => parseInt(item));
     }
     setInputModal(false);
   };
@@ -116,7 +112,7 @@ export default function MultipleRoll({ navigation }) {
       let puchArray = [];
       let resoult = 0;
 
-      for (let j = 0; j < diceNumber; j++) {
+      for (let j = 0; j < diceCount; j++) {
         puchArray.push({
           key: j,
           item: Math.floor(Math.random() * multipleRoll[i].sides) + 1,
@@ -126,7 +122,7 @@ export default function MultipleRoll({ navigation }) {
       puchArray.map((data) => {
         plus += data.item;
       });
-      resoult = plus + buff;
+      resoult = plus + diceModifier;
       multipleArray = [
         ...multipleArray,
         {
@@ -154,10 +150,10 @@ export default function MultipleRoll({ navigation }) {
       {
         createdAt: time.toLocaleTimeString(),
         key: time.getMilliseconds(),
-        diceCount: diceNumber,
+        diceCount: diceCount,
         dice: multipleRoll[i].sides,
         rollArray: puchArray,
-        diceModifier: buff,
+        diceModifier: diceModifier,
         rollTotal: resoult,
       },
     ];
@@ -258,20 +254,20 @@ export default function MultipleRoll({ navigation }) {
 
       <Modal isVisible={inputModal} style={{ margin: 0 }}>
         <View style={[Style.lightBackground]}>
-          {isBuff ? (
+          {isDiceModifier ? (
             <TextInput
               keyboardType='numeric'
               style={Style.input}
-              placeholder={`${buff}`}
+              placeholder={`${diceModifier}`}
               maxLength={3}
               placeholderTextColor='white'
-              onChangeText={(val) => setBuffInput(val)}
+              onChangeText={(val) => setDiceModifierInput(val)}
             />
           ) : (
             <TextInput
               keyboardType='numeric'
               style={Style.input}
-              placeholder={`${diceNumber}`}
+              placeholder={`${diceCount}`}
               maxLength={3}
               placeholderTextColor='white'
               onChangeText={(val) => setDiceInput(val)}
@@ -379,29 +375,31 @@ export default function MultipleRoll({ navigation }) {
         <View style={[Style.DiceNBuffContainer, { flexBasis: "50%" }]}>
           <TouchableOpacity
             onPress={() => {
-              if (diceNumber != 1) {
-                setDiceNumber((diceNumber) => diceNumber - 1);
+              if (diceCount != 1) {
+                setDiceCount((diceCount) => diceCount - 1);
               }
             }}>
             <AntDesign name='minuscircle' size={30} color='white' />
           </TouchableOpacity>
           <Text style={[Style.diceNBuff]} onPress={() => openInputModal(0)}>
-            {diceNumber}d
+            {diceCount}d
           </Text>
           <TouchableOpacity
-            onPress={() => setDiceNumber((diceNumber) => diceNumber + 1)}>
+            onPress={() => setDiceCount((diceCount) => diceCount + 1)}>
             <AntDesign name='pluscircle' size={30} color='white' />
           </TouchableOpacity>
         </View>
 
         <View style={[Style.DiceNBuffContainer, { flexBasis: "50%" }]}>
-          <TouchableOpacity onPress={() => setBuff((buff) => buff - 1)}>
+          <TouchableOpacity
+            onPress={() => setDiceModifier((diceModifier) => diceModifier - 1)}>
             <AntDesign name='minuscircle' size={30} color='white' />
           </TouchableOpacity>
           <Text style={[Style.diceNBuff]} onPress={() => openInputModal(1)}>
-            {buff}
+            {diceModifier}
           </Text>
-          <TouchableOpacity onPress={() => setBuff((buff) => buff + 1)}>
+          <TouchableOpacity
+            onPress={() => setDiceModifier((diceModifier) => diceModifier + 1)}>
             <AntDesign name='pluscircle' size={30} color='white' />
           </TouchableOpacity>
         </View>
