@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Text, View, ScrollView, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, FlatList } from "react-native";
 
 import { HistoryContext } from "../context/HistoryContext";
 import Style from "../../assets/styles/styles";
@@ -18,83 +18,84 @@ export default function History() {
     </>
   ) : (
     <>
-      <ScrollView style={[Style.screenBackground, { flex: 1 }]}>
-        {history.map((data) => {
-          return (
-            <View
-              key={data.key}
-              style={{
-                borderTopWidth: 1,
-                borderBottomWidth: 1,
-                borderColor: "gray",
-                flexDirection: "row",
-                padding: 10,
-                marginBottom: 20,
-              }}>
-              <View style={[styles.resultContainer, Style.lightBackground]}>
-                <Text
-                  style={[
-                    Style.DefaultFont,
-                    Style.textColor,
-                    { fontWeight: "bold" },
-                  ]}>
-                  {data.rollTotal}
-                </Text>
-              </View>
+      <View style={[Style.screenBackground, { flex: 1 }]}>
+        <FlatList
+          data={history}
+          renderItem={({ item }) => {
+            return (
               <View
+                key={item.key}
                 style={{
-                  marginLeft: 10,
-                  flex: 1,
-                  flexDirection: "column",
+                  borderTopWidth: 1,
+                  borderBottomWidth: 1,
+                  borderColor: "gray",
+                  flexDirection: "row",
+                  padding: 10,
+                  marginBottom: 20,
                 }}>
-                <View>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      flex: 1,
-                      marginBottom: 5,
-                    }}>
-                    <View style={{ flex: 1 }}>
-                      <Text style={[Style.textColor, Style.DefaultFont]}>
-                        {data.diceCount}d{data.dice}
-                        {data.diceModifier ? (
-                          <>
-                            {data.diceModifier > 0 ? (
-                              <>+{data.diceModifier}</>
-                            ) : (
-                              <>{data.diceModifier}</>
-                            )}
-                          </>
-                        ) : (
-                          <></>
-                        )}
-                      </Text>
-                    </View>
-                    <View style={[{ flex: 1, alignItems: "flex-end" }]}>
-                      <Text style={[Style.DefaultFont, Style.textColor]}>
-                        {data.createdAt}
-                      </Text>
-                    </View>
-                  </View>
-                  <Text style={{ justifyContent: "flex-start", fontSize: 15 }}>
-                    {data.rollArray.map((item) => {
-                      return (
-                        <Text key={item.key} style={Style.textColor}>
-                          {data.rollArray.length == 1 ? (
-                            <>{item.item}</>
-                          ) : (
-                            <>{item.item},</>
-                          )}
-                        </Text>
-                      );
-                    })}
+                <View style={[styles.resultContainer, Style.lightBackground]}>
+                  <Text
+                    style={[
+                      Style.DefaultFont,
+                      Style.textColor,
+                      { fontWeight: "bold" },
+                    ]}>
+                    {item.rollTotal}
                   </Text>
                 </View>
+                <View
+                  style={{
+                    marginLeft: 10,
+                    flex: 1,
+                    flexDirection: "column",
+                  }}>
+                  <View>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        flex: 1,
+                        marginBottom: 5,
+                      }}>
+                      <View style={{ flex: 1 }}>
+                        <Text style={[Style.textColor, Style.DefaultFont]}>
+                          {item.diceCount}d{item.dice}
+                          {item.diceModifier ? (
+                            <>
+                              {item.diceModifier > 0 ? (
+                                <>+{item.diceModifier}</>
+                              ) : (
+                                <>{item.diceModifier}</>
+                              )}
+                            </>
+                          ) : (
+                            <></>
+                          )}
+                        </Text>
+                      </View>
+                      <View style={[{ flex: 1, alignItems: "flex-end" }]}>
+                        <Text style={[Style.DefaultFont, Style.textColor]}>
+                          {item.createdAt}
+                        </Text>
+                      </View>
+                    </View>
+                    <Text
+                      style={{ justifyContent: "flex-start", fontSize: 15 }}>
+                      {item.rollArray.map((item) => {
+                        return (
+                          <Text key={item.key} style={Style.textColor}>
+                            {item.item},
+                          </Text>
+                        );
+                      })}
+                    </Text>
+                  </View>
+                </View>
               </View>
-            </View>
-          );
-        })}
-      </ScrollView>
+            );
+          }}
+          keyExtractor={(item) => item.key.toString()}
+        />
+      </View>
     </>
   );
 }

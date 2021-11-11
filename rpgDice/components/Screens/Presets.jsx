@@ -27,8 +27,7 @@ import { HistoryContext } from "../context/HistoryContext";
 
 export default function Presets({ navigation }) {
   const { dice } = useContext(DiceContext);
-  const { modalOpen, setModalOpen, setFoldersModal, foldersModal } =
-    useContext(HistoryContext);
+  const { setFoldersModal, foldersModal } = useContext(HistoryContext);
 
   /******************************************************* */
   //update Preset

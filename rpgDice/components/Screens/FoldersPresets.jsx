@@ -29,7 +29,7 @@ import { Entypo } from "@expo/vector-icons";
 export default function FoldersPresets({ route, navigation }) {
   const { dice } = useContext(DiceContext);
   const { folder, setFolder } = useContext(FolderContext);
-  const { foldersModal, setFoldersModal } = useContext(HistoryContext);
+  const { setFoldersModal } = useContext(HistoryContext);
 
   const [color, setColor] = useState("white");
 
@@ -40,10 +40,14 @@ export default function FoldersPresets({ route, navigation }) {
   const [presetName, setPresetName] = useState("");
   const [presetNamePlaceholder, setPresetNamePlaceholder] =
     useState("Enter a name");
-  const [selectedDice, setSelectedDice] = useState(0);
-  const [diceNumber, setDiceNumber] = useState(1);
-  const [buff, setBuff] = useState(0);
   const [presetIndex, setPresetIndex] = useState();
+
+  /* const [selectedDice, setSelectedDice] = useState(0); */
+  const [currentDice, setCurrentDice] = useState(0);
+  /* const [diceNumber, setDiceNumber] = useState(1); */
+  const [diceCount, setDiceCount] = useState(1);
+  /*  const [buff, setBuff] = useState(0); */
+  const [diceModifier, setDiceModifier] = useState(0);
 
   const { id } = route.params;
 
@@ -59,9 +63,9 @@ export default function FoldersPresets({ route, navigation }) {
     let time = new Date();
     let name = presetName;
     let pBuffPlus = false;
-    let dice = selectedDice;
+    let dice = currentDice;
     const old = folder[folderIndex].items;
-    if (buff > 0) {
+    if (diceModifier > 0) {
       pBuffPlus = true;
     }
     if (dice == "") {
@@ -77,8 +81,8 @@ export default function FoldersPresets({ route, navigation }) {
       ...old,
       {
         id: time.toLocaleTimeString(),
-        numberOfDice: diceNumber,
-        buff: buff,
+        diceCount: diceCount,
+        diceModifier: diceModifier,
         name: name,
         dice: dice,
         buffPlus: pBuffPlus,
@@ -99,9 +103,9 @@ export default function FoldersPresets({ route, navigation }) {
 
   const reset = () => {
     setPresetNamePlaceholder("enter a name");
-    setSelectedDice(0);
-    setDiceNumber(1);
-    setBuff(0);
+    setCurrentDice(0);
+    setDiceCount(1);
+    setDiceModifier(0);
     setPresetIndex();
   };
 
@@ -151,9 +155,9 @@ export default function FoldersPresets({ route, navigation }) {
     setPresetIndex(objIndex);
     setUpdateModal(true);
     setPresetNamePlaceholder(folder[folderIndex].items[objIndex].name);
-    setSelectedDice(folder[folderIndex].items[objIndex].dice);
-    setDiceNumber(folder[folderIndex].items[objIndex].numberOfDice);
-    setBuff(folder[folderIndex].items[objIndex].buff);
+    setCurrentDice(folder[folderIndex].items[objIndex].dice);
+    setDiceCount(folder[folderIndex].items[objIndex].diceCount);
+    setDiceModifier(folder[folderIndex].items[objIndex].diceModifier);
     setNewPreset(true);
   };
 
@@ -164,18 +168,18 @@ export default function FoldersPresets({ route, navigation }) {
       folder[folderIndex].items[presetIndex].name = presetName;
     }
 
-    if (buff > 0) {
+    if (diceModifier > 0) {
       folder[folderIndex].items[presetIndex].buffPlus = true;
     } else {
       folder[folderIndex].items[presetIndex].buffPlus = false;
     }
 
-    const icon = DiceIconSelect(selectedDice);
+    const icon = DiceIconSelect(currentDice);
 
     folder[folderIndex].items[presetIndex].icon = icon;
-    folder[folderIndex].items[presetIndex].dice = selectedDice;
-    folder[folderIndex].items[presetIndex].numberOfDice = diceNumber;
-    folder[folderIndex].items[presetIndex].buff = buff;
+    folder[folderIndex].items[presetIndex].dice = currentDice;
+    folder[folderIndex].items[presetIndex].diceCount = diceCount;
+    folder[folderIndex].items[presetIndex].diceModifier = diceModifier;
     reset();
     setFolder([...folder]);
     setUpdateModal(false);
@@ -184,15 +188,15 @@ export default function FoldersPresets({ route, navigation }) {
 
   const openRollModal = (id) => {
     const objIndex = folder[folderIndex].items.findIndex((obj) => obj.id == id);
-    setDiceNumber(folder[folderIndex].items[objIndex].numberOfDice);
-    setSelectedDice(folder[folderIndex].items[objIndex].dice);
-    setBuff(folder[folderIndex].items[objIndex].buff);
+    setDiceCount(folder[folderIndex].items[objIndex].diceCount);
+    setCurrentDice(folder[folderIndex].items[objIndex].dice);
+    setDiceModifier(folder[folderIndex].items[objIndex].diceModifier);
     setFoldersModal(true);
   };
 
   return (
     <View style={[Style.screenBackground, { flex: 1 }]}>
-      {FoldersHistoryRoll(diceNumber, selectedDice, buff)}
+      {FoldersHistoryRoll(diceCount, currentDice, diceModifier)}
       <Modal
         isVisible={newPreset}
         coverScreen={true}
@@ -216,10 +220,10 @@ export default function FoldersPresets({ route, navigation }) {
               borderColor: "#A9CEC2",
             }}>
             <Picker
-              selectedValue={selectedDice}
+              selectedValue={currentDice}
               style={{ color: "white", margin: 10 }}
               onValueChange={(itemValue, itemIndex) => {
-                if (itemValue != 0) setSelectedDice(itemValue);
+                if (itemValue != 0) setCurrentDice(itemValue);
               }}>
               <Picker.Item color={color} label='chose a dice' value='0' />
               {dice.map((data) => {
@@ -238,12 +242,12 @@ export default function FoldersPresets({ route, navigation }) {
           <View style={styles.DiceNBuffContainer}>
             <TouchableOpacity
               onPress={() => {
-                if (diceNumber != 1) {
-                  setDiceNumber((diceNumber) => diceNumber - 1);
+                if (diceCount != 1) {
+                  setDiceCount((diceCount) => diceCount - 1);
                 }
               }}
               onLongPress={() => {
-                setDiceNumber(1);
+                setDiceCount(1);
               }}>
               <AntDesign name='minuscircle' size={30} color='white' />
             </TouchableOpacity>
@@ -255,18 +259,18 @@ export default function FoldersPresets({ route, navigation }) {
                   Style.DefaultFont,
                   { textAlign: "center" },
                 ]}>
-                {diceNumber}d
+                {diceCount}d
               </Text>
             </View>
 
             <TouchableOpacity
               onPress={() => {
-                if (diceNumber != 100) {
-                  setDiceNumber((diceNumber) => diceNumber + 1);
+                if (diceCount != 100) {
+                  setDiceCount((diceCount) => diceCount + 1);
                 }
               }}
               onLongPress={() => {
-                setDiceNumber(100);
+                setDiceCount(100);
               }}>
               <AntDesign name='pluscircle' size={30} color='white' />
             </TouchableOpacity>
@@ -276,9 +280,11 @@ export default function FoldersPresets({ route, navigation }) {
 
           <View style={styles.DiceNBuffContainer}>
             <TouchableOpacity
-              onPress={() => setBuff((buff) => buff - 1)}
+              onPress={() =>
+                setDiceModifier((diceModifier) => diceModifier - 1)
+              }
               onLongPress={() => {
-                setBuff(0);
+                setDiceModifier(0);
               }}>
               <AntDesign name='minuscircle' size={30} color='white' />
             </TouchableOpacity>
@@ -290,14 +296,16 @@ export default function FoldersPresets({ route, navigation }) {
                   Style.textColor,
                   { textAlign: "center" },
                 ]}>
-                {buff}
+                {diceModifier}
               </Text>
             </View>
 
             <TouchableOpacity
-              onPress={() => setBuff((buff) => buff + 1)}
+              onPress={() =>
+                setDiceModifier((diceModifier) => diceModifier + 1)
+              }
               onLongPress={() => {
-                setBuff(100);
+                setDiceModifier(100);
               }}>
               <AntDesign name='pluscircle' size={30} color='white' />
             </TouchableOpacity>
@@ -373,13 +381,13 @@ export default function FoldersPresets({ route, navigation }) {
                     </TouchableOpacity>
                     <View style={[PresetStyle.buttonContainer]}>
                       <Text style={[PresetStyle.buttonText]}>
-                        {data.numberOfDice}d{data.dice}
-                        {data.buff ? (
+                        {data.diceCount}d{data.dice}
+                        {data.diceModifier ? (
                           <>
                             {data.buffPlus ? (
-                              <>+{data.buff}</>
+                              <>+{data.diceModifier}</>
                             ) : (
-                              <>{data.buff}</>
+                              <>{data.diceModifier}</>
                             )}
                           </>
                         ) : (
