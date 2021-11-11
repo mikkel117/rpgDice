@@ -15,7 +15,7 @@ import { Picker } from "@react-native-picker/picker";
 import Style from "../../assets/styles/styles";
 import PresetStyle from "../../assets/styles/PresetStyle";
 import DiceIconSelect from "../functions/DiceIconSelect";
-import HistoryRoll from "../functions/HistoryRoll";
+import FoldersHistoryRoll from "../functions/FoldersHistoryRoll";
 
 import { DiceContext } from "../context/DiceContext";
 import { HistoryContext } from "../context/HistoryContext";
@@ -29,7 +29,7 @@ import { Entypo } from "@expo/vector-icons";
 export default function FoldersPresets({ route, navigation }) {
   const { dice } = useContext(DiceContext);
   const { folder, setFolder } = useContext(FolderContext);
-  const { setModalOpen } = useContext(HistoryContext);
+  const { foldersModal, setFoldersModal } = useContext(HistoryContext);
 
   const [color, setColor] = useState("white");
 
@@ -187,11 +187,12 @@ export default function FoldersPresets({ route, navigation }) {
     setDiceNumber(folder[folderIndex].items[objIndex].numberOfDice);
     setSelectedDice(folder[folderIndex].items[objIndex].dice);
     setBuff(folder[folderIndex].items[objIndex].buff);
-    setModalOpen(true);
+    setFoldersModal(true);
   };
 
   return (
     <View style={[Style.screenBackground, { flex: 1 }]}>
+      {FoldersHistoryRoll(diceNumber, selectedDice, buff)}
       <Modal
         isVisible={newPreset}
         coverScreen={true}
@@ -331,8 +332,6 @@ export default function FoldersPresets({ route, navigation }) {
           </View>
         </View>
       </Modal>
-
-      {HistoryRoll(diceNumber, selectedDice, buff)}
 
       {/* back */}
       <TouchableOpacity

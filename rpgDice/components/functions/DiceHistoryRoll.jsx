@@ -5,7 +5,7 @@ import Modal from "react-native-modal";
 import Style from "../../assets/styles/styles";
 import { HistoryContext } from "../context/HistoryContext";
 
-export default function HistoryRoll(diceCount, dice, diceModifier) {
+export default function DiceHistoryRoll(diceCount, dice, diceModifier) {
   const { history, setHistory, modalOpen, setModalOpen } =
     useContext(HistoryContext);
 

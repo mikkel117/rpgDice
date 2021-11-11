@@ -16,7 +16,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Style from "../../assets/styles/styles";
 import { HistoryContext } from "../context/HistoryContext";
 import { DiceContext } from "../context/DiceContext";
-import HistoryRoll from "../functions/HistoryRoll";
+import DiceHistoryRoll from "../functions/DiceHistoryRoll";
 
 export default function Dice({ navigation }) {
   //saves all the thowes in the app as long as it is open
@@ -104,6 +104,7 @@ export default function Dice({ navigation }) {
 
   return (
     <View style={[Style.screenBackground, { flex: 1 }]}>
+      {DiceHistoryRoll(diceCount, currentDice, diceModifier)}
       <FlatList
         keyExtractor={(item) => item.id}
         numColumns={4}
@@ -131,8 +132,6 @@ export default function Dice({ navigation }) {
           </TouchableOpacity>
         )}
       />
-      {HistoryRoll(diceCount, currentDice, diceModifier)}
-
       <Modal
         isVisible={diceCountPressed}
         coverScreen={false}
@@ -180,7 +179,6 @@ export default function Dice({ navigation }) {
           </View>
         </View>
       </Modal>
-
       <View style={{ flexDirection: "row" }}>
         <View style={Style.DiceNBuffContainer}>
           <TouchableOpacity

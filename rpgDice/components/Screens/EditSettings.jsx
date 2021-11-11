@@ -1,4 +1,4 @@
-import React, { useContext, version } from "react";
+import React, { useContext, useEffect, version } from "react";
 import { Alert, Text, View, TouchableOpacity } from "react-native";
 import Modal from "react-native-modal";
 
@@ -8,7 +8,7 @@ import { SettingsContext } from "../context/SettingsContext";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function EditSettings({ navigation }) {
+export default function EditSettings({ navigation, route }) {
   const { setHistory } = useContext(HistoryContext);
   const { preSetDefault, setPreSetDefault, firstTime, setFirstTime } =
     useContext(SettingsContext);

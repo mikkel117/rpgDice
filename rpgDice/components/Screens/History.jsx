@@ -20,7 +20,6 @@ export default function History() {
     <>
       <ScrollView style={[Style.screenBackground, { flex: 1 }]}>
         {history.map((data) => {
-          console.log(data);
           return (
             <View
               key={data.key}

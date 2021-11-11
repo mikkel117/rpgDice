@@ -21,18 +21,17 @@ import { MaterialIcons } from "@expo/vector-icons";
 import DiceIconSelect from "../functions/DiceIconSelect";
 import PresetStyle from "../../assets/styles/PresetStyle";
 import Style from "../../assets/styles/styles";
-import HistoryRoll from "../functions/HistoryRoll";
+import FoldersHistoryRoll from "../functions/FoldersHistoryRoll";
 import { DiceContext } from "../context/DiceContext";
 import { HistoryContext } from "../context/HistoryContext";
 
 export default function Presets({ navigation }) {
   const { dice } = useContext(DiceContext);
-  const { modalOpen, setModalOpen } = useContext(HistoryContext);
+  const { modalOpen, setModalOpen, setFoldersModal, foldersModal } =
+    useContext(HistoryContext);
 
   /******************************************************* */
   //update Preset
-  /*   const [diceInputPlaceholder, setDiceInputPlaceholder] =
-    useState("enter a name"); */
   const [updateModal, setUpdateModal] = useState(false);
   const [updateId, setUpdateId] = useState(0);
   /******************************************************* */
@@ -68,10 +67,10 @@ export default function Presets({ navigation }) {
   }, [preset]);
 
   useEffect(() => {
-    if (modalOpen == false) {
+    if (foldersModal == false) {
       reset();
     }
-  }, [modalOpen]);
+  }, [foldersModal]);
 
   const reset = () => {
     setPresetInputPlaceholder("enter a name");
@@ -214,11 +213,12 @@ export default function Presets({ navigation }) {
     setSelectedDice(preset[index].dice);
     setBuff(preset[index].buff);
     setNumberOfDice(preset[index].numberOfDice);
-    setModalOpen(true);
+    setFoldersModal(true);
   };
 
   return (
     <View style={[Style.screenBackground, { flex: 1 }]}>
+      {FoldersHistoryRoll(numberOfDice, selectedDice, buff)}
       <Modal isVisible={presetModal} style={{ margin: 0 }}>
         <View style={[Style.lightBackground, {}]}>
           <TextInput
@@ -357,8 +357,6 @@ export default function Presets({ navigation }) {
           </View>
         </View>
       </Modal>
-
-      {HistoryRoll(numberOfDice, selectedDice, buff)}
 
       <View style={{ alignItems: "center" }}>
         <Text style={[Style.textColor, { fontSize: 25 }]}>

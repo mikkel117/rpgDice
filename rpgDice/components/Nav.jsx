@@ -1,7 +1,11 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  useRoute,
+  CommonActions,
+} from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -93,6 +97,12 @@ function StackScreen() {
       <Stack.Screen
         name='folderPresets'
         component={FoldersPresets}
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: "#47494E",
+          },
+          routeName: "folderPresets",
+        }}
         options={{
           headerShown: false,
         }}
