@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -17,17 +17,21 @@ import { AntDesign } from "@expo/vector-icons";
 import Style from "../../assets/styles/styles";
 import { DiceContext } from "../context/DiceContext";
 import { HistoryContext } from "../context/HistoryContext";
-import { ScrollView, TextInput } from "react-native-gesture-handler";
+import { FlatList, ScrollView, TextInput } from "react-native-gesture-handler";
 
 export default function MultipleRoll({ navigation }) {
   const { multipleRoll, setMultipleRoll } = useContext(DiceContext);
   const { history, setHistory } = useContext(HistoryContext);
 
   const [buff, setBuff] = useState(0);
+  const [diceModifier, setDiceModifier] = useState(0);
   const [buffInput, setBuffInput] = useState(0);
+  const [diceModifierInput, setDiceModifierInput] = useState(0);
   const [diceNumber, setDiceNumber] = useState(1);
+  const [diceCount, setDiceCount] = useState(1);
   const [diceInput, setDiceInput] = useState(1);
   const [isBuff, setIsBuff] = useState(false);
+  const [isDiceModifier, setIsDiceModifier] = useState(false);
   const [inputModal, setInputModal] = useState(false);
 
   const [resoultArray, setResoultArray] = useState([]);
@@ -107,6 +111,7 @@ export default function MultipleRoll({ navigation }) {
     let multipleArray = [];
     let rollNumber = 1;
     let historyArray = [];
+    const time = new Date();
     for (let i = 0; i < multipleRoll.length; i++) {
       let puchArray = [];
       let resoult = 0;
@@ -125,7 +130,7 @@ export default function MultipleRoll({ navigation }) {
       multipleArray = [
         ...multipleArray,
         {
-          id: i,
+          id: rollNumber,
           item: resoult,
           dice: multipleRoll[i].name,
           sides: multipleRoll[i].sides,
@@ -134,7 +139,6 @@ export default function MultipleRoll({ navigation }) {
         },
       ];
       historyArray = [...historyArray, ...creatHistory(puchArray, i, resoult)];
-      /* setTheHistory(puchArray, i, resoult); */
       puchArray = [];
       rollNumber++;
     }
@@ -144,20 +148,21 @@ export default function MultipleRoll({ navigation }) {
   };
 
   const creatHistory = (puchArray, i, resoult) => {
-    let test = [];
+    let returnArray = [];
     let time = new Date();
-    test = [
+    returnArray = [
       {
         createdAt: time.toLocaleTimeString(),
         key: time.getMilliseconds(),
-        hNumberOfDice: diceNumber,
-        hDice: multipleRoll[i].sides,
-        hRolled: puchArray,
-        hBuff: buff,
-        hPlusEmAll: resoult,
+        diceCount: diceNumber,
+        dice: multipleRoll[i].sides,
+        rollArray: puchArray,
+        diceModifier: buff,
+        rollTotal: resoult,
       },
     ];
-    return test;
+    setTimeout(() => {}, 1000);
+    return returnArray;
   };
 
   const closeRollModal = () => {
@@ -176,73 +181,72 @@ export default function MultipleRoll({ navigation }) {
                 Platform.OS === "android" ? StatusBar.currentHeight : 0,
             },
           ]}>
-          <ScrollView>
-            {resoultArray.map((data) => {
-              return (
+          <FlatList
+            data={resoultArray}
+            renderItem={({ item }) => (
+              <View
+                style={{
+                  borderWidth: 1,
+                  marginVertical: 10,
+                  flexDirection: "row",
+                  marginVertical: 10,
+                }}>
                 <View
-                  style={{
-                    borderWidth: 1,
-                    marginVertical: 10,
-                    flexDirection: "row",
-                    marginVertical: 10,
-                  }}
-                  key={data.id}>
-                  <View
-                    style={[
-                      {
-                        flex: 1,
-                        alignItems: "center",
-                        justifyContent: "center",
-                      },
-                    ]}>
-                    <Text style={[Style.textColor, { fontSize: 25 }]}>
-                      #{data.rollNumber}
-                    </Text>
-                  </View>
-                  <View
-                    style={[
-                      {
-                        flex: 1,
-                        alignItems: "center",
-                        justifyContent: "center",
-                        borderRightWidth: 1,
-                        borderLeftWidth: 1,
-                        paddingVertical: 10,
-                      },
-                    ]}>
-                    <Text
-                      style={[
-                        Style.textColor,
-                        { fontSize: 30, fontWeight: "bold" },
-                      ]}>
-                      {data.item}
-                    </Text>
-                  </View>
-                  <View
-                    style={[
-                      {
-                        flex: 1,
-                        alignItems: "center",
-                        justifyContent: "center",
-                      },
-                    ]}>
-                    <MaterialCommunityIcons
-                      name={data.dice}
-                      size={40}
-                      color='white'
-                    />
-                    <Text
-                      style={[
-                        Style.textColor,
-                        { textAlign: "center", fontSize: 15 },
-                      ]}>
-                      d{data.sides}
-                    </Text>
-                  </View>
+                  style={[
+                    {
+                      flex: 1,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    },
+                  ]}>
+                  <Text style={[Style.textColor, { fontSize: 25 }]}>
+                    #{item.rollNumber}
+                  </Text>
                 </View>
-              );
-            })}
-          </ScrollView>
+                <View
+                  style={[
+                    {
+                      flex: 1,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRightWidth: 1,
+                      borderLeftWidth: 1,
+                      paddingVertical: 10,
+                    },
+                  ]}>
+                  <Text
+                    style={[
+                      Style.textColor,
+                      { fontSize: 30, fontWeight: "bold" },
+                    ]}>
+                    {item.item}
+                  </Text>
+                </View>
+                <View
+                  style={[
+                    {
+                      flex: 1,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    },
+                  ]}>
+                  <MaterialCommunityIcons
+                    name={item.dice}
+                    size={40}
+                    color='white'
+                  />
+                  <Text
+                    style={[
+                      Style.textColor,
+                      { textAlign: "center", fontSize: 15 },
+                    ]}>
+                    d{item.sides}
+                  </Text>
+                </View>
+              </View>
+            )}
+            keyExtractor={(item) => item.id.toString()}
+          />
           <TouchableOpacity onPress={() => closeRollModal()}>
             <Text
               style={[Style.buttonStyle, { fontSize: 25, fontWeight: "bold" }]}>
@@ -295,7 +299,6 @@ export default function MultipleRoll({ navigation }) {
       {multipleRoll.length > 0 ? (
         <View
           style={{
-            /*  alignItems: "flex-end", */
             borderBottomWidth: 2,
             borderColor: "gray",
             marginBottom: 10,
@@ -326,47 +329,46 @@ export default function MultipleRoll({ navigation }) {
         <></>
       )}
       {multipleRoll.length > 0 ? (
-        <ScrollView>
-          {multipleRoll.map((data) => {
-            return (
-              <View
-                key={data.id}
-                style={{
-                  padding: 10,
-                  marginBottom: 10,
-                  borderTopWidth: 1,
-                  borderBottomWidth: 1,
-                  borderColor: "gray",
-                  flexDirection: "row",
-                }}>
-                <View style={{ flex: 1, flexDirection: "row" }}>
-                  <View>
-                    <MaterialCommunityIcons
-                      name={data.name}
-                      size={50}
-                      color='white'
-                    />
-                  </View>
-                  <View style={{ justifyContent: "center", marginLeft: 10 }}>
-                    <Text style={[Style.textColor, Style.DefaultFont]}>
-                      d{data.sides}
-                    </Text>
-                  </View>
+        <FlatList
+          data={multipleRoll}
+          renderItem={({ item }) => (
+            <View
+              style={{
+                padding: 10,
+                marginBottom: 10,
+                borderTopWidth: 1,
+                borderBottomWidth: 1,
+                borderColor: "gray",
+                flexDirection: "row",
+              }}>
+              <View style={{ flex: 1, flexDirection: "row" }}>
+                <View>
+                  <MaterialCommunityIcons
+                    name={item.name}
+                    size={50}
+                    color='white'
+                  />
                 </View>
-                <View
-                  style={{
-                    flex: 1,
-                    alignItems: "flex-end",
-                    justifyContent: "center",
-                  }}>
-                  <TouchableOpacity onPress={() => deleteAlert(data.id)}>
-                    <MaterialIcons name='delete' size={50} color='red' />
-                  </TouchableOpacity>
+                <View style={{ justifyContent: "center", marginLeft: 10 }}>
+                  <Text style={[Style.textColor, Style.DefaultFont]}>
+                    d{item.sides}
+                  </Text>
                 </View>
               </View>
-            );
-          })}
-        </ScrollView>
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: "flex-end",
+                  justifyContent: "center",
+                }}>
+                <TouchableOpacity onPress={() => deleteAlert(item.id)}>
+                  <MaterialIcons name='delete' size={50} color='red' />
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+          keyExtractor={(item) => item.id.toString()}
+        />
       ) : (
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
