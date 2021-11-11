@@ -7,8 +7,7 @@ import {
   TouchableOpacity,
   View,
   StyleSheet,
-  ScrollView,
-  Button,
+  FlatList,
 } from "react-native";
 import Modal from "react-native-modal";
 import { Picker } from "@react-native-picker/picker";
@@ -367,57 +366,54 @@ export default function Presets({ navigation }) {
       </View>
       {preset.length > 0 ? (
         <>
-          <ScrollView style={[Style.screenBackground, { flex: 1 }]}>
-            {preset.map((data) => {
-              return (
-                <View style={[PresetStyle.presetContainer, {}]} key={data.id}>
-                  <View style={PresetStyle.diceButtonContainer}>
-                    <TouchableOpacity onPress={() => openRollModal(data.id)}>
-                      <View style={[PresetStyle.diceContainer]}>
-                        <MaterialCommunityIcons
-                          name={data.icon}
-                          size={50}
-                          color='white'
-                        />
-                      </View>
-                    </TouchableOpacity>
-                    <View style={[PresetStyle.buttonContainer]}>
-                      <Text style={[PresetStyle.buttonText]}>
-                        {data.numberOfDice}d{data.dice}
-                        {data.buff ? (
-                          <>
-                            {data.buffPlus ? (
-                              <>+{data.buff}</>
-                            ) : (
-                              <>{data.buff}</>
-                            )}
-                          </>
-                        ) : (
-                          <></>
-                        )}
-                      </Text>
+          <FlatList
+            data={preset}
+            renderItem={({ item }) => (
+              <View style={[PresetStyle.presetContainer, {}]}>
+                <View style={PresetStyle.diceButtonContainer}>
+                  <TouchableOpacity onPress={() => openRollModal(item.id)}>
+                    <View style={[PresetStyle.diceContainer]}>
+                      <MaterialCommunityIcons
+                        name={item.icon}
+                        size={50}
+                        color='white'
+                      />
                     </View>
-                  </View>
-                  <View style={[PresetStyle.deleteEditcontainer]}>
-                    <Text style={[PresetStyle.name]}>{data.name}</Text>
-                    <View style={[PresetStyle.deleteEditWrapper]}>
-                      <TouchableOpacity onPress={() => deleteAlert(data.id)}>
-                        <MaterialIcons name='delete' size={40} color='red' />
-                      </TouchableOpacity>
-
-                      <TouchableOpacity onPress={() => update(data.id)}>
-                        <MaterialCommunityIcons
-                          name='content-save-edit'
-                          size={40}
-                          color='white'
-                        />
-                      </TouchableOpacity>
-                    </View>
+                  </TouchableOpacity>
+                  <View style={[PresetStyle.buttonContainer]}>
+                    <Text style={[PresetStyle.buttonText]}>
+                      {item.numberOfDice}d{item.dice}
+                      {item.buff ? (
+                        <>
+                          {item.buffPlus ? <>+{item.buff}</> : <>{item.buff}</>}
+                        </>
+                      ) : (
+                        <></>
+                      )}
+                    </Text>
                   </View>
                 </View>
-              );
-            })}
-          </ScrollView>
+                <View style={[PresetStyle.deleteEditcontainer]}>
+                  <Text style={[PresetStyle.name]}>{item.name}</Text>
+                  <View style={[PresetStyle.deleteEditWrapper]}>
+                    <TouchableOpacity onPress={() => deleteAlert(item.id)}>
+                      <MaterialIcons name='delete' size={40} color='red' />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={() => update(item.id)}>
+                      <MaterialCommunityIcons
+                        name='content-save-edit'
+                        size={40}
+                        color='white'
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            )}
+            keyExtractor={(item) => item.id.toString()}
+          />
+
           <TouchableOpacity
             onPress={() => deleteAllPresets()}
             style={{ alignSelf: "flex-end" }}>
