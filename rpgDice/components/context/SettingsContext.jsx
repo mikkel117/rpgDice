@@ -4,22 +4,23 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export const SettingsContext = createContext();
 
 const SettingsContextProvider = (props) => {
-  const [firstTime, setFirstTime] = useState(true);
+  const [folderQuestion, setFolderQuestion] = useState(true);
   const [preSetDefault, setPreSetDefault] = useState(false);
+  const [firstTime, setFirstTime] = useState(true);
   useEffect(() => {
     read();
   }, []);
 
   useEffect(() => {
     set();
-  }, [firstTime, preSetDefault]);
+  }, [folderQuestion, preSetDefault, firstTime]);
 
   read = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem("settings");
       let data = jsonValue != null ? JSON.parse(jsonValue) : null;
       if (data != null) {
-        setFirstTime(data[0].value);
+        setFolderQuestion(data[0].value);
         setPreSetDefault(data[1].value);
       }
     } catch (e) {
@@ -29,8 +30,9 @@ const SettingsContextProvider = (props) => {
 
   const testCall = () => {
     let settingsArray = [
-      { name: "first time", value: firstTime },
+      { name: "folderQuestion", value: folderQuestion },
       { name: "preset", value: preSetDefault },
+      { name: "firstTime", value: firstTime },
     ];
 
     return settingsArray;
@@ -48,7 +50,14 @@ const SettingsContextProvider = (props) => {
 
   return (
     <SettingsContext.Provider
-      value={{ firstTime, setFirstTime, preSetDefault, setPreSetDefault }}>
+      value={{
+        folderQuestion,
+        setFolderQuestion,
+        preSetDefault,
+        setPreSetDefault,
+        firstTime,
+        setFirstTime,
+      }}>
       {props.children}
     </SettingsContext.Provider>
   );

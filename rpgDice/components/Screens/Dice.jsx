@@ -7,8 +7,8 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-
 import Modal from "react-native-modal";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -16,14 +16,15 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Style from "../../assets/styles/styles";
 import { HistoryContext } from "../context/HistoryContext";
 import { DiceContext } from "../context/DiceContext";
+import { SettingsContext } from "../context/SettingsContext";
 import DiceHistoryRoll from "../functions/DiceHistoryRoll";
 
 export default function Dice({ navigation }) {
   //saves all the thowes in the app as long as it is open
-  const { history, setHistory, modalOpen, setModalOpen } =
-    useContext(HistoryContext);
+  const { setModalOpen } = useContext(HistoryContext);
   const { dice, multipleRoll, setMultipleRoll, diceColor, setDiceColor } =
     useContext(DiceContext);
+  const { firstTime, setFirstTime } = useContext(SettingsContext);
 
   //set the number of dices that needs to be thowen
   const [diceCount, setDiceCount] = useState(1);
@@ -133,6 +134,48 @@ export default function Dice({ navigation }) {
         )}
       />
       <Modal
+        isVisible={firstTime}
+        coverScreen={false}
+        style={{ margin: 0, opacity: 10 }}>
+        <View style={[styles.modal]}>
+          <View style={[styles.modalContent, Style.lightBackground]}>
+            <Text
+              style={[Style.textColor, Style.DefaultFont, styles.modalHeader]}>
+              Welcome to RPG Dice!
+            </Text>
+            <Text
+              style={[Style.textColor, Style.DefaultFont, styles.modalText]}>
+              This is a dice roller for RPG games.
+            </Text>
+            <Text
+              style={[Style.textColor, Style.DefaultFont, styles.modalText]}>
+              You can roll the dice by pressing it.
+            </Text>
+            <Text
+              style={[Style.textColor, Style.DefaultFont, styles.modalText]}>
+              You can also add a modifier to the dice.
+            </Text>
+            <Text
+              style={[Style.textColor, Style.DefaultFont, styles.modalText]}>
+              You can also add how many times you want to roll the dice.
+            </Text>
+            <Text
+              style={[Style.textColor, Style.DefaultFont, styles.modalText]}>
+              You can roll multiple dice at the same time by pressing and
+              holding the dice until the dice in the top right corner lights up.
+            </Text>
+
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => {
+                setFirstTime(false);
+              }}>
+              <Text style={[Style.textColor, Style.DefaultFont]}>Got it!</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+      <Modal
         isVisible={diceCountPressed}
         coverScreen={false}
         style={{ flex: 1 }}>
@@ -234,6 +277,32 @@ export default function Dice({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  modal: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContent: {
+    padding: 20,
+    borderRadius: 10,
+    width: "80%",
+  },
+  modalHeader: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 10,
+  },
+  modalButton: {
+    backgroundColor: "green",
+    alignItems: "center",
+    width: "100%",
+    padding: 10,
+    borderRadius: 10,
+  },
   dices: {
     margin: 2,
     flexBasis: "24%",

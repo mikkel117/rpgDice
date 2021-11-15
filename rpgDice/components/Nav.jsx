@@ -186,21 +186,7 @@ export default function Nav() {
           })}
         />
         <Tab.Screen name='Historie' component={Historie} />
-        <Tab.Screen
-          name='Edit'
-          component={StackScreen}
-          options={({ navigation }) => ({
-            headerRight: () => (
-              <View>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate("settings")}
-                  style={{ marginRight: 15 }}>
-                  <Ionicons name='settings' size={30} color='white' />
-                </TouchableOpacity>
-              </View>
-            ),
-          })}
-        />
+        <Tab.Screen name='Edit' component={StackScreen} />
         {/* <Tab.Screen name='Sandbox' component={SandBox} /> */}
       </Tab.Navigator>
     </NavigationContainer>

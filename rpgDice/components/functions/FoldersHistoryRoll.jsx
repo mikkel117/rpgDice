@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import Modal from "react-native-modal";
 
 import Style from "../../assets/styles/styles";
@@ -59,50 +59,75 @@ export default function FoldersHistoryRoll(diceCount, dice, diceModifier) {
 
   return (
     <Modal isVisible={foldersModal} style={{ margin: 0 }}>
-      <TouchableOpacity
-        style={{ flex: 1, justifyContent: "center" }}
-        onPress={() => close()}>
-        <View style={Style.lightBackground}>
-          <Text
-            style={[
-              Style.textColor,
-              Style.DefaultFont,
-              { textAlign: "center", paddingBottom: 5 },
-            ]}>
-            {diceCount}d{dice}
-            {diceModifier ? (
-              <>
-                {diceModifier > 0 ? <>+{diceModifier}</> : <>{diceModifier}</>}{" "}
-              </>
-            ) : (
-              <></>
-            )}
-          </Text>
+      <View style={styles.modal}>
+        <TouchableOpacity
+          style={{ flex: 1, justifyContent: "center", width: "90%" }}
+          onPress={() => close()}>
+          <View style={Style.lightBackground}>
+            <Text
+              style={[
+                Style.textColor,
+                Style.DefaultFont,
+                { textAlign: "center", paddingBottom: 5 },
+              ]}>
+              {diceCount}d{dice}
+              {diceModifier ? (
+                <>
+                  {diceModifier > 0 ? (
+                    <>+{diceModifier}</>
+                  ) : (
+                    <>{diceModifier}</>
+                  )}{" "}
+                </>
+              ) : (
+                <></>
+              )}
+            </Text>
 
-          <Text
-            style={[
-              Style.textColor,
-              { textAlign: "center", fontSize: 25, paddingBottom: 5 },
-            ]}>
-            {rollTotal}
-          </Text>
+            <Text
+              style={[
+                Style.textColor,
+                { textAlign: "center", fontSize: 25, paddingBottom: 5 },
+              ]}>
+              {rollTotal}
+            </Text>
 
-          <Text
-            style={[
-              Style.textColor,
-              Style.DefaultFont,
-              { textAlign: "center", paddingBottom: 5 },
-            ]}>
-            {rollArray.map((data) => {
-              return (
-                <Text key={data.key}>
-                  {rollArray.length == 1 ? <>{data.item}</> : <>{data.item},</>}
-                </Text>
-              );
-            })}
-          </Text>
-        </View>
-      </TouchableOpacity>
+            <Text
+              style={[
+                Style.textColor,
+                Style.DefaultFont,
+                { textAlign: "center", paddingBottom: 5 },
+              ]}>
+              {rollArray.map((data) => {
+                return (
+                  <Text key={data.key}>
+                    {rollArray.length == 1 ? (
+                      <>{data.item}</>
+                    ) : (
+                      <>{data.item},</>
+                    )}
+                  </Text>
+                );
+              })}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
     </Modal>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  modal: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});

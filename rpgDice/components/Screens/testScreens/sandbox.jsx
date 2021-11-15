@@ -13,16 +13,6 @@ import Style from "../../../assets/styles/styles";
 
 import NewReactTest from "./NewReactTest";
 
-const UseDebug = () => {
-  useEffect(() => {
-    console.log("mounted");
-
-    return () => {
-      console.log("unmounted");
-    };
-  });
-};
-
 export default function Sandbox() {
   return (
     <SafeAreaView style={[styles.container]}>
