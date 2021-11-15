@@ -13,9 +13,12 @@ import Modal from "react-native-modal";
 import { Picker } from "@react-native-picker/picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
+import {
+  MaterialIcons,
+  Ionicons,
+  AntDesign,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 
 import DiceIconSelect from "../functions/DiceIconSelect";
 import PresetStyle from "../../assets/styles/PresetStyle";
@@ -361,7 +364,7 @@ export default function Presets({ navigation }) {
           Create pre set rolles here
         </Text>
         <TouchableOpacity onPress={() => setPresetModal(true)}>
-          <MaterialCommunityIcons name='folder-plus' size={30} color='white' />
+          <Ionicons name='create' size={30} color='white' />
         </TouchableOpacity>
       </View>
       {preset.length > 0 ? (

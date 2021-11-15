@@ -19,11 +19,8 @@ import Presets from "./Screens/Presets";
 import EditDice from "./Screens/EditDice";
 import EditSettings from "./Screens/EditSettings";
 import Folders from "./Screens/Folders";
-import Settings from "./Screens/Settings";
 
 import { DiceContext } from "./context/DiceContext";
-
-import SandBox from "./Screens/testScreens/sandbox";
 
 import Style from "../assets/styles/styles";
 import FoldersPresets from "./Screens/FoldersPresets";
@@ -92,8 +89,6 @@ function StackScreen() {
           ),
         })}
       />
-
-      <Stack.Screen name='settings' component={Settings} />
       <Stack.Screen
         name='folderPresets'
         component={FoldersPresets}
@@ -187,7 +182,6 @@ export default function Nav() {
         />
         <Tab.Screen name='Historie' component={Historie} />
         <Tab.Screen name='Edit' component={StackScreen} />
-        {/* <Tab.Screen name='Sandbox' component={SandBox} /> */}
       </Tab.Navigator>
     </NavigationContainer>
   );

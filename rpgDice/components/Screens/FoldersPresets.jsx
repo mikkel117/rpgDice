@@ -21,10 +21,13 @@ import { DiceContext } from "../context/DiceContext";
 import { HistoryContext } from "../context/HistoryContext";
 import { FolderContext } from "../context/FolderContext";
 
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
+import {
+  MaterialCommunityIcons,
+  Ionicons,
+  MaterialIcons,
+  AntDesign,
+  Entypo,
+} from "@expo/vector-icons";
 
 export default function FoldersPresets({ route, navigation }) {
   const { dice } = useContext(DiceContext);
@@ -354,9 +357,9 @@ export default function FoldersPresets({ route, navigation }) {
         </Text>
 
         <TouchableOpacity onPress={() => setNewPreset(true)}>
-          <MaterialIcons
-            name='create-new-folder'
-            size={35}
+          <Ionicons
+            name='create'
+            size={30}
             color='white'
             style={{ marginTop: 10 }}
           />

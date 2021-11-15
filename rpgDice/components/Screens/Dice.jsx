@@ -153,16 +153,17 @@ export default function Dice({ navigation }) {
             </Text>
             <Text
               style={[Style.textColor, Style.DefaultFont, styles.modalText]}>
-              You can also add a modifier to the dice.
+              You can add modifiers to the roll.
             </Text>
             <Text
               style={[Style.textColor, Style.DefaultFont, styles.modalText]}>
-              You can also add how many times you want to roll the dice.
+              You can add how many times you want to roll the dice.
             </Text>
             <Text
               style={[Style.textColor, Style.DefaultFont, styles.modalText]}>
-              You can roll multiple dice at the same time by pressing and
-              holding the dice until the dice in the top right corner lights up.
+              You can also roll multiple dice at the same time by pressing and
+              holding the dice. Until the dice in the top right corner lights
+              up.
             </Text>
 
             <TouchableOpacity

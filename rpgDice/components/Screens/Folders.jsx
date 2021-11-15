@@ -168,7 +168,7 @@ export default function Folders({ navigation }) {
       </Modal>
 
       <View style={{ alignItems: "center" }}>
-        <Text style={[Style.DefaultFont, Style.textColor]}>
+        <Text style={[Style.textColor, { fontSize: 25 }]}>
           create and edit folders here
         </Text>
         <TouchableOpacity onPress={() => openModal()}>
