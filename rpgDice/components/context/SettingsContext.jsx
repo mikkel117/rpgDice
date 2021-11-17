@@ -6,14 +6,14 @@ export const SettingsContext = createContext();
 const SettingsContextProvider = (props) => {
   const [folderQuestion, setFolderQuestion] = useState(true);
   const [preSetDefault, setPreSetDefault] = useState(false);
-  const [firstTime, setFirstTime] = useState(true);
+  const [firstTime, setFirstTime] = useState(false);
   useEffect(() => {
     read();
   }, []);
 
   useEffect(() => {
     set();
-  }, [folderQuestion, preSetDefault, firstTime]);
+  }, [folderQuestion, preSetDefault]);
 
   read = async () => {
     try {
@@ -32,7 +32,6 @@ const SettingsContextProvider = (props) => {
     let settingsArray = [
       { name: "folderQuestion", value: folderQuestion },
       { name: "preset", value: preSetDefault },
-      { name: "firstTime", value: firstTime },
     ];
 
     return settingsArray;

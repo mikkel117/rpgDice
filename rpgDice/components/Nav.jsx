@@ -9,9 +9,7 @@ import {
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import { FontAwesome5 } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
+import { FontAwesome5, AntDesign } from "@expo/vector-icons";
 
 import Dice from "./Screens/Dice";
 import Historie from "./Screens/History";
@@ -25,6 +23,7 @@ import { DiceContext } from "./context/DiceContext";
 import Style from "../assets/styles/styles";
 import FoldersPresets from "./Screens/FoldersPresets";
 import MultipleRoll from "./Screens/MultipleRoll";
+import { SettingsContext } from "./context/SettingsContext";
 
 const screenOptions = (route) => {
   let iconName;
@@ -138,6 +137,7 @@ function homeDice() {
 const Tab = createBottomTabNavigator();
 
 export default function Nav() {
+  const { firstTime, setFirstTime } = useContext(SettingsContext);
   const { diceColor, setDiceColor } = useContext(DiceContext);
   return (
     <NavigationContainer>
@@ -171,10 +171,18 @@ export default function Nav() {
           name='Home'
           component={homeDice}
           options={({ navigation }) => ({
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={() => setFirstTime(true)}
+                style={{ marginLeft: 35 }}>
+                <AntDesign name='questioncircle' size={30} color='orange' />
+              </TouchableOpacity>
+            ),
+
             headerRight: () => (
               <TouchableOpacity
                 onPress={() => navigation.navigate("multipleRoll")}
-                style={{ marginRight: 15 }}>
+                style={{ marginRight: 35 }}>
                 <FontAwesome5 name='dice' size={30} color={`${diceColor}`} />
               </TouchableOpacity>
             ),

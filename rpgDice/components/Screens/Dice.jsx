@@ -144,9 +144,24 @@ export default function Dice({ navigation }) {
               Welcome to RPG Dice!
             </Text>
             <Text
-              style={[Style.textColor, Style.DefaultFont, styles.modalText]}>
+              style={[
+                Style.textColor,
+                Style.DefaultFont,
+                styles.modalText,
+                {
+                  textAlign: "center",
+                  fontWeight: "bold",
+                },
+              ]}>
               This is a dice roller for RPG games.
             </Text>
+            <View
+              style={{
+                borderWidth: 2,
+                borderColor: "black",
+                marginVertical: 15,
+              }}
+            />
             <Text
               style={[Style.textColor, Style.DefaultFont, styles.modalText]}>
               You can roll the dice by pressing it.
@@ -167,7 +182,7 @@ export default function Dice({ navigation }) {
             </Text>
 
             <TouchableOpacity
-              style={styles.modalButton}
+              style={[styles.modalButton]}
               onPress={() => {
                 setFirstTime(false);
               }}>
@@ -176,6 +191,7 @@ export default function Dice({ navigation }) {
           </View>
         </View>
       </Modal>
+
       <Modal
         isVisible={diceCountPressed}
         coverScreen={false}
@@ -295,12 +311,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   modalText: {
-    marginBottom: 10,
+    marginBottom: 15,
   },
   modalButton: {
     backgroundColor: "green",
     alignItems: "center",
     width: "100%",
+    marginTop: 20,
     padding: 10,
     borderRadius: 10,
   },

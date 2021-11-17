@@ -45,11 +45,8 @@ export default function FoldersPresets({ route, navigation }) {
     useState("Enter a name");
   const [presetIndex, setPresetIndex] = useState();
 
-  /* const [selectedDice, setSelectedDice] = useState(0); */
   const [currentDice, setCurrentDice] = useState(0);
-  /* const [diceNumber, setDiceNumber] = useState(1); */
   const [diceCount, setDiceCount] = useState(1);
-  /*  const [buff, setBuff] = useState(0); */
   const [diceModifier, setDiceModifier] = useState(0);
 
   const { id } = route.params;
