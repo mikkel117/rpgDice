@@ -15,6 +15,10 @@ you download the code open it in you editter and then.
 
 and you sould be good to go.
 
+or
+
+you can go to this https://expo.dev/@rumbo/rpgDice websight to open it on your phone.
+
 ### images from the app
 ![image](https://user-images.githubusercontent.com/19694154/147918163-97fb2997-39a3-4247-86c8-d202c4a582af.png)
 
